@@ -9,6 +9,7 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,9 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   static final String KEY_FIELDS_DOC = "The fields that should be used as a key for the message.";
   static final String FIRST_ROW_AS_HEADER_DOC = "Flag to indicate if the fist row of data contains the header of the file.";
   static final boolean FIRST_ROW_AS_HEADER_DEFAULT = false;
+  public static final String CHARSET_CONF ="charset";
+  static final String CHARSET_DOC ="Character set to read wth file with.";
+  static final String CHARSET_DEFAULT = Charset.defaultCharset().name();
 
   public CSVRecordProcessorConfig(Map<?, ?> originals) {
     super(getConf(), originals);
@@ -76,6 +80,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
         .define(NULL_FIELD_INDICATOR_CONF, ConfigDef.Type.STRING, NULL_FIELD_INDICATOR_DEFAULT, ConfigDef.ValidString.in(nullFieldIndicatorValues()), ConfigDef.Importance.LOW, NULL_FIELD_INDICATOR_DOC)
         .define(KEY_FIELDS_CONF, ConfigDef.Type.LIST, ConfigDef.Importance.HIGH, KEY_FIELDS_DOC)
         .define(FIRST_ROW_AS_HEADER_CONF, ConfigDef.Type.BOOLEAN, FIRST_ROW_AS_HEADER_DEFAULT, ConfigDef.Importance.HIGH, FIRST_ROW_AS_HEADER_DOC)
+        .define(CHARSET_CONF, ConfigDef.Type.STRING, CHARSET_DEFAULT, ConfigDef.Importance.MEDIUM, CHARSET_DOC)
         ;
   }
 
@@ -132,6 +137,13 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   public List<String> keyFields() {
     return this.getList(KEY_FIELDS_CONF);
   }
+
+  public Charset charset() {
+    String value = this.getString(CHARSET_CONF);
+    Charset charset = Charset.forName(value);
+    return charset;
+  }
+
 
   public CSVParserBuilder createCSVParserBuilder() {
 

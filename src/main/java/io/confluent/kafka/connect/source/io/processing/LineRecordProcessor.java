@@ -36,11 +36,11 @@ public class LineRecordProcessor implements RecordProcessor {
 
   @Override
   public void configure(Map<?, ?> configValues, InputStream inputStream, String fileName) {
+    this.config = new LineRecordProcessorConfig(configValues);
     this.inputStream = inputStream;
     this.inputFileName = fileName;
-    this.inputStreamReader = new InputStreamReader(this.inputStream);
+    this.inputStreamReader = new InputStreamReader(this.inputStream, this.config.charset());
     this.lineNumberReader = new LineNumberReader(this.inputStreamReader);
-    this.config = new LineRecordProcessorConfig(configValues);
   }
 
 

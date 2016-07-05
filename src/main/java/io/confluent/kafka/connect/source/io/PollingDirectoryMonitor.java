@@ -1,5 +1,6 @@
 package io.confluent.kafka.connect.source.io;
 
+import com.google.common.base.Preconditions;
 import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import org.apache.kafka.connect.errors.ConnectException;
@@ -75,7 +76,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     } finally {
       try {
         if (null != temporaryFile && temporaryFile.exists()) {
-          temporaryFile.delete();
+          Preconditions.checkState(temporaryFile.delete(), "Unable to delete temp file in %s", directoryPath);
         }
       } catch (Exception ex) {
         if (log.isWarnEnabled()) {
@@ -104,7 +105,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     }
   }
 
-  void closeAndMoveToFinished() throws IOException {
+  void closeAndMoveToFinished(File outputDirectory) throws IOException {
     if (null != inputStream) {
       if (log.isInfoEnabled()) {
         log.info("Closing {}", this.inputFile);
@@ -112,7 +113,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
       this.inputStream.close();
       this.inputStream = null;
 
-      File finishedFile = new File(this.finishedDirectory, this.inputFile.getName());
+      File finishedFile = new File(outputDirectory, this.inputFile.getName());
 
       if (log.isInfoEnabled()) {
         log.info("Finished processing {} moving to {}.", this.inputFile);
@@ -126,7 +127,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
   public List<SourceRecord> poll() {
     try {
       if (!hasRecords) {
-        closeAndMoveToFinished();
+        closeAndMoveToFinished(this.finishedDirectory);
 
         File[] files = this.inputDirectory.listFiles(this.inputPatternFilter);
         if (null == files || files.length == 0) {
@@ -148,8 +149,14 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
       this.hasRecords = !records.isEmpty();
       return records;
     } catch (IOException ex) {
+      try {
+        closeAndMoveToFinished(this.errorDirectory);
+      } catch (IOException ex0){
+        if(log.isErrorEnabled()){
+          log.error("Exception thrown while moving {} to {}", this.inputFile, this.errorDirectory, ex0);
+        }
+      }
       throw new ConnectException(ex);
-
     }
   }
 }

@@ -65,7 +65,7 @@ public class CSVRecordProcessor implements RecordProcessor {
     }
 
     this.csvParser = this.config.createCSVParserBuilder().build();
-    this.streamReader = new InputStreamReader(inputStream);
+    this.streamReader = new InputStreamReader(inputStream, this.config.charset());
     this.csvReader = this.config.createCSVReaderBuilder(this.streamReader, csvParser).build();
 
     if (this.config.firstRowAsHeader()) {
