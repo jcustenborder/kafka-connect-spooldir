@@ -1,4 +1,4 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;

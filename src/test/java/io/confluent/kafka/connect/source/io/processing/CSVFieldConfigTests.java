@@ -1,6 +1,7 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
+import io.confluent.kafka.connect.source.io.processing.CSVFieldConfig;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;

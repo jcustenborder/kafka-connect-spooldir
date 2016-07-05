@@ -1,6 +1,8 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
+import io.confluent.kafka.connect.source.io.processing.CSVRecordProcessor;
+import io.confluent.kafka.connect.source.io.processing.CSVRecordProcessorConfig;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,7 +1,6 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 import com.google.common.collect.ImmutableList;

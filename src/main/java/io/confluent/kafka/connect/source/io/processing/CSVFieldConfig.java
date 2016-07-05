@@ -1,4 +1,4 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.base.Preconditions;
 import org.apache.kafka.common.config.AbstractConfig;

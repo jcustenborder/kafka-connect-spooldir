@@ -1,4 +1,4 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import org.apache.kafka.connect.source.SourceRecord;
 

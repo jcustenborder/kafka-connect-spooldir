@@ -1,4 +1,4 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.base.Joiner;
 import com.opencsv.CSVParser;

@@ -1,4 +1,4 @@
-package io.confluent.kafka.connect.source.io;
+package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.data.Schema;
