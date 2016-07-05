@@ -6,6 +6,7 @@ import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class DirectoryMonitorConfig extends AbstractConfig {
 
   public static final String RECORD_PROCESSOR_CLASS_CONF = "record.processor.class";

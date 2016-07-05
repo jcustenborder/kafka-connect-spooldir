@@ -23,18 +23,18 @@ import java.util.Map;
 
 public class CSVRecordProcessor implements RecordProcessor {
   private static final Logger log = LoggerFactory.getLogger(CSVRecordProcessor.class);
-  CSVRecordProcessorConfig config;
-  CSVParser csvParser;
-  CSVReader csvReader;
-  InputStreamReader streamReader;
+  private CSVRecordProcessorConfig config;
+  private CSVParser csvParser;
+  private CSVReader csvReader;
+  private InputStreamReader streamReader;
 
-  String[] fieldNames;
-  Schema valueSchema;
-  Schema keySchema;
-  String fileName;
-  Converter converter = new Converter();
+  private String[] fieldNames;
+  private Schema valueSchema;
+  private Schema keySchema;
+  private String fileName;
+  private Converter converter = new Converter();
 
-  Schema buildValueSchema() {
+  private Schema buildValueSchema() {
     SchemaBuilder builder = SchemaBuilder.struct();
 
     for (String field : this.fieldNames) {
@@ -44,7 +44,7 @@ public class CSVRecordProcessor implements RecordProcessor {
     return builder.build();
   }
 
-  Schema buildKeySchema() {
+  private Schema buildKeySchema() {
     SchemaBuilder builder = SchemaBuilder.struct();
 
     for (String key : this.config.keyFields()) {

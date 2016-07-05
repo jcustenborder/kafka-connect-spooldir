@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   public static final String SKIP_LINES_CONF = "skip.lines";
   public static final String SEPARATOR_CHAR_CONF = "separator.char";
@@ -140,8 +141,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
 
   public Charset charset() {
     String value = this.getString(CHARSET_CONF);
-    Charset charset = Charset.forName(value);
-    return charset;
+    return Charset.forName(value);
   }
 
 

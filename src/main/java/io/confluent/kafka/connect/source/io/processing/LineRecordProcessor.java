@@ -21,11 +21,11 @@ public class LineRecordProcessor implements RecordProcessor {
   final static String FIELD_FILENAME = "filename";
   final static String FIELD_LINENUMBER = "linenumber";
   final Schema defaultKeySchema;
-  String inputFileName;
-  InputStream inputStream;
-  InputStreamReader inputStreamReader;
-  LineNumberReader lineNumberReader;
-  LineRecordProcessorConfig config;
+  private String inputFileName;
+  private InputStream inputStream;
+  private InputStreamReader inputStreamReader;
+  private LineNumberReader lineNumberReader;
+  private LineRecordProcessorConfig config;
 
   public LineRecordProcessor() {
     this.defaultKeySchema = SchemaBuilder.struct()
@@ -44,7 +44,7 @@ public class LineRecordProcessor implements RecordProcessor {
   }
 
 
-  public SourceRecord createSourceRecord(
+  private SourceRecord createSourceRecord(
       int lineNumber,
       Map<String, ?> sourcePartition,
       Map<String, ?> sourceOffset,
@@ -55,7 +55,7 @@ public class LineRecordProcessor implements RecordProcessor {
     key.put(FIELD_FILENAME, this.inputFileName);
     key.put(FIELD_LINENUMBER, lineNumber);
 
-    SourceRecord sourceRecord = new SourceRecord(
+    return new SourceRecord(
         sourcePartition,
         sourceOffset,
         topic,
@@ -64,10 +64,9 @@ public class LineRecordProcessor implements RecordProcessor {
         Schema.STRING_SCHEMA,
         line
     );
-    return sourceRecord;
   }
 
-  Map<String, ?> getSourceOffset(int lineNumber) {
+  private Map<String, ?> getSourceOffset(int lineNumber) {
     return ImmutableMap.of(this.inputFileName, lineNumber);
   }
 

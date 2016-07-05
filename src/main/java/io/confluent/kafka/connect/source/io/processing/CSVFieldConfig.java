@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class CSVFieldConfig extends AbstractConfig {
 
   public final static String NAME_CONF = "name";

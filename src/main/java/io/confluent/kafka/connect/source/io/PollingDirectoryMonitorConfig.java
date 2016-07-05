@@ -9,6 +9,7 @@ import java.io.FilenameFilter;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("WeakerAccess")
 public class PollingDirectoryMonitorConfig extends DirectoryMonitorConfig {
 
   public static final String INPUT_PATH_CONFIG = "input.path";

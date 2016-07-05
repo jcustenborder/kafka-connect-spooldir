@@ -5,6 +5,7 @@ import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class RecordProcessorConfig extends AbstractConfig {
 
   public static final String BATCH_SIZE_CONF = "batch.size";

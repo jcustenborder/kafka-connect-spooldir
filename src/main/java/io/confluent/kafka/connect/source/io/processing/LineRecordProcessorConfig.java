@@ -5,6 +5,7 @@ import org.apache.kafka.common.config.ConfigDef;
 import java.nio.charset.Charset;
 import java.util.Map;
 
+@SuppressWarnings("WeakerAccess")
 public class LineRecordProcessorConfig extends RecordProcessorConfig {
 
   public static final String CHARSET_CONF = "charset";
@@ -24,7 +25,6 @@ public class LineRecordProcessorConfig extends RecordProcessorConfig {
 
   public Charset charset() {
     String value = this.getString(CHARSET_CONF);
-    Charset charset = Charset.forName(value);
-    return charset;
+    return Charset.forName(value);
   }
 }

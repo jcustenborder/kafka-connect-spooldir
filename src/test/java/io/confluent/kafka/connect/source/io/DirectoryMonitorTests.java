@@ -1,5 +1,6 @@
 package io.confluent.kafka.connect.source.io;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;

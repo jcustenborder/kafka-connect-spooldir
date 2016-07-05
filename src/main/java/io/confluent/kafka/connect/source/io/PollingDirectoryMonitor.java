@@ -20,20 +20,20 @@ import java.util.Map;
 
 public class PollingDirectoryMonitor implements DirectoryMonitor {
   private static final Logger log = LoggerFactory.getLogger(PollingDirectoryMonitor.class);
-  File inputDirectory;
-  File finishedDirectory;
-  File errorDirectory;
+  private File inputDirectory;
+  private File finishedDirectory;
+  private File errorDirectory;
 
-  Map<?, ?> configValues;
-  PollingDirectoryMonitorConfig config;
-  RecordProcessor recordProcessor;
-  FilenameFilter inputPatternFilter;
-  File inputFile;
-  String inputFileName;
-  InputStream inputStream;
-  boolean hasRecords = false;
+  private Map<?, ?> configValues;
+  private PollingDirectoryMonitorConfig config;
+  private RecordProcessor recordProcessor;
+  private FilenameFilter inputPatternFilter;
+  private File inputFile;
+  private String inputFileName;
+  private InputStream inputStream;
+  private boolean hasRecords = false;
 
-  static void checkDirectory(String key, File directoryPath) {
+  private static void checkDirectory(String key, File directoryPath) {
     if (log.isInfoEnabled()) {
       log.info("Checking if directory {} '{}' exists.",
           key,
@@ -67,7 +67,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     File temporaryFile = null;
 
     try {
-      temporaryFile = File.createTempFile(".permissings", ".testing", directoryPath);
+      temporaryFile = File.createTempFile(".permission", ".testing", directoryPath);
     } catch (IOException ex) {
       throw new ConnectException(
           errorMessage,
@@ -105,7 +105,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     }
   }
 
-  void closeAndMoveToFinished(File outputDirectory) throws IOException {
+  private void closeAndMoveToFinished(File outputDirectory) throws IOException {
     if (null != inputStream) {
       if (log.isInfoEnabled()) {
         log.info("Closing {}", this.inputFile);

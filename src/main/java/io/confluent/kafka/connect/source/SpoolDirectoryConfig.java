@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@SuppressWarnings("WeakerAccess")
 public class SpoolDirectoryConfig extends AbstractConfig {
 
   public static final String INPUT_DIRECTORY_PATH_CONFIG = "input.directory.path";
