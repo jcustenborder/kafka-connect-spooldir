@@ -2,7 +2,6 @@ package io.confluent.kafka.connect.source.io;
 
 import com.google.common.base.Preconditions;
 import com.google.common.io.PatternFilenameFilter;
-import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.io.File;
@@ -13,16 +12,17 @@ import java.util.regex.Pattern;
 public class PollingDirectoryMonitorConfig extends DirectoryMonitorConfig {
 
   public static final String INPUT_PATH_CONFIG = "input.path";
-  static final String INPUT_PATH_DOC = "Input path to read files from.";
-
   public static final String FINISHED_PATH_CONFIG = "finished.path";
-  static final String FINISHED_PATH_DOC = "The directory to place finished";
-
   public static final String ERROR_PATH_CONFIG = "error.path";
+  public static final String INPUT_FILE_PATTERN_CONF = "input.file.pattern";
+  static final String INPUT_PATH_DOC = "Input path to read files from.";
+  static final String FINISHED_PATH_DOC = "The directory to place finished";
   static final String ERROR_PATH_DOC = "The directory to place files that have error(s).";
+  static final String INPUT_FILE_PATTERN_DOC = "Regular expression to check input file names against.";
 
-  public static final String INPUT_FILE_PATTERN_CONF="input.file.pattern";
-  static final String INPUT_FILE_PATTERN_DOC="Regular expression to check input file names against.";
+  public PollingDirectoryMonitorConfig(Map<?, ?> originals) {
+    super(getConf(), originals);
+  }
 
   public static ConfigDef getConf() {
     return DirectoryMonitorConfig.getConf()
@@ -31,10 +31,6 @@ public class PollingDirectoryMonitorConfig extends DirectoryMonitorConfig {
         .define(ERROR_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, ERROR_PATH_DOC)
         .define(INPUT_FILE_PATTERN_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, INPUT_FILE_PATTERN_DOC)
         ;
-  }
-
-  public PollingDirectoryMonitorConfig(Map<?, ?> originals) {
-    super(getConf(), originals);
   }
 
   File getFile(String key) {
@@ -52,7 +48,7 @@ public class PollingDirectoryMonitorConfig extends DirectoryMonitorConfig {
     return getFile(FINISHED_PATH_CONFIG);
   }
 
-  public File errorPath(){
+  public File errorPath() {
     return getFile(ERROR_PATH_CONFIG);
   }
 

@@ -1,14 +1,13 @@
 package io.confluent.kafka.connect.source;
 
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.source.SourceConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
 
 public class SpoolDirectoryConnector extends SourceConnector {
   private static Logger log = LoggerFactory.getLogger(SpoolDirectoryConnector.class);

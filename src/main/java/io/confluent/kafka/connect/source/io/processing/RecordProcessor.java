@@ -9,7 +9,8 @@ import java.util.Map;
 
 public interface RecordProcessor extends AutoCloseable {
   void configure(Map<?, ?> configValues,
-      InputStream inputStream,
-      String fileName) throws IOException;
+                 InputStream inputStream,
+                 String fileName) throws IOException;
+
   List<SourceRecord> poll() throws IOException;
 }

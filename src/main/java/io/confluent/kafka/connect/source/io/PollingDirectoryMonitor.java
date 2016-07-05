@@ -25,6 +25,12 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
 
   Map<?, ?> configValues;
   PollingDirectoryMonitorConfig config;
+  RecordProcessor recordProcessor;
+  FilenameFilter inputPatternFilter;
+  File inputFile;
+  String inputFileName;
+  InputStream inputStream;
+  boolean hasRecords = false;
 
   static void checkDirectory(String key, File directoryPath) {
     if (log.isInfoEnabled()) {
@@ -79,8 +85,6 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     }
   }
 
-  RecordProcessor recordProcessor;
-
   @Override
   public void configure(Map<?, ?> configValues) {
     this.configValues = configValues;
@@ -100,14 +104,8 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     }
   }
 
-  FilenameFilter inputPatternFilter;
-  File inputFile;
-  String inputFileName;
-  InputStream inputStream;
-  boolean hasRecords = false;
-
   void closeAndMoveToFinished() throws IOException {
-    if(null!=inputStream){
+    if (null != inputStream) {
       if (log.isInfoEnabled()) {
         log.info("Closing {}", this.inputFile);
       }
@@ -116,7 +114,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
 
       File finishedFile = new File(this.finishedDirectory, this.inputFile.getName());
 
-      if(log.isInfoEnabled()){
+      if (log.isInfoEnabled()) {
         log.info("Finished processing {} moving to {}.", this.inputFile);
       }
 
@@ -137,7 +135,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
         this.inputFile = files[0];
         this.inputFileName = Files.getNameWithoutExtension(this.inputFile.getName());
         try {
-          if(log.isInfoEnabled()){
+          if (log.isInfoEnabled()) {
             log.info("Opening {}", this.inputFile);
           }
           this.inputStream = new FileInputStream(this.inputFile);

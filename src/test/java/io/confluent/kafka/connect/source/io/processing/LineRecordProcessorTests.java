@@ -1,9 +1,9 @@
 package io.confluent.kafka.connect.source.io.processing;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
-import com.google.common.collect.ImmutableList;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -25,13 +25,13 @@ public class LineRecordProcessorTests {
   LineRecordProcessor lineRecordProcessor;
 
   @Before
-  public void setup(){
+  public void setup() {
     this.lineRecordProcessor = new LineRecordProcessor();
   }
 
   @Test
   public void poll() throws IOException {
-    final String topic="testing";
+    final String topic = "testing";
     File tempfile = File.createTempFile(LineRecordProcessorTests.class.getSimpleName(), "test");
     tempfile.deleteOnExit();
     String inputFileName = Files.getNameWithoutExtension(tempfile.getName());
@@ -52,8 +52,8 @@ public class LineRecordProcessorTests {
     Files.asCharSink(tempfile, Charset.defaultCharset(), FileWriteMode.APPEND).writeLines(testLines);
 
     List<SourceRecord> expectedRecords = new ArrayList<>();
-    int lineNumber=1;
-    for(String line:testLines) {
+    int lineNumber = 1;
+    for (String line : testLines) {
       Struct key = new Struct(this.lineRecordProcessor.defaultKeySchema);
       key.put(LineRecordProcessor.FIELD_FILENAME, tempfile.getName());
       key.put(LineRecordProcessor.FIELD_LINENUMBER, lineNumber);
@@ -76,12 +76,12 @@ public class LineRecordProcessorTests {
       lineNumber++;
     }
 
-    Map<? ,?> settings = ImmutableMap.of(
+    Map<?, ?> settings = ImmutableMap.of(
         RecordProcessorConfig.TOPIC_CONF, topic
     );
 
     List<SourceRecord> actualRecords;
-    try(FileInputStream inputStream = new FileInputStream(tempfile)) {
+    try (FileInputStream inputStream = new FileInputStream(tempfile)) {
       this.lineRecordProcessor.configure(settings, inputStream, inputFileName);
       actualRecords = this.lineRecordProcessor.poll();
     }

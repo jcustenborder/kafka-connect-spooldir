@@ -16,9 +16,29 @@ import java.util.Map;
 
 public class CSVFieldConfig extends AbstractConfig {
 
+  static final String LOGICAL_TYPE_DEFAULT = "none";
+  static final String[] LOGICAL_TYPE_VALID = logicalTypes();
+  static final String DECIMAL_SCALE_DOC = "The scale value for a decimal.";
+  static final Integer DECIMAL_SCALE_DEFAULT = 10;
+  static final String REQUIRED_DOC = "Flag to determine if field is required and can accept nulls.";
+  public static String NAME_CONF = "name";
+  public static String SCHEMA_TYPE_CONF = "schema.type";
+  public static String LOGICAL_TYPE_CONF = "logical.type";
+  public static String DECIMAL_SCALE_CONF = "decimal.scale";
+  public static String REQUIRED_CONF = "required";
+  static String NAME_DOC = "Name of the field.";
+  static String SCHEMA_TYPE_DOC = "type";
+  static String SCHEMA_TYPE_DEFAULT = ConfigDef.Type.STRING.name();
+  static String[] SCHEMA_TYPE_VALID_VALUES = types();
+  static String LOGICAL_TYPE_DOC = "logical type.";
+  static boolean REQUIRED_DEFAULT = false;
+  public CSVFieldConfig(Map<?, ?> originals) {
+    super(conf(), originals);
+  }
+
   static String[] types() {
     List<String> types = new ArrayList<>();
-    for(Schema.Type type:Schema.Type.values()){
+    for (Schema.Type type : Schema.Type.values()) {
       types.add(type.name());
     }
     types.remove(Schema.Type.ARRAY.name());
@@ -31,50 +51,13 @@ public class CSVFieldConfig extends AbstractConfig {
 
   static String[] logicalTypes() {
     List<String> types = new ArrayList<>();
-    for(LogicalType logicalType:LogicalType.values()){
+    for (LogicalType logicalType : LogicalType.values()) {
       types.add(logicalType.name());
     }
     String[] typeArray = new String[types.size()];
 
     return types.toArray(typeArray);
   }
-
-  public void addField(SchemaBuilder builder) {
-    Preconditions.checkState(Schema.Type.STRUCT == builder.type(), "Only structs are supported.");
-    builder.field(name(), schema());
-  }
-
-  public enum LogicalType{
-    none,
-    decimal,
-    time,
-    timestamp,
-    date
-  }
-
-
-  public static String NAME_CONF="name";
-  static String NAME_DOC="Name of the field.";
-
-
-  public static String SCHEMA_TYPE_CONF ="schema.type";
-  static String SCHEMA_TYPE_DOC ="type";
-  static String SCHEMA_TYPE_DEFAULT =ConfigDef.Type.STRING.name();
-  static String[] SCHEMA_TYPE_VALID_VALUES = types();
-
-  public static String LOGICAL_TYPE_CONF="logical.type";
-  static String LOGICAL_TYPE_DOC="logical type.";
-  static final String LOGICAL_TYPE_DEFAULT="none";
-  static final String[] LOGICAL_TYPE_VALID=logicalTypes();
-
-  public static String DECIMAL_SCALE_CONF="decimal.scale";
-  static final String DECIMAL_SCALE_DOC="The scale value for a decimal.";
-  static final Integer DECIMAL_SCALE_DEFAULT=10;
-
-  public static String REQUIRED_CONF ="required";
-  static final String REQUIRED_DOC ="Flag to determine if field is required and can accept nulls.";
-  static boolean REQUIRED_DEFAULT=false;
-
 
   public static ConfigDef conf() {
     return new ConfigDef()
@@ -86,20 +69,21 @@ public class CSVFieldConfig extends AbstractConfig {
         ;
   }
 
-  public CSVFieldConfig(Map<?, ?> originals) {
-    super(conf(), originals);
+  public void addField(SchemaBuilder builder) {
+    Preconditions.checkState(Schema.Type.STRUCT == builder.type(), "Only structs are supported.");
+    builder.field(name(), schema());
   }
-  
-  public String name(){
+
+  public String name() {
     return this.getString(NAME_CONF);
   }
-  
+
   public Schema.Type schemaType() {
     String value = this.getString(SCHEMA_TYPE_CONF);
     return Schema.Type.valueOf(value);
   }
-  
-  public LogicalType logicalType(){
+
+  public LogicalType logicalType() {
     String value = this.getString(LOGICAL_TYPE_CONF);
     return LogicalType.valueOf(value);
   }
@@ -108,14 +92,14 @@ public class CSVFieldConfig extends AbstractConfig {
     return this.getInt(DECIMAL_SCALE_CONF);
   }
 
-  public boolean required(){
+  public boolean required() {
     return this.getBoolean(REQUIRED_CONF);
   }
 
   public Schema schema() {
     SchemaBuilder builder;
 
-    switch (logicalType()){
+    switch (logicalType()) {
       case decimal:
         builder = Decimal.builder(decimalScale());
         break;
@@ -140,11 +124,19 @@ public class CSVFieldConfig extends AbstractConfig {
         );
     }
 
-    if(!required()){
+    if (!required()) {
       builder = builder.optional();
     }
 
     return builder.build();
   }
-  
+
+  public enum LogicalType {
+    none,
+    decimal,
+    time,
+    timestamp,
+    date
+  }
+
 }

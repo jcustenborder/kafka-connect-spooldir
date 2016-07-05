@@ -8,14 +8,8 @@ import java.util.Map;
 
 public class DirectoryMonitorConfig extends AbstractConfig {
 
-  public static final String RECORD_PROCESSOR_CLASS_CONF="record.processor.class";
-  static final String RECORD_PROCESSOR_CLASS_DOC="Record Processor to use.";
-
-  public static ConfigDef getConf() {
-    return new ConfigDef()
-        .define(RECORD_PROCESSOR_CLASS_CONF, ConfigDef.Type.CLASS, ConfigDef.Importance.HIGH, RECORD_PROCESSOR_CLASS_DOC)
-        ;
-  }
+  public static final String RECORD_PROCESSOR_CLASS_CONF = "record.processor.class";
+  static final String RECORD_PROCESSOR_CLASS_DOC = "Record Processor to use.";
 
   public DirectoryMonitorConfig(ConfigDef configDef, Map<?, ?> originals) {
     super(configDef, originals);
@@ -25,8 +19,14 @@ public class DirectoryMonitorConfig extends AbstractConfig {
     this(getConf(), originals);
   }
 
+  public static ConfigDef getConf() {
+    return new ConfigDef()
+        .define(RECORD_PROCESSOR_CLASS_CONF, ConfigDef.Type.CLASS, ConfigDef.Importance.HIGH, RECORD_PROCESSOR_CLASS_DOC)
+        ;
+  }
+
   Class<RecordProcessor> recordProcessor() {
-    return (Class<RecordProcessor>)this.getClass(RECORD_PROCESSOR_CLASS_CONF);
+    return (Class<RecordProcessor>) this.getClass(RECORD_PROCESSOR_CLASS_CONF);
   }
 
 

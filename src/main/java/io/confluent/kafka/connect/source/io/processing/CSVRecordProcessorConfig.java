@@ -13,61 +13,49 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVRecordProcessorConfig extends RecordProcessorConfig {
-  static final String[] nullFieldIndicatorValues;
-
-  static {
-    nullFieldIndicatorValues= new String[CSVReaderNullFieldIndicator.values().length];
-    for(int i=0;i<CSVReaderNullFieldIndicator.values().length;i++){
-      nullFieldIndicatorValues[i]=CSVReaderNullFieldIndicator.values()[i].name();
-    }
-  }
-
   public static final String SKIP_LINES_CONF = "skip.lines";
+  public static final String SEPARATOR_CHAR_CONF = "separator.char";
+  public static final String QUOTE_CHAR_CONF = "quote.char";
+  public static final String ESCAPE_CHAR_CONF = "escape.char";
+  public static final String STRICT_QUOTES_CONF = "strict.quotes";
+  public static final String IGNORE_LEADING_WHITESPACE_CONF = "ignore.leading.whitespace";
+  public static final String IGNORE_QUOTATIONS_CONF = "ignore.quotations";
+  public static final String KEEP_CARRIAGE_RETURN_CONF = "keep.carriage.return";
+  public static final String VERIFY_READER_CONF = "verify.reader";
+  public static final String NULL_FIELD_INDICATOR_CONF = "null.field.indicator";
+  public static final String KEY_FIELDS_CONF = "key.fields";
+  public static final String FIRST_ROW_AS_HEADER_CONF = "first.row.as.header";
+  static final String[] nullFieldIndicatorValues;
   static final String SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
-
-  public static final String SEPARATOR_CHAR_CONF = "separator.char";
   static final String SEPARATOR_CHAR_DOC = "Separator character.";
-  static final int SEPARATOR_CHAR_DEFAULT = (int)CSVParser.DEFAULT_SEPARATOR;
-
-  public static final String QUOTE_CHAR_CONF = "quote.char";
+  static final int SEPARATOR_CHAR_DEFAULT = (int) CSVParser.DEFAULT_SEPARATOR;
   static final String QUOTE_CHAR_DOC = "Quote character.";
-  static final int QUOTE_CHAR_DEFAULT = (int)CSVParser.DEFAULT_QUOTE_CHARACTER;
-
-  public static final String ESCAPE_CHAR_CONF = "escape.char";
+  static final int QUOTE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_QUOTE_CHARACTER;
   static final String ESCAPE_CHAR_DOC = "Escape character.";
-  static final int ESCAPE_CHAR_DEFAULT = (int)CSVParser.DEFAULT_ESCAPE_CHARACTER;
-
-  public static final String STRICT_QUOTES_CONF = "strict.quotes";
+  static final int ESCAPE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_ESCAPE_CHARACTER;
   static final String STRICT_QUOTES_DOC = "strict quotes.";
   static final boolean STRICT_QUOTES_DEFAULT = CSVParser.DEFAULT_STRICT_QUOTES;
-
-  public static final String IGNORE_LEADING_WHITESPACE_CONF = "ignore.leading.whitespace";
   static final String IGNORE_LEADING_WHITESPACE_DOC = "ignore_leading_whitespace character.";
   static final boolean IGNORE_LEADING_WHITESPACE_DEFAULT = CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
-
-  public static final String IGNORE_QUOTATIONS_CONF = "ignore.quotations";
   static final String IGNORE_QUOTATIONS_DOC = "ignore_quotations character.";
   static final boolean IGNORE_QUOTATIONS_DEFAULT = CSVParser.DEFAULT_IGNORE_QUOTATIONS;
-
-  public static final String KEEP_CARRIAGE_RETURN_CONF = "keep.carriage.return";
   static final String KEEP_CARRIAGE_RETURN_DOC = "Flag to determine if the carriage return at the end of the line should be maintained.";
   static final boolean KEEP_CARRIAGE_RETURN_DEFAULT = CSVReader.DEFAULT_KEEP_CR;
-
-  public static final String VERIFY_READER_CONF = "verify.reader";
   static final String VERIFY_READER_DOC = "Flag to determine if the reader should be verified.";
   static final boolean VERIFY_READER_DEFAULT = CSVReader.DEFAULT_VERIFY_READER;
-
-  public static final String NULL_FIELD_INDICATOR_CONF="null.field.indicator";
   static final String NULL_FIELD_INDICATOR_DOC = "Flag to determine if the reader should be verified. Valid values are " + Joiner.on(", ").join(nullFieldIndicatorValues);
   static final String NULL_FIELD_INDICATOR_DEFAULT = CSVParser.DEFAULT_NULL_FIELD_INDICATOR.name();
-
-  public static final String KEY_FIELDS_CONF = "key.fields";
   static final String KEY_FIELDS_DOC = "The fields that should be used as a key for the message.";
+  static final String FIRST_ROW_AS_HEADER_DOC = "Flag to indicate if the fist row of data contains the header of the file.";
+  static final boolean FIRST_ROW_AS_HEADER_DEFAULT = false;
 
-  public static final String FIRST_ROW_AS_HEADER_CONF ="first.row.as.header";
-  static final String FIRST_ROW_AS_HEADER_DOC ="Flag to indicate if the fist row of data contains the header of the file.";
-  static final boolean FIRST_ROW_AS_HEADER_DEFAULT =false;
+  static {
+    nullFieldIndicatorValues = new String[CSVReaderNullFieldIndicator.values().length];
+    for (int i = 0; i < CSVReaderNullFieldIndicator.values().length; i++) {
+      nullFieldIndicatorValues[i] = CSVReaderNullFieldIndicator.values()[i].name();
+    }
+  }
 
 
   public CSVRecordProcessorConfig(Map<?, ?> originals) {
@@ -125,7 +113,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   }
 
   public boolean keepCarriageReturn() {
-    return  this.getBoolean(KEEP_CARRIAGE_RETURN_CONF);
+    return this.getBoolean(KEEP_CARRIAGE_RETURN_CONF);
   }
 
   public boolean verifyReader() {
@@ -167,7 +155,6 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
         .withFieldAsNull(nullFieldIndicator())
         ;
   }
-
 
 
 }

@@ -18,16 +18,14 @@ import java.util.Map;
  * Record processor reads file line by line.
  */
 public class LineRecordProcessor implements RecordProcessor {
+  final static String FIELD_FILENAME = "filename";
+  final static String FIELD_LINENUMBER = "linenumber";
+  final Schema defaultKeySchema;
   String inputFileName;
   InputStream inputStream;
   InputStreamReader inputStreamReader;
   LineNumberReader lineNumberReader;
   LineRecordProcessorConfig config;
-
-  final Schema defaultKeySchema;
-
-  final static String FIELD_FILENAME="filename";
-  final static String FIELD_LINENUMBER="linenumber";
 
   public LineRecordProcessor() {
     this.defaultKeySchema = SchemaBuilder.struct()
@@ -69,23 +67,22 @@ public class LineRecordProcessor implements RecordProcessor {
     return sourceRecord;
   }
 
-  Map<String, ?> getSourceOffset(int lineNumber){
+  Map<String, ?> getSourceOffset(int lineNumber) {
     return ImmutableMap.of(this.inputFileName, lineNumber);
   }
 
 
-
   @Override
-  public List<SourceRecord> poll() throws IOException{
+  public List<SourceRecord> poll() throws IOException {
     List<SourceRecord> sourceRecords = new ArrayList<>();
 
     String line;
 
     Map<String, ?> sourcePartitions = ImmutableMap.of();
-    while((line = this.lineNumberReader.readLine())!=null){
+    while ((line = this.lineNumberReader.readLine()) != null) {
       int lineNumber = this.lineNumberReader.getLineNumber();
       Map<String, ?> sourceOffsets = getSourceOffset(lineNumber);
-      SourceRecord sourceRecord=createSourceRecord(
+      SourceRecord sourceRecord = createSourceRecord(
           lineNumber,
           sourcePartitions,
           sourceOffsets,

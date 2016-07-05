@@ -1,7 +1,6 @@
 package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
-import io.confluent.kafka.connect.source.io.processing.CSVFieldConfig;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
@@ -113,8 +112,8 @@ public class CSVFieldConfigTests {
   }
 
   @Test
-  public void field(){
-    final String fieldName="fieldName";
+  public void field() {
+    final String fieldName = "fieldName";
     Map<?, ?> settings = ImmutableMap.of(
         CSVFieldConfig.NAME_CONF, fieldName,
         CSVFieldConfig.SCHEMA_TYPE_CONF, Schema.Type.INT64.name(),
@@ -126,7 +125,6 @@ public class CSVFieldConfigTests {
     Field field = builder.field(fieldName);
     Assert.assertNotNull(field);
     Assert.assertThat(fieldName, IsEqual.equalTo(field.name()));
-
 
 
   }

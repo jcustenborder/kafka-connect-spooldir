@@ -2,7 +2,6 @@ package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVParserBuilder;
-import io.confluent.kafka.connect.source.io.processing.CSVRecordProcessorConfig;
 import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;

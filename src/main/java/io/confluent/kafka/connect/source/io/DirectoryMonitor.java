@@ -7,5 +7,6 @@ import java.util.Map;
 
 public interface DirectoryMonitor {
   void configure(Map<?, ?> config);
+
   List<SourceRecord> poll();
 }

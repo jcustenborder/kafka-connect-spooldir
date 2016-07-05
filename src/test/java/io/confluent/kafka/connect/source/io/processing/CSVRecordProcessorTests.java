@@ -1,8 +1,6 @@
 package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
-import io.confluent.kafka.connect.source.io.processing.CSVRecordProcessor;
-import io.confluent.kafka.connect.source.io.processing.CSVRecordProcessorConfig;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,7 +17,7 @@ public class CSVRecordProcessorTests {
   CSVRecordProcessor csvRecordProcessor;
 
   @Before
-  public void setup(){
+  public void setup() {
     this.csvRecordProcessor = new CSVRecordProcessor();
   }
 
@@ -32,9 +30,9 @@ public class CSVRecordProcessorTests {
     );
     this.csvRecordProcessorConfig = new CSVRecordProcessorConfig(configs);
 
-    final String fileName="Testing";
+    final String fileName = "Testing";
 
-    try(InputStream inputStream = this.getClass().getResourceAsStream("MOCK_DATA.csv")){
+    try (InputStream inputStream = this.getClass().getResourceAsStream("MOCK_DATA.csv")) {
       this.csvRecordProcessor.configure(configs, inputStream, fileName);
 
       List<SourceRecord> results = this.csvRecordProcessor.poll();
@@ -44,7 +42,6 @@ public class CSVRecordProcessorTests {
     }
 
   }
-
 
 
 }

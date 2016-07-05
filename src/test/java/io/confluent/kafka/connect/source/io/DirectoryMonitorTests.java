@@ -24,6 +24,12 @@ import java.util.Map;
 
 public class DirectoryMonitorTests {
 
+  File tempDirectory;
+  File inputDirectory;
+  File errorDirectory;
+  File finishedDirectory;
+  Map<String, String> settings;
+
   @Test(expected = ConnectException.class)
   public void configure_MissingDirectories() {
     Map<?, ?> settings = ImmutableMap.of(
@@ -38,14 +44,8 @@ public class DirectoryMonitorTests {
     monitor.configure(settings);
   }
 
-  File tempDirectory;
-  File inputDirectory;
-  File errorDirectory;
-  File finishedDirectory;
-  Map<String, String> settings;
-
   @Before
-  public void before(){
+  public void before() {
     this.tempDirectory = Files.createTempDir();
     this.inputDirectory = new File(tempDirectory, "input");
     this.inputDirectory.mkdirs();
@@ -53,7 +53,7 @@ public class DirectoryMonitorTests {
     this.errorDirectory.mkdirs();
     this.finishedDirectory = new File(tempDirectory, "finished");
     this.finishedDirectory.mkdirs();
-    
+
     this.settings = new HashMap<>();
 
     this.settings.put(PollingDirectoryMonitorConfig.INPUT_PATH_CONFIG, inputDirectory.getAbsolutePath());
@@ -67,7 +67,7 @@ public class DirectoryMonitorTests {
   }
 
   @Test
-  public void configure(){
+  public void configure() {
     PollingDirectoryMonitor monitor = new PollingDirectoryMonitor();
     monitor.configure(settings);
   }
@@ -87,14 +87,14 @@ public class DirectoryMonitorTests {
     monitor.configure(settings);
 
     File inputFile = new File(this.inputDirectory, "input.csv");
-    try(FileOutputStream outputStream=new FileOutputStream(inputFile)){
-      try(InputStream inputStream = Data.getMockData()){
+    try (FileOutputStream outputStream = new FileOutputStream(inputFile)) {
+      try (InputStream inputStream = Data.getMockData()) {
         ByteStreams.copy(inputStream, outputStream);
       }
     }
 
     List<SourceRecord> results;
-    for(int i=0;i<10;i++) {
+    for (int i = 0; i < 10; i++) {
       results = monitor.poll();
       Assert.assertNotNull(results);
       Assert.assertFalse(results.isEmpty());

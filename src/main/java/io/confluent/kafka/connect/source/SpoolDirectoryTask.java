@@ -1,13 +1,10 @@
 package io.confluent.kafka.connect.source;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.Files;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +23,6 @@ public class SpoolDirectoryTask extends SourceTask {
 
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
-
 
 
     //TODO: Create SourceRecord objects that will be sent the kafka cluster.
