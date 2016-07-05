@@ -151,8 +151,8 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     } catch (IOException ex) {
       try {
         closeAndMoveToFinished(this.errorDirectory);
-      } catch (IOException ex0){
-        if(log.isErrorEnabled()){
+      } catch (IOException ex0) {
+        if (log.isErrorEnabled()) {
           log.error("Exception thrown while moving {} to {}", this.inputFile, this.errorDirectory, ex0);
         }
       }

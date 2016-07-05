@@ -26,6 +26,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   public static final String NULL_FIELD_INDICATOR_CONF = "null.field.indicator";
   public static final String KEY_FIELDS_CONF = "key.fields";
   public static final String FIRST_ROW_AS_HEADER_CONF = "first.row.as.header";
+  public static final String CHARSET_CONF = "charset";
   //  static final String[] nullFieldIndicatorValues;
   static final String SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
@@ -50,8 +51,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   static final String KEY_FIELDS_DOC = "The fields that should be used as a key for the message.";
   static final String FIRST_ROW_AS_HEADER_DOC = "Flag to indicate if the fist row of data contains the header of the file.";
   static final boolean FIRST_ROW_AS_HEADER_DEFAULT = false;
-  public static final String CHARSET_CONF ="charset";
-  static final String CHARSET_DOC ="Character set to read wth file with.";
+  static final String CHARSET_DOC = "Character set to read wth file with.";
   static final String CHARSET_DEFAULT = Charset.defaultCharset().name();
 
   public CSVRecordProcessorConfig(Map<?, ?> originals) {

@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class LineRecordProcessorConfig extends RecordProcessorConfig {
 
-  public static final String CHARSET_CONF ="charset";
-  static final String CHARSET_DOC ="Character set to read wth file with.";
+  public static final String CHARSET_CONF = "charset";
+  static final String CHARSET_DOC = "Character set to read wth file with.";
   static final String CHARSET_DEFAULT = Charset.defaultCharset().name();
 
 
