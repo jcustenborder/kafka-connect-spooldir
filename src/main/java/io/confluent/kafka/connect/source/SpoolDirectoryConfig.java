@@ -1,11 +1,11 @@
 package io.confluent.kafka.connect.source;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Importance;
 import org.apache.kafka.common.config.ConfigDef.Type;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +16,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public static final String INPUT_DIRECTORY_PATH_DOC = "The input directory the connector should read from.";
   public static final String INPUT_FILE_MASK_CONFIG = "input.mask";
   public static final String INPUT_FILE_MASK_DOC = "The file mask of the input file set.";
-  public static final List<String> INPUT_FILE_MASK_DEFAULT = Arrays.asList("*.txt");
+  public static final List<String> INPUT_FILE_MASK_DEFAULT = ImmutableList.of("*.txt");
   public static final String COMPLETE_DIRECTORY_PATH_CONFIG = "complete.directory.path";
   public static final String COMPLETE_DIRECTORY_PATH_DOC = "The directory completed files should me moved to.";
   public static final String COMPLETE_FILE_EXTENSION_CONFIG = "complete.extension";

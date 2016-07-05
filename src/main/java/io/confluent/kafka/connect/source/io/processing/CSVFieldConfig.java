@@ -16,22 +16,23 @@ import java.util.Map;
 
 public class CSVFieldConfig extends AbstractConfig {
 
+`  public final static String NAME_CONF = "name";
+  public final static String SCHEMA_TYPE_CONF = "schema.type";
+  public final static String LOGICAL_TYPE_CONF = "logical.type";
+  public final static String DECIMAL_SCALE_CONF = "decimal.scale";
+  public final static String REQUIRED_CONF = "required";
   static final String LOGICAL_TYPE_DEFAULT = "none";
   static final String[] LOGICAL_TYPE_VALID = logicalTypes();
   static final String DECIMAL_SCALE_DOC = "The scale value for a decimal.";
   static final Integer DECIMAL_SCALE_DEFAULT = 10;
   static final String REQUIRED_DOC = "Flag to determine if field is required and can accept nulls.";
-  public static String NAME_CONF = "name";
-  public static String SCHEMA_TYPE_CONF = "schema.type";
-  public static String LOGICAL_TYPE_CONF = "logical.type";
-  public static String DECIMAL_SCALE_CONF = "decimal.scale";
-  public static String REQUIRED_CONF = "required";
   static String NAME_DOC = "Name of the field.";
   static String SCHEMA_TYPE_DOC = "type";
   static String SCHEMA_TYPE_DEFAULT = ConfigDef.Type.STRING.name();
   static String[] SCHEMA_TYPE_VALID_VALUES = types();
   static String LOGICAL_TYPE_DOC = "logical type.";
   static boolean REQUIRED_DEFAULT = false;
+
   public CSVFieldConfig(Map<?, ?> originals) {
     super(conf(), originals);
   }

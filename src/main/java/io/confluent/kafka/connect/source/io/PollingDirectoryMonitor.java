@@ -129,7 +129,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
         closeAndMoveToFinished();
 
         File[] files = this.inputDirectory.listFiles(this.inputPatternFilter);
-        if (files.length == 0) {
+        if (null == files || files.length == 0) {
           return new ArrayList<>();
         }
         this.inputFile = files[0];

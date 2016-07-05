@@ -25,7 +25,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   public static final String NULL_FIELD_INDICATOR_CONF = "null.field.indicator";
   public static final String KEY_FIELDS_CONF = "key.fields";
   public static final String FIRST_ROW_AS_HEADER_CONF = "first.row.as.header";
-  static final String[] nullFieldIndicatorValues;
+  //  static final String[] nullFieldIndicatorValues;
   static final String SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
   static final String SEPARATOR_CHAR_DOC = "Separator character.";
@@ -44,22 +44,22 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   static final boolean KEEP_CARRIAGE_RETURN_DEFAULT = CSVReader.DEFAULT_KEEP_CR;
   static final String VERIFY_READER_DOC = "Flag to determine if the reader should be verified.";
   static final boolean VERIFY_READER_DEFAULT = CSVReader.DEFAULT_VERIFY_READER;
-  static final String NULL_FIELD_INDICATOR_DOC = "Flag to determine if the reader should be verified. Valid values are " + Joiner.on(", ").join(nullFieldIndicatorValues);
+  static final String NULL_FIELD_INDICATOR_DOC = "Flag to determine if the reader should be verified. Valid values are " + Joiner.on(", ").join(nullFieldIndicatorValues());
   static final String NULL_FIELD_INDICATOR_DEFAULT = CSVParser.DEFAULT_NULL_FIELD_INDICATOR.name();
   static final String KEY_FIELDS_DOC = "The fields that should be used as a key for the message.";
   static final String FIRST_ROW_AS_HEADER_DOC = "Flag to indicate if the fist row of data contains the header of the file.";
   static final boolean FIRST_ROW_AS_HEADER_DEFAULT = false;
 
-  static {
-    nullFieldIndicatorValues = new String[CSVReaderNullFieldIndicator.values().length];
-    for (int i = 0; i < CSVReaderNullFieldIndicator.values().length; i++) {
-      nullFieldIndicatorValues[i] = CSVReaderNullFieldIndicator.values()[i].name();
-    }
-  }
-
-
   public CSVRecordProcessorConfig(Map<?, ?> originals) {
     super(getConf(), originals);
+  }
+
+  static String[] nullFieldIndicatorValues() {
+    String[] result = new String[CSVReaderNullFieldIndicator.values().length];
+    for (int i = 0; i < CSVReaderNullFieldIndicator.values().length; i++) {
+      result[i] = CSVReaderNullFieldIndicator.values()[i].name();
+    }
+    return result;
   }
 
   public static ConfigDef getConf() {
@@ -73,7 +73,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
         .define(IGNORE_QUOTATIONS_CONF, ConfigDef.Type.BOOLEAN, IGNORE_QUOTATIONS_DEFAULT, ConfigDef.Importance.LOW, IGNORE_QUOTATIONS_DOC)
         .define(KEEP_CARRIAGE_RETURN_CONF, ConfigDef.Type.BOOLEAN, KEEP_CARRIAGE_RETURN_DEFAULT, ConfigDef.Importance.LOW, KEEP_CARRIAGE_RETURN_DOC)
         .define(VERIFY_READER_CONF, ConfigDef.Type.BOOLEAN, VERIFY_READER_DEFAULT, ConfigDef.Importance.LOW, VERIFY_READER_DOC)
-        .define(NULL_FIELD_INDICATOR_CONF, ConfigDef.Type.STRING, NULL_FIELD_INDICATOR_DEFAULT, ConfigDef.ValidString.in(nullFieldIndicatorValues), ConfigDef.Importance.LOW, NULL_FIELD_INDICATOR_DOC)
+        .define(NULL_FIELD_INDICATOR_CONF, ConfigDef.Type.STRING, NULL_FIELD_INDICATOR_DEFAULT, ConfigDef.ValidString.in(nullFieldIndicatorValues()), ConfigDef.Importance.LOW, NULL_FIELD_INDICATOR_DOC)
         .define(KEY_FIELDS_CONF, ConfigDef.Type.LIST, ConfigDef.Importance.HIGH, KEY_FIELDS_DOC)
         .define(FIRST_ROW_AS_HEADER_CONF, ConfigDef.Type.BOOLEAN, FIRST_ROW_AS_HEADER_DEFAULT, ConfigDef.Importance.HIGH, FIRST_ROW_AS_HEADER_DOC)
         ;
