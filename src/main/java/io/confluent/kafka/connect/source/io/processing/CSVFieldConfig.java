@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class CSVFieldConfig extends AbstractConfig {
 
-`  public final static String NAME_CONF = "name";
+  public final static String NAME_CONF = "name";
   public final static String SCHEMA_TYPE_CONF = "schema.type";
   public final static String LOGICAL_TYPE_CONF = "logical.type";
   public final static String DECIMAL_SCALE_CONF = "decimal.scale";
