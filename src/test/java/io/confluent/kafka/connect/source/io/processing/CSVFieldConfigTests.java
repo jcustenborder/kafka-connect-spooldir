@@ -19,7 +19,7 @@ public class CSVFieldConfigTests {
   }
 
   private Schema assertSchema(Map<?, ?> settings, Schema expectedSchema) {
-    CSVFieldConfig config = new CSVFieldConfig(settings);
+    CSVFieldConfig config = new CSVFieldConfig(settings, 0);
     final Schema actualSchema = config.schema();
 
     Assert.assertThat("name should match", actualSchema.name(), IsEqual.equalTo(expectedSchema.name()));
@@ -119,7 +119,7 @@ public class CSVFieldConfigTests {
         CSVFieldConfig.SCHEMA_TYPE_CONF, Schema.Type.INT64.name(),
         CSVFieldConfig.LOGICAL_TYPE_CONF, CSVFieldConfig.LogicalType.decimal.name()
     );
-    CSVFieldConfig config = new CSVFieldConfig(settings);
+    CSVFieldConfig config = new CSVFieldConfig(settings, 0);
     SchemaBuilder builder = SchemaBuilder.struct();
     config.addField(builder);
     Field field = builder.field(fieldName);

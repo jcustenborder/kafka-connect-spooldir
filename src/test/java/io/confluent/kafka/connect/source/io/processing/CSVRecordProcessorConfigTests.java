@@ -2,11 +2,15 @@ package io.confluent.kafka.connect.source.io.processing;
 
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVParserBuilder;
+import io.confluent.kafka.connect.source.Data;
 import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class CSVRecordProcessorConfigTests {
 
@@ -32,6 +36,33 @@ public class CSVRecordProcessorConfigTests {
     Assert.assertThat(actual.isIgnoreLeadingWhiteSpace(), IsEqual.equalTo(expected.isIgnoreLeadingWhiteSpace()));
     Assert.assertThat(actual.isIgnoreQuotations(), IsEqual.equalTo(expected.isIgnoreQuotations()));
     Assert.assertThat(actual.isStrictQuotes(), IsEqual.equalTo(expected.isStrictQuotes()));
+  }
+
+  void add(Map<String, String> settings, Integer index, String key, String value) {
+    String mapKey = String.format("fields.%02d.%s", index, key);
+    settings.put(mapKey, value);
+  }
+
+  @Test
+  public void withFields() throws IOException {
+    Map<String, String> settings = Data.getMockDataSettings();
+    settings.put(CSVRecordProcessorConfig.TOPIC_CONF, "csv");
+    settings.put(CSVRecordProcessorConfig.KEY_FIELDS_CONF, "ID");
+
+    CSVRecordProcessorConfig config = new CSVRecordProcessorConfig(settings);
+
+    List<CSVFieldConfig> fields = config.fields();
+    Assert.assertNotNull(fields);
+    Assert.assertFalse(fields.isEmpty());
+
+    for (int i = 0; i < fields.size(); i++) {
+      Assert.assertThat(fields.get(i).index, IsEqual.equalTo(i));
+    }
+
+    Properties properties = new Properties();
+    properties.putAll(settings);
+    properties.store(System.out, "");
+
   }
 
 }

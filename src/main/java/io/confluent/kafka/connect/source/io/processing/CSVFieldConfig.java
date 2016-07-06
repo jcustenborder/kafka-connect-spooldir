@@ -34,8 +34,11 @@ public class CSVFieldConfig extends AbstractConfig {
   static String LOGICAL_TYPE_DOC = "logical type.";
   static boolean REQUIRED_DEFAULT = false;
 
-  public CSVFieldConfig(Map<?, ?> originals) {
+  public final int index;
+
+  public CSVFieldConfig(Map<?, ?> originals, int index) {
     super(conf(), originals);
+    this.index = index;
   }
 
   static String[] types() {

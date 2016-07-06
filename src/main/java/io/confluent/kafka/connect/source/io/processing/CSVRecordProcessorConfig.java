@@ -10,8 +10,15 @@ import org.apache.kafka.common.config.ConfigDef;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("WeakerAccess")
 public class CSVRecordProcessorConfig extends RecordProcessorConfig {
@@ -168,5 +175,40 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
         ;
   }
 
+  final Pattern fieldPrefixPatten = Pattern.compile("(\\d+)\\.");
 
+  public List<CSVFieldConfig> fields() {
+    List<CSVFieldConfig> fields = new ArrayList<>();
+
+    Set<String> prefixes = new HashSet<>();
+
+    Map<String, Object> fieldOriginals = this.originalsWithPrefix("fields.");
+
+    for (Map.Entry<String, Object> mapEntry : fieldOriginals.entrySet()) {
+      Matcher matcher = fieldPrefixPatten.matcher(mapEntry.getKey());
+      if (matcher.find()) {
+        prefixes.add(matcher.group(0));
+      }
+    }
+
+    for (String prefix : prefixes) {
+      Matcher matcher = fieldPrefixPatten.matcher(prefix);
+      if (matcher.find()) {
+        int index = Integer.parseInt(matcher.group(1));
+        String originalPrefix = String.format("fields.%s", matcher.group(0));
+        Map<String, Object> prefixOriginals = this.originalsWithPrefix(originalPrefix);
+        CSVFieldConfig fieldConfig = new CSVFieldConfig(prefixOriginals, index);
+        fields.add(fieldConfig);
+      }
+    }
+
+    Collections.sort(fields, new Comparator<CSVFieldConfig>() {
+      @Override
+      public int compare(CSVFieldConfig o1, CSVFieldConfig o2) {
+        return Integer.compare(o1.index, o2.index);
+      }
+    });
+
+    return fields;
+  }
 }
