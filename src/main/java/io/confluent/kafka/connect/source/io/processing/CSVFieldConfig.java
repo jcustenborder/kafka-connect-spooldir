@@ -1,5 +1,6 @@
 package io.confluent.kafka.connect.source.io.processing;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
@@ -27,11 +28,14 @@ public class CSVFieldConfig extends AbstractConfig {
   static final String DECIMAL_SCALE_DOC = "The scale value for a decimal.";
   static final Integer DECIMAL_SCALE_DEFAULT = 10;
   static final String REQUIRED_DOC = "Flag to determine if field is required and can accept nulls.";
-  static String NAME_DOC = "Name of the field.";
-  static String SCHEMA_TYPE_DOC = "type";
+  static String NAME_DOC = "Name of the field in the resulting Kafka Connect Schema.";
+  static String SCHEMA_TYPE_DOC = "Kafka Connect schema type for the field. The value of this field is no necessary when " +
+      LOGICAL_TYPE_CONF + " is specified. The schema type for the logical type will be used. Supported values are " + Joiner.on(", ").join(types()) + ".";
   static String SCHEMA_TYPE_DEFAULT = ConfigDef.Type.STRING.name();
   static String[] SCHEMA_TYPE_VALID_VALUES = types();
-  static String LOGICAL_TYPE_DOC = "logical type.";
+  static String LOGICAL_TYPE_DOC = "The logical type configuration for the field. If this is configured the value for " +
+      SCHEMA_TYPE_CONF + " is ignored and the " + SCHEMA_TYPE_CONF + " for the requested logical type is used. Supported values are " +
+      Joiner.on(", ").join(logicalTypes()) + ".";
   static boolean REQUIRED_DEFAULT = false;
 
   public final int index;
