@@ -134,20 +134,51 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     }
   }
 
+  File findNextInputFile() {
+    File[] files = this.inputDirectory.listFiles(this.inputPatternFilter);
+    if (null == files || files.length == 0) {
+      if (log.isDebugEnabled()) {
+        log.debug("No files matching {} were found in {}", PollingDirectoryMonitorConfig.INPUT_FILE_PATTERN_CONF, this.inputDirectory);
+      }
+      return null;
+    }
+
+    File result = null;
+
+    for (File file : files) {
+      long fileAgeMS = System.currentTimeMillis() - file.lastModified();
+
+      if (fileAgeMS < 0L) {
+        if (log.isWarnEnabled()) {
+          log.warn("File {} has a date in the future.", file);
+        }
+      }
+
+      if (this.config.minimumFileAgeMS() > 0L && fileAgeMS < this.config.minimumFileAgeMS()) {
+        if (log.isDebugEnabled()) {
+          log.debug("Skipping {} because it does not meet the minimum age.", file);
+        }
+        continue;
+      }
+      result = file;
+      break;
+    }
+
+    return result;
+  }
+
   @Override
   public List<SourceRecord> poll() {
     try {
       if (!hasRecords) {
         closeAndMoveToFinished(this.finishedDirectory, false);
 
-        File[] files = this.inputDirectory.listFiles(this.inputPatternFilter);
-        if (null == files || files.length == 0) {
-          if (log.isDebugEnabled()) {
-            log.debug("No files matching {} were found in {}", PollingDirectoryMonitorConfig.INPUT_FILE_PATTERN_CONF, this.inputDirectory);
-          }
+        File nextFile = findNextInputFile();
+        if (null == nextFile) {
           return new ArrayList<>();
         }
-        this.inputFile = files[0];
+
+        this.inputFile = nextFile;
         this.inputFileName = Files.getNameWithoutExtension(this.inputFile.getName());
         try {
           if (log.isInfoEnabled()) {
