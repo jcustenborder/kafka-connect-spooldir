@@ -162,7 +162,7 @@ Configuration Options
   * Importance: low
 
 ``null.field.indicator``
-  Flag to determine if the reader should be verified. Valid values are EMPTY_SEPARATORS, EMPTY_QUOTES, BOTH, NEITHER
+  Indicator to determine how the CSV Reader can determine if a field is null. Valid values are EMPTY_SEPARATORS, EMPTY_QUOTES, BOTH, NEITHER. For more information see http://opencsv.sourceforge.net/apidocs/com/opencsv/enums/CSVReaderNullFieldIndicator.html.
 
   * Type: string
   * Default: "NEITHER"

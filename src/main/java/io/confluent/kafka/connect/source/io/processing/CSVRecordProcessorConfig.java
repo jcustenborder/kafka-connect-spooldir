@@ -60,7 +60,8 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   static final boolean KEEP_CARRIAGE_RETURN_DEFAULT = CSVReader.DEFAULT_KEEP_CR;
   static final String VERIFY_READER_DOC = "Flag to determine if the reader should be verified.";
   static final boolean VERIFY_READER_DEFAULT = CSVReader.DEFAULT_VERIFY_READER;
-  static final String NULL_FIELD_INDICATOR_DOC = "Flag to determine if the reader should be verified. Valid values are " + Joiner.on(", ").join(nullFieldIndicatorValues());
+  static final String NULL_FIELD_INDICATOR_DOC = "Indicator to determine how the CSV Reader can determine if a field is null. Valid values are " + Joiner.on(", ").join(nullFieldIndicatorValues())
+      + ". For more information see http://opencsv.sourceforge.net/apidocs/com/opencsv/enums/CSVReaderNullFieldIndicator.html.";
   static final String NULL_FIELD_INDICATOR_DEFAULT = CSVParser.DEFAULT_NULL_FIELD_INDICATOR.name();
   static final String KEY_FIELDS_DOC = "The fields that should be used as a key for the message.";
   static final String FIRST_ROW_AS_HEADER_DOC = "Flag to indicate if the fist row of data contains the header of the file.";
