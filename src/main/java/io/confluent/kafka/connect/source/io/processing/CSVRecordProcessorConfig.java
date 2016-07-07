@@ -37,7 +37,7 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   public static final String NULL_FIELD_INDICATOR_CONF = "null.field.indicator";
   public static final String KEY_FIELDS_CONF = "key.fields";
   public static final String FIRST_ROW_AS_HEADER_CONF = "first.row.as.header";
-  public static final String CHARSET_CONF = "charset";
+  public static final String CHARSET_CONF = "file.charset";
   public static final String PARSER_TIMESTAMP_DATE_FORMATS_CONF = "parser.timestamp.date.formats";
   public static final String PARSER_TIMESTAMP_TIMEZONE_CONF = "parser.timestamp.timezone";
 
