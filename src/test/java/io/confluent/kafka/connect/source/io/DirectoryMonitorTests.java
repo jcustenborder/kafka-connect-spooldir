@@ -1,6 +1,5 @@
 package io.confluent.kafka.connect.source.io;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
@@ -63,7 +62,7 @@ public class DirectoryMonitorTests {
     this.settings.put(DirectoryMonitorConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
     this.settings.put(PollingDirectoryMonitorConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");
     this.settings.put(CSVRecordProcessorConfig.TOPIC_CONF, "csv");
-    this.settings.put(CSVRecordProcessorConfig.KEY_FIELDS_CONF, "ID");
+    this.settings.put(CSVRecordProcessorConfig.KEY_FIELDS_CONF, "id");
     this.settings.put(CSVRecordProcessorConfig.FIRST_ROW_AS_HEADER_CONF, "true");
   }
 

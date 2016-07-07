@@ -43,6 +43,11 @@ public class LineRecordProcessor implements RecordProcessor {
     this.lineNumberReader = new LineNumberReader(this.inputStreamReader);
   }
 
+  @Override
+  public long lineNumber() {
+    return this.lineNumberReader.getLineNumber();
+  }
+
 
   private SourceRecord createSourceRecord(
       int lineNumber,

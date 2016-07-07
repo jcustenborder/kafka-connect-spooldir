@@ -1,5 +1,7 @@
 package io.confluent.kafka.connect.source;
 
+import io.confluent.kafka.connect.source.io.DirectoryMonitor;
+import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
@@ -10,6 +12,8 @@ import java.util.Map;
 
 public class SpoolDirectoryTask extends SourceTask {
   static final Logger log = LoggerFactory.getLogger(SpoolDirectoryTask.class);
+  SpoolDirectoryConfig config;
+  DirectoryMonitor directoryMonitor;
 
   @Override
   public String version() {
@@ -18,19 +22,31 @@ public class SpoolDirectoryTask extends SourceTask {
 
   @Override
   public void start(Map<String, String> map) {
-    //TODO: Do things here that are required to start your task. This could be open a connection to a database, etc.
+    this.config = new SpoolDirectoryConfig(map);
+
+    try {
+      this.directoryMonitor = this.config.directoryMonitor().newInstance();
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new ConnectException("Exception thrown while configuring DirectoryMonitor", e);
+    }
+
+    this.directoryMonitor.configure(map);
   }
 
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
+    List<SourceRecord> results = this.directoryMonitor.poll();
 
+    while (results.isEmpty()) {
+      Thread.sleep(1000);
+      results = this.directoryMonitor.poll();
+    }
 
-    //TODO: Create SourceRecord objects that will be sent the kafka cluster.
-    throw new UnsupportedOperationException("This has not been implemented.");
+    return results;
   }
 
   @Override
   public void stop() {
-    //TODO: Do whatever is required to stop your task.
+
   }
 }

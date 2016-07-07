@@ -10,13 +10,16 @@ import org.apache.kafka.common.config.ConfigDef;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +38,9 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   public static final String KEY_FIELDS_CONF = "key.fields";
   public static final String FIRST_ROW_AS_HEADER_CONF = "first.row.as.header";
   public static final String CHARSET_CONF = "charset";
+  public static final String PARSER_TIMESTAMP_DATE_FORMATS_CONF = "parser.timestamp.date.formats";
+  public static final String PARSER_TIMESTAMP_TIMEZONE_CONF = "parser.timestamp.timezone";
+
   //  static final String[] nullFieldIndicatorValues;
   static final String SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
@@ -61,6 +67,11 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   static final boolean FIRST_ROW_AS_HEADER_DEFAULT = false;
   static final String CHARSET_DOC = "Character set to read wth file with.";
   static final String CHARSET_DEFAULT = Charset.defaultCharset().name();
+  static final String PARSER_TIMESTAMP_DATE_FORMATS_DOC = "date formats.";
+  static final List<String> PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT = Arrays.asList("yyyy-MM-dd' 'HH:mm:ss");
+  static final String PARSER_TIMESTAMP_TIMEZONE_DOC = "Timezone";
+  static final String PARSER_TIMESTAMP_TIMEZONE_DEFAULT = "UTC";
+  final Pattern fieldPrefixPatten = Pattern.compile("(\\d+)\\.");
 
   public CSVRecordProcessorConfig(Map<?, ?> originals) {
     super(getConf(), originals);
@@ -89,6 +100,8 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
         .define(KEY_FIELDS_CONF, ConfigDef.Type.LIST, ConfigDef.Importance.HIGH, KEY_FIELDS_DOC)
         .define(FIRST_ROW_AS_HEADER_CONF, ConfigDef.Type.BOOLEAN, FIRST_ROW_AS_HEADER_DEFAULT, ConfigDef.Importance.HIGH, FIRST_ROW_AS_HEADER_DOC)
         .define(CHARSET_CONF, ConfigDef.Type.STRING, CHARSET_DEFAULT, ConfigDef.Importance.MEDIUM, CHARSET_DOC)
+        .define(PARSER_TIMESTAMP_TIMEZONE_CONF, ConfigDef.Type.STRING, PARSER_TIMESTAMP_TIMEZONE_DEFAULT, ConfigDef.Importance.MEDIUM, PARSER_TIMESTAMP_TIMEZONE_DOC)
+        .define(PARSER_TIMESTAMP_DATE_FORMATS_CONF, ConfigDef.Type.LIST, PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT, ConfigDef.Importance.MEDIUM, PARSER_TIMESTAMP_DATE_FORMATS_DOC)
         ;
   }
 
@@ -151,7 +164,6 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
     return Charset.forName(value);
   }
 
-
   public CSVParserBuilder createCSVParserBuilder() {
 
     return new CSVParserBuilder()
@@ -174,8 +186,6 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
         .withFieldAsNull(nullFieldIndicator())
         ;
   }
-
-  final Pattern fieldPrefixPatten = Pattern.compile("(\\d+)\\.");
 
   public List<CSVFieldConfig> fields() {
     List<CSVFieldConfig> fields = new ArrayList<>();
@@ -211,4 +221,21 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
 
     return fields;
   }
+
+  public SimpleDateFormat[] parserTimestampDateFormats() {
+    List<SimpleDateFormat> results = new ArrayList<>();
+    List<String> formats = this.getList(PARSER_TIMESTAMP_DATE_FORMATS_CONF);
+
+    for (String s : formats) {
+      results.add(new SimpleDateFormat(s));
+    }
+
+    return results.toArray(new SimpleDateFormat[results.size()]);
+  }
+
+  public TimeZone parserTimestampTimezone() {
+    String value = this.getString(PARSER_TIMESTAMP_TIMEZONE_CONF);
+    return TimeZone.getTimeZone(value);
+  }
+
 }

@@ -26,7 +26,7 @@ public class CSVRecordProcessorTests {
   public void poll() throws IOException {
     Map<String, String> configs = ImmutableMap.of(
         CSVRecordProcessorConfig.TOPIC_CONF, "csv",
-        CSVRecordProcessorConfig.KEY_FIELDS_CONF, "ID",
+        CSVRecordProcessorConfig.KEY_FIELDS_CONF, "id",
         CSVRecordProcessorConfig.FIRST_ROW_AS_HEADER_CONF, "true"
     );
     this.csvRecordProcessorConfig = new CSVRecordProcessorConfig(configs);

@@ -1,6 +1,7 @@
 package io.confluent.kafka.connect.source.io;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import org.apache.kafka.connect.errors.ConnectException;
@@ -17,13 +18,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class PollingDirectoryMonitor implements DirectoryMonitor {
   private static final Logger log = LoggerFactory.getLogger(PollingDirectoryMonitor.class);
+  Stopwatch processingTime = Stopwatch.createStarted();
   private File inputDirectory;
   private File finishedDirectory;
   private File errorDirectory;
-
   private Map<?, ?> configValues;
   private PollingDirectoryMonitorConfig config;
   private RecordProcessor recordProcessor;
@@ -103,9 +105,11 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     } catch (InstantiationException | IllegalAccessException e) {
       throw new ConnectException("Exception thrown while creating record processor", e);
     }
+
+    this.inputPatternFilter = config.inputFilePattern();
   }
 
-  private void closeAndMoveToFinished(File outputDirectory) throws IOException {
+  private void closeAndMoveToFinished(File outputDirectory, boolean errored) throws IOException {
     if (null != inputStream) {
       if (log.isInfoEnabled()) {
         log.info("Closing {}", this.inputFile);
@@ -115,9 +119,16 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
 
       File finishedFile = new File(outputDirectory, this.inputFile.getName());
 
-      if (log.isInfoEnabled()) {
-        log.info("Finished processing {} moving to {}.", this.inputFile);
+      if (errored) {
+        if (log.isErrorEnabled()) {
+          log.error("Error during processing, moving {} to {}.", this.inputFile, outputDirectory);
+        }
+      } else {
+        if (log.isInfoEnabled()) {
+          log.info("Finished processing {} in {} second(s). Moving to {}.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS), outputDirectory);
+        }
       }
+
 
       Files.move(this.inputFile, finishedFile);
     }
@@ -127,10 +138,13 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
   public List<SourceRecord> poll() {
     try {
       if (!hasRecords) {
-        closeAndMoveToFinished(this.finishedDirectory);
+        closeAndMoveToFinished(this.finishedDirectory, false);
 
         File[] files = this.inputDirectory.listFiles(this.inputPatternFilter);
         if (null == files || files.length == 0) {
+          if (log.isDebugEnabled()) {
+            log.debug("No files matching {} were found in {}", PollingDirectoryMonitorConfig.INPUT_FILE_PATTERN_CONF, this.inputDirectory);
+          }
           return new ArrayList<>();
         }
         this.inputFile = files[0];
@@ -144,19 +158,31 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }
+        processingTime.reset();
+        processingTime.start();
       }
       List<SourceRecord> records = this.recordProcessor.poll();
       this.hasRecords = !records.isEmpty();
       return records;
-    } catch (IOException ex) {
+    } catch (Exception ex) {
+      if (log.isErrorEnabled()) {
+        log.error("Exception encountered processing line {} of {}.", this.recordProcessor.lineNumber(), this.inputFile, ex);
+      }
+
       try {
-        closeAndMoveToFinished(this.errorDirectory);
+        closeAndMoveToFinished(this.errorDirectory, true);
       } catch (IOException ex0) {
+
         if (log.isErrorEnabled()) {
           log.error("Exception thrown while moving {} to {}", this.inputFile, this.errorDirectory, ex0);
         }
       }
-      throw new ConnectException(ex);
+      if (this.config.haltOnError()) {
+        throw new ConnectException(ex);
+      } else {
+
+        return new ArrayList<>();
+      }
     }
   }
 }

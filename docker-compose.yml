@@ -1,0 +1,28 @@
+version: "2"
+services:
+  zookeeper:
+    image: confluent/zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      zk_id: "1"
+    network_mode: "host"
+  kafka:
+    image: confluent/kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "confluent:2181"
+    network_mode: "host"
+  schema-registry:
+    image: confluent/schema-registry
+    depends_on:
+      - kafka
+      - zookeeper
+    ports:
+      - "8081:8081"
+    environment:
+      SR_KAFKASTORE_CONNECTION_URL: "confluent:2181"
+    network_mode: "host"

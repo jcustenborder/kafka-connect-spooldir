@@ -12,5 +12,7 @@ public interface RecordProcessor extends AutoCloseable {
                  InputStream inputStream,
                  String fileName) throws IOException;
 
+  long lineNumber();
+
   List<SourceRecord> poll() throws IOException;
 }

@@ -78,6 +78,11 @@ public class CSVFieldConfig extends AbstractConfig {
         ;
   }
 
+  public static void add(Map<String, String> settings, Integer index, String key, String value) {
+    String mapKey = String.format("fields.%02d.%s", index, key);
+    settings.put(mapKey, value);
+  }
+
   public void addField(SchemaBuilder builder) {
     Preconditions.checkState(Schema.Type.STRUCT == builder.type(), "Only structs are supported.");
     builder.field(name(), schema());
@@ -147,5 +152,4 @@ public class CSVFieldConfig extends AbstractConfig {
     timestamp,
     date
   }
-
 }
