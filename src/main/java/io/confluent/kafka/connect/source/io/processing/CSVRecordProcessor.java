@@ -142,6 +142,10 @@ public class CSVRecordProcessor implements RecordProcessor {
         keyStruct.put(field.name(), value);
       }
 
+      if (log.isInfoEnabled() && this.csvReader.getLinesRead() % ((long) this.config.batchSize() * 20) == 0) {
+        log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.fileName);
+      }
+
       Map<String, ?> partitions = ImmutableMap.of();
       Map<String, ?> offset = ImmutableMap.of(this.fileName, csvReader.getLinesRead());
 
