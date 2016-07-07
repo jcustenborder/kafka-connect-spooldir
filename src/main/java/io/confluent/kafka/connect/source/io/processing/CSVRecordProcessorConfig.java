@@ -44,15 +44,15 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   //  static final String[] nullFieldIndicatorValues;
   static final String SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
-  static final String SEPARATOR_CHAR_DOC = "Separator character.";
+  static final String SEPARATOR_CHAR_DOC = "The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \\t.";
   static final int SEPARATOR_CHAR_DEFAULT = (int) CSVParser.DEFAULT_SEPARATOR;
-  static final String QUOTE_CHAR_DOC = "Quote character.";
+  static final String QUOTE_CHAR_DOC = "The character that is used to quote a field. This typically happens when the " + SEPARATOR_CHAR_CONF + " character is within the data.";
   static final int QUOTE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_QUOTE_CHARACTER;
   static final String ESCAPE_CHAR_DOC = "Escape character.";
   static final int ESCAPE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_ESCAPE_CHARACTER;
   static final String STRICT_QUOTES_DOC = "strict quotes.";
   static final boolean STRICT_QUOTES_DEFAULT = CSVParser.DEFAULT_STRICT_QUOTES;
-  static final String IGNORE_LEADING_WHITESPACE_DOC = "ignore_leading_whitespace character.";
+  static final String IGNORE_LEADING_WHITESPACE_DOC = "Flag to determine if the whitespace leading the field should be ignored.";
   static final boolean IGNORE_LEADING_WHITESPACE_DEFAULT = CSVParser.DEFAULT_IGNORE_LEADING_WHITESPACE;
   static final String IGNORE_QUOTATIONS_DOC = "ignore_quotations character.";
   static final boolean IGNORE_QUOTATIONS_DEFAULT = CSVParser.DEFAULT_IGNORE_QUOTATIONS;
@@ -67,9 +67,12 @@ public class CSVRecordProcessorConfig extends RecordProcessorConfig {
   static final boolean FIRST_ROW_AS_HEADER_DEFAULT = false;
   static final String CHARSET_DOC = "Character set to read wth file with.";
   static final String CHARSET_DEFAULT = Charset.defaultCharset().name();
-  static final String PARSER_TIMESTAMP_DATE_FORMATS_DOC = "date formats.";
+  static final String PARSER_TIMESTAMP_DATE_FORMATS_DOC = "The date formats that are expected in the file. This is a list " +
+      "of strings that will be used to parse the date fields in order. The most accurate date format should be the first " +
+      "in the list. Take a look at the Java documentation for more info. " +
+      "https://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html";
   static final List<String> PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT = Arrays.asList("yyyy-MM-dd' 'HH:mm:ss");
-  static final String PARSER_TIMESTAMP_TIMEZONE_DOC = "Timezone";
+  static final String PARSER_TIMESTAMP_TIMEZONE_DOC = "The timezone that all of the dates will be parsed with.";
   static final String PARSER_TIMESTAMP_TIMEZONE_DEFAULT = "UTC";
   final Pattern fieldPrefixPatten = Pattern.compile("(\\d+)\\.");
 

@@ -45,6 +45,6 @@ public class SpoolDirectoryConnector extends SourceConnector {
 
   @Override
   public ConfigDef config() {
-    return SpoolDirectoryConfig.conf();
+    return SpoolDirectoryConfig.getConf();
   }
 }

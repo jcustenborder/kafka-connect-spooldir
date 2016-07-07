@@ -10,7 +10,7 @@ import java.util.Map;
 public class DirectoryMonitorConfig extends AbstractConfig {
 
   public static final String RECORD_PROCESSOR_CLASS_CONF = "record.processor.class";
-  static final String RECORD_PROCESSOR_CLASS_DOC = "Record Processor to use.";
+  static final String RECORD_PROCESSOR_CLASS_DOC = "Class that implements RecordProcessor. This class is used to process data as it arrives.";
 
   public DirectoryMonitorConfig(ConfigDef configDef, Map<?, ?> originals) {
     super(configDef, originals);

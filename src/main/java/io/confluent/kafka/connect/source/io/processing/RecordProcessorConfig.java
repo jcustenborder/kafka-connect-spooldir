@@ -9,11 +9,11 @@ import java.util.Map;
 public class RecordProcessorConfig extends AbstractConfig {
 
   public static final String BATCH_SIZE_CONF = "batch.size";
-  public static final String BATCH_SIZE_DOC = "Number of records to return in a batch.";
+  public static final String BATCH_SIZE_DOC = "The number of records that should be returned with each batch.";
   public static final int BATCH_SIZE_DEFAULT = 100;
 
   public static final String TOPIC_CONF = "topic";
-  public static final String TOPIC_DOC = "Topic to write the data to.";
+  public static final String TOPIC_DOC = "The Kafka topic to write the data to.";
 
 
   public RecordProcessorConfig(ConfigDef definition, Map<?, ?> originals) {

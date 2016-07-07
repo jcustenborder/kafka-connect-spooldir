@@ -30,17 +30,17 @@ public class SpoolDirectoryConfig extends AbstractConfig {
 //  private static final String INPUT_GROUP = "input";
 
   public static final String DIRECTORY_MONITOR_CLASS_CONF = "directory.monitor.class";
-  static final String DIRECTORY_MONITOR_CLASS_DOC = "doc";
+  static final String DIRECTORY_MONITOR_CLASS_DOC = "Class that implements the DirectoryMonitor interface. This is used to monitor the directory for new files that have been added to the file system.";
 
   public SpoolDirectoryConfig(ConfigDef config, Map<String, String> parsedConfig) {
     super(config, parsedConfig);
   }
 
   public SpoolDirectoryConfig(Map<String, String> parsedConfig) {
-    this(conf(), parsedConfig);
+    this(getConf(), parsedConfig);
   }
 
-  public static ConfigDef conf() {
+  public static ConfigDef getConf() {
     return new ConfigDef()
         .define(DIRECTORY_MONITOR_CLASS_CONF, Type.CLASS, PollingDirectoryMonitor.class.getName(), Importance.HIGH, DIRECTORY_MONITOR_CLASS_DOC)
         ;

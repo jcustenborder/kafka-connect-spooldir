@@ -8,4 +8,4 @@ mkdir -p /tmp/spooldir/input /tmp/spooldir/finished /tmp/spooldir/error
 
 cp src/test/resources/io/confluent/kafka/connect/source/MOCK_DATA.csv /tmp/spooldir/input
 
-$CONFLUENT_HOME/bin/connect-standalone connect/connect-avro-docker.properties config/MySourceConnector.properties
+$CONFLUENT_HOME/bin/connect-standalone connect/connect-avro-docker.properties config/CSVExample.properties

@@ -16,9 +16,9 @@ public class PollingDirectoryMonitorConfig extends DirectoryMonitorConfig {
   public static final String ERROR_PATH_CONFIG = "error.path";
   public static final String INPUT_FILE_PATTERN_CONF = "input.file.pattern";
   public static final String HALT_ON_ERROR_CONF = "halt.on.error";
-  static final String INPUT_PATH_DOC = "Input path to read files from.";
-  static final String FINISHED_PATH_DOC = "The directory to place finished";
-  static final String ERROR_PATH_DOC = "The directory to place files that have error(s).";
+  static final String INPUT_PATH_DOC = "The directory to read files that will be processed. This directory must exist and be writable by the user running Kafka Connect.";
+  static final String FINISHED_PATH_DOC = "The directory to place files that have been successfully processed. This directory must exist and be writable by the user running Kafka Connect.";
+  static final String ERROR_PATH_DOC = "The directory to place files in which have error(s). This directory must exist and be writable by the user running Kafka Connect.";
   static final String INPUT_FILE_PATTERN_DOC = "Regular expression to check input file names against.";
   static final String HALT_ON_ERROR_DOC = "Should the task halt when it encounters an error or continue to the next file.";
 
