@@ -1,12 +1,14 @@
-package io.confluent.kafka.connect.source.io.processing;
+package io.confluent.kafka.connect.source.io.processing.csv;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
-import io.confluent.kafka.connect.conversion.Converter;
-import io.confluent.kafka.connect.conversion.type.DateTypeConverter;
+import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
+import io.confluent.kafka.connect.utils.Parser;
+import io.confluent.kafka.connect.utils.type.DateTypeParser;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
@@ -25,22 +27,22 @@ import java.util.Map;
 
 public class CSVRecordProcessor implements RecordProcessor {
   private static final Logger log = LoggerFactory.getLogger(CSVRecordProcessor.class);
-  private CSVRecordProcessorConfig config;
+  private SpoolDirectoryConfig config;
   private CSVParser csvParser;
   private CSVReader csvReader;
   private InputStreamReader streamReader;
 
-  private List<CSVFieldConfig> fields;
+  private SchemaConfig schemaConfig;
   private Schema valueSchema;
   private Schema keySchema;
   private String fileName;
-  private Converter converter = new Converter();
+  private Parser converter = new Parser();
 
   private Schema buildValueSchema() {
     SchemaBuilder builder = SchemaBuilder.struct();
 
-    for (CSVFieldConfig fieldConfig : fields) {
-      builder.field(fieldConfig.name(), fieldConfig.schema());
+    for (FieldConfig fieldConfig : schemaConfig.fields) {
+      builder.field(fieldConfig.name, fieldConfig.schema());
     }
 
     return builder.build();
@@ -60,15 +62,15 @@ public class CSVRecordProcessor implements RecordProcessor {
 
 
   @Override
-  public void configure(Map<?, ?> configValues, InputStream inputStream, String fileName) throws IOException {
-    this.config = new CSVRecordProcessorConfig(configValues);
+  public void configure(SpoolDirectoryConfig config, InputStream inputStream, String fileName) throws IOException {
+    this.config = config;
 
     if (log.isDebugEnabled()) {
       log.debug("Configuring CSVParser...");
     }
 
-    DateTypeConverter timestampDateConverter = new DateTypeConverter(this.config.parserTimestampTimezone(), this.config.parserTimestampDateFormats());
-    this.converter.registerTypeConverter(Timestamp.SCHEMA, timestampDateConverter);
+    DateTypeParser timestampDateConverter = new DateTypeParser(this.config.parserTimestampTimezone(), this.config.parserTimestampDateFormats());
+    this.converter.registerTypeParser(Timestamp.SCHEMA, timestampDateConverter);
 
     this.csvParser = this.config.createCSVParserBuilder().build();
     this.streamReader = new InputStreamReader(inputStream, this.config.charset());
@@ -81,22 +83,16 @@ public class CSVRecordProcessor implements RecordProcessor {
         log.debug("Field names for the file are {}", Joiner.on(", ").join(fieldNames));
       }
 
-      List<CSVFieldConfig> fields = new ArrayList<>();
+      SchemaConfig schemaConfig = new SchemaConfig();
 
       for (int i = 0; i < fieldNames.length; i++) {
-        String fieldName = fieldNames[i];
-
-        Map<?, ?> fieldSettings = ImmutableMap.of(
-            CSVFieldConfig.NAME_CONF, fieldName,
-            CSVFieldConfig.SCHEMA_TYPE_CONF, Schema.Type.STRING.name(),
-            CSVFieldConfig.REQUIRED_CONF, Boolean.FALSE.toString()
-        );
-
-        fields.add(new CSVFieldConfig(fieldSettings, i));
+        FieldConfig fieldConfig = FieldConfig.create(Schema.OPTIONAL_STRING_SCHEMA);
+        fieldConfig.name = fieldNames[i];
+        schemaConfig.fields.add(fieldConfig);
       }
-      this.fields = fields;
+      this.schemaConfig = schemaConfig;
     } else {
-      this.fields = this.config.fields();
+      this.schemaConfig = this.config.schemaConfig();
     }
 
     this.valueSchema = buildValueSchema();
@@ -124,7 +120,7 @@ public class CSVRecordProcessor implements RecordProcessor {
       Struct valueStruct = new Struct(this.valueSchema);
       Struct keyStruct = new Struct(this.keySchema);
 
-      Preconditions.checkState(this.valueSchema.fields().size() == record.length, "Record has %s columns but schema has %s columns.",
+      Preconditions.checkState(this.valueSchema.fields().size() == record.length, "Record has %s columns but schemaConfig has %s columns.",
           this.valueSchema.fields().size(),
           record.length
       );
@@ -132,7 +128,7 @@ public class CSVRecordProcessor implements RecordProcessor {
       for (int i = 0; i < record.length; i++) {
         Field field = this.valueSchema.fields().get(i);
         String input = record[i];
-        Object value = converter.convert(field.schema(), input);
+        Object value = converter.parseString(field.schema(), input);
         valueStruct.put(field.name(), value);
       }
 

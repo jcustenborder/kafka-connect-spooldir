@@ -1,11 +1,10 @@
 package io.confluent.kafka.connect.source.io;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.Data;
-import io.confluent.kafka.connect.source.io.processing.CSVRecordProcessor;
-import io.confluent.kafka.connect.source.io.processing.CSVRecordProcessorConfig;
+import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.csv.CSVRecordProcessor;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.hamcrest.core.IsEqual;
@@ -28,21 +27,29 @@ public class DirectoryMonitorTests {
   File inputDirectory;
   File errorDirectory;
   File finishedDirectory;
-  Map<String, String> settings;
+  SpoolDirectoryConfig settings;
 
   @Test(expected = ConnectException.class)
   public void configure_MissingDirectories() {
-    Map<?, ?> settings = ImmutableMap.of(
-        PollingDirectoryMonitorConfig.INPUT_PATH_CONFIG, "/missing",
-        PollingDirectoryMonitorConfig.ERROR_PATH_CONFIG, "/missing2",
-        PollingDirectoryMonitorConfig.FINISHED_PATH_CONFIG, "/missing4",
-        DirectoryMonitorConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName(),
-        PollingDirectoryMonitorConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$"
-    );
+    Map<String, String> settings = getSettings();
+
 
     PollingDirectoryMonitor monitor = new PollingDirectoryMonitor();
-    monitor.configure(settings);
+    monitor.configure(new SpoolDirectoryConfig(settings));
   }
+
+  Map<String, String> getSettings() {
+    Map<String, String> settings = new HashMap<>();
+    settings.put(SpoolDirectoryConfig.INPUT_PATH_CONFIG, "/missing");
+    settings.put(SpoolDirectoryConfig.ERROR_PATH_CONFIG, "/missing2");
+    settings.put(SpoolDirectoryConfig.FINISHED_PATH_CONFIG, "/missing4");
+    settings.put(SpoolDirectoryConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
+    settings.put(SpoolDirectoryConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");
+    settings.put(SpoolDirectoryConfig.TOPIC_CONF, "input");
+
+    return settings;
+  }
+
 
   @Before
   public void before() {
@@ -54,16 +61,20 @@ public class DirectoryMonitorTests {
     this.finishedDirectory = new File(tempDirectory, "finished");
     this.finishedDirectory.mkdirs();
 
-    this.settings = new HashMap<>();
+    Map<String, String> settings = new HashMap<>();
 
-    this.settings.put(PollingDirectoryMonitorConfig.INPUT_PATH_CONFIG, inputDirectory.getAbsolutePath());
-    this.settings.put(PollingDirectoryMonitorConfig.ERROR_PATH_CONFIG, errorDirectory.getAbsolutePath());
-    this.settings.put(PollingDirectoryMonitorConfig.FINISHED_PATH_CONFIG, finishedDirectory.getAbsolutePath());
-    this.settings.put(DirectoryMonitorConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
-    this.settings.put(PollingDirectoryMonitorConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");
-    this.settings.put(CSVRecordProcessorConfig.TOPIC_CONF, "csv");
-    this.settings.put(CSVRecordProcessorConfig.KEY_FIELDS_CONF, "id");
-    this.settings.put(CSVRecordProcessorConfig.FIRST_ROW_AS_HEADER_CONF, "true");
+    settings.put(SpoolDirectoryConfig.INPUT_PATH_CONFIG, inputDirectory.getAbsolutePath());
+    settings.put(SpoolDirectoryConfig.ERROR_PATH_CONFIG, errorDirectory.getAbsolutePath());
+    settings.put(SpoolDirectoryConfig.FINISHED_PATH_CONFIG, finishedDirectory.getAbsolutePath());
+    settings.put(SpoolDirectoryConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
+    settings.put(SpoolDirectoryConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");
+    settings.put(SpoolDirectoryConfig.TOPIC_CONF, "csv");
+    settings.put(SpoolDirectoryConfig.KEY_FIELDS_CONF, "id");
+    settings.put(SpoolDirectoryConfig.FIRST_ROW_AS_HEADER_CONF, "true");
+    settings.put(SpoolDirectoryConfig.SCHEMA_CONF, "{\"fields\":[{\"name\":\"id\",\"type\":\"int32\",\"required\":true},{\"name\":\"first_name\",\"type\":\"string\",\"required\":true},{\"name\":\"last_name\",\"type\":\"string\",\"required\":true},{\"name\":\"email\",\"type\":\"string\",\"required\":true},{\"name\":\"gender\",\"type\":\"string\",\"required\":true},{\"name\":\"ip_address\",\"type\":\"string\",\"required\":true},{\"name\":\"last_login\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"account_balance\",\"type\":\"decimal\",\"scale\":10,\"required\":false},{\"name\":\"country\",\"type\":\"string\",\"required\":true},{\"name\":\"favorite_color\",\"type\":\"string\",\"required\":false}]]");
+
+
+    this.settings = new SpoolDirectoryConfig(settings);
   }
 
   @Test

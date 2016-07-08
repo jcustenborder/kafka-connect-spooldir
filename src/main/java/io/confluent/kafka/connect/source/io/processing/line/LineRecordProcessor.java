@@ -1,6 +1,8 @@
-package io.confluent.kafka.connect.source.io.processing;
+package io.confluent.kafka.connect.source.io.processing.line;
 
 import com.google.common.collect.ImmutableMap;
+import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
@@ -25,7 +27,7 @@ public class LineRecordProcessor implements RecordProcessor {
   private InputStream inputStream;
   private InputStreamReader inputStreamReader;
   private LineNumberReader lineNumberReader;
-  private LineRecordProcessorConfig config;
+  private SpoolDirectoryConfig config;
 
   public LineRecordProcessor() {
     this.defaultKeySchema = SchemaBuilder.struct()
@@ -35,8 +37,8 @@ public class LineRecordProcessor implements RecordProcessor {
   }
 
   @Override
-  public void configure(Map<?, ?> configValues, InputStream inputStream, String fileName) {
-    this.config = new LineRecordProcessorConfig(configValues);
+  public void configure(SpoolDirectoryConfig config, InputStream inputStream, String fileName) {
+    this.config = config;
     this.inputStream = inputStream;
     this.inputFileName = fileName;
     this.inputStreamReader = new InputStreamReader(this.inputStream, this.config.charset());

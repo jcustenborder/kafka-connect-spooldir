@@ -14,19 +14,6 @@ The LineRecordProcessor supports reading a file line by line and emitting the li
 
 Configuration Options
 =====================
-``topic``
-  The Kafka topic to write the data to.
-
-  * Type: string
-  * Default: ""
-  * Importance: high
-
-``directory.monitor.class``
-  Class that implements the DirectoryMonitor interface. This is used to monitor the directory for new files that have been added to the file system.
-
-  * Type: class
-  * Default: class io.confluent.kafka.connect.source.io.PollingDirectoryMonitor
-  * Importance: high
 
 ``error.path``
   The directory to place files in which have error(s). This directory must exist and be writable by the user running Kafka Connect.
@@ -63,6 +50,27 @@ Configuration Options
   * Default:
   * Importance: high
 
+``topic``
+  The Kafka topic to write the data to.
+
+  * Type: string
+  * Default: ""
+  * Importance: high
+
+``file.minimum.age.ms``
+  The amount of time in milliseconds after the file was last written to before the file can be processed.
+
+  * Type: long
+  * Default: 0
+  * Importance: high
+
+``first.row.as.header``
+  Flag to indicate if the fist row of data contains the header of the file.
+
+  * Type: boolean
+  * Default: false
+  * Importance: high
+
 ``halt.on.error``
   Should the task halt when it encounters an error or continue to the next file.
 
@@ -74,35 +82,21 @@ Configuration Options
   The fields that should be used as a key for the message.
 
   * Type: list
-  * Default:
+  * Default: []
   * Importance: high
-
-``topic``
-  The Kafka topic to write the data to.
-
-  * Type: string
-  * Default: ""
-  * Importance: high
-
-``first.row.as.header``
-  Flag to indicate if the fist row of data contains the header of the file.
-
-  * Type: boolean
-  * Default: false
-  * Importance: high
-
-``charset``
-  Character set to read wth file with.
-
-  * Type: string
-  * Default: "UTF-8"
-  * Importance: medium
 
 ``escape.char``
   Escape character.
 
   * Type: int
   * Default: 92
+  * Importance: medium
+
+``file.charset``
+  Character set to read wth file with.
+
+  * Type: string
+  * Default: "UTF-8"
   * Importance: medium
 
 ``parser.timestamp.date.formats``
@@ -124,6 +118,13 @@ Configuration Options
 
   * Type: int
   * Default: 34
+  * Importance: medium
+
+``schema``
+  Schema representaiton in json.
+
+  * Type: string
+  * Default: ""
   * Importance: medium
 
 ``separator.char``
@@ -188,6 +189,7 @@ Configuration Options
   * Type: boolean
   * Default: true
   * Importance: low
+
 
 
 

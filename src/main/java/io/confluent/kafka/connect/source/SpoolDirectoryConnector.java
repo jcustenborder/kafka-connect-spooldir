@@ -24,8 +24,6 @@ public class SpoolDirectoryConnector extends SourceConnector {
   public void start(Map<String, String> map) {
     config = new SpoolDirectoryConfig(map);
     this.settings = map;
-
-    //TODO: Add things you need to do to setup your connector.
   }
 
   @Override
@@ -40,7 +38,7 @@ public class SpoolDirectoryConnector extends SourceConnector {
 
   @Override
   public void stop() {
-    //TODO: Do things that are necessary to stop your connector.
+
   }
 
   @Override

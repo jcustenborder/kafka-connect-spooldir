@@ -3,6 +3,7 @@ package io.confluent.kafka.connect.source.io;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.Files;
+import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -27,7 +28,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
   private File finishedDirectory;
   private File errorDirectory;
   private Map<?, ?> configValues;
-  private PollingDirectoryMonitorConfig config;
+  private SpoolDirectoryConfig config;
   private RecordProcessor recordProcessor;
   private FilenameFilter inputPatternFilter;
   private File inputFile;
@@ -89,16 +90,15 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
   }
 
   @Override
-  public void configure(Map<?, ?> configValues) {
-    this.configValues = configValues;
-    this.config = new PollingDirectoryMonitorConfig(this.configValues);
+  public void configure(SpoolDirectoryConfig config) {
+    this.config = config;
 
     this.inputDirectory = this.config.inputPath();
-    checkDirectory(PollingDirectoryMonitorConfig.INPUT_PATH_CONFIG, this.inputDirectory);
+    checkDirectory(SpoolDirectoryConfig.INPUT_PATH_CONFIG, this.inputDirectory);
     this.finishedDirectory = this.config.finishedPath();
-    checkDirectory(PollingDirectoryMonitorConfig.FINISHED_PATH_CONFIG, this.finishedDirectory);
+    checkDirectory(SpoolDirectoryConfig.FINISHED_PATH_CONFIG, this.finishedDirectory);
     this.errorDirectory = this.config.errorPath();
-    checkDirectory(PollingDirectoryMonitorConfig.ERROR_PATH_CONFIG, this.errorDirectory);
+    checkDirectory(SpoolDirectoryConfig.ERROR_PATH_CONFIG, this.errorDirectory);
 
     try {
       this.recordProcessor = this.config.recordProcessor().newInstance();
@@ -138,7 +138,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     File[] files = this.inputDirectory.listFiles(this.inputPatternFilter);
     if (null == files || files.length == 0) {
       if (log.isDebugEnabled()) {
-        log.debug("No files matching {} were found in {}", PollingDirectoryMonitorConfig.INPUT_FILE_PATTERN_CONF, this.inputDirectory);
+        log.debug("No files matching {} were found in {}", SpoolDirectoryConfig.INPUT_FILE_PATTERN_CONF, this.inputDirectory);
       }
       return null;
     }
@@ -185,7 +185,7 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
             log.info("Opening {}", this.inputFile);
           }
           this.inputStream = new FileInputStream(this.inputFile);
-          this.recordProcessor.configure(this.configValues, this.inputStream, this.inputFileName);
+          this.recordProcessor.configure(this.config, this.inputStream, this.inputFileName);
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }

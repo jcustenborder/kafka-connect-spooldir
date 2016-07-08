@@ -1,7 +1,7 @@
 package io.confluent.kafka.connect.source;
 
 import io.confluent.kafka.connect.source.io.DirectoryMonitor;
-import org.apache.kafka.connect.errors.ConnectException;
+import io.confluent.kafka.connect.source.io.PollingDirectoryMonitor;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
@@ -23,14 +23,8 @@ public class SpoolDirectoryTask extends SourceTask {
   @Override
   public void start(Map<String, String> map) {
     this.config = new SpoolDirectoryConfig(map);
-
-    try {
-      this.directoryMonitor = this.config.directoryMonitor().newInstance();
-    } catch (InstantiationException | IllegalAccessException e) {
-      throw new ConnectException("Exception thrown while configuring DirectoryMonitor", e);
-    }
-
-    this.directoryMonitor.configure(map);
+    this.directoryMonitor = new PollingDirectoryMonitor();
+    this.directoryMonitor.configure(this.config);
   }
 
   @Override

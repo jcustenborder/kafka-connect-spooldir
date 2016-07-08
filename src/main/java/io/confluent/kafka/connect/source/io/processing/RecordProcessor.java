@@ -1,14 +1,14 @@
 package io.confluent.kafka.connect.source.io.processing;
 
+import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
 import org.apache.kafka.connect.source.SourceRecord;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 public interface RecordProcessor extends AutoCloseable {
-  void configure(Map<?, ?> configValues,
+  void configure(SpoolDirectoryConfig config,
                  InputStream inputStream,
                  String fileName) throws IOException;
 
