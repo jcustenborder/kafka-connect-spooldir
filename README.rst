@@ -25,6 +25,11 @@ This project is dependant upon another project to handle parsing data from text 
     cd kafka-connect-spooldir
     mvn clean package
 
+Running on your workstation
+===========================
+
+
+
 
 Configuration Options
 =====================
