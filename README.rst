@@ -12,6 +12,21 @@ strongly typed Avro data in real time.
 
 The LineRecordProcessor supports reading a file line by line and emitting the line.
 
+Building on you workstation
+===========================
+
+This project is dependant upon another project to handle parsing data from text to Kafka Connect compatible types. To build the project use the following.
+
+::.
+    cd ~/source
+    git clone git@github.com:jcustenborder/connect-utils.git
+    cd connect-utils
+    mvn clean install
+    git@github.com:jcustenborder/kafka-connect-spooldir.git
+    cd kafka-connect-spooldir
+    mvn clean package
+
+
 Configuration Options
 =====================
 
