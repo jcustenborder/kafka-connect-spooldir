@@ -193,6 +193,8 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
           return new ArrayList<>();
         }
 
+        //TODO: Before opening the file, rename the file to processing.
+
         this.inputFile = nextFile;
         this.inputFileName = Files.getNameWithoutExtension(this.inputFile.getName());
         try {

@@ -31,7 +31,6 @@ public class SchemaConfigTests {
     Assert.assertNotNull(actual);
     Assert.assertThat(actual.type(), IsEqual.equalTo(expected.type()));
     Assert.assertThat(actual.name(), IsEqual.equalTo(expected.name()));
-//    Assert.assertThat(actual.type(), IsEqual.equalTo(Schema.Type.STRUCT));
 
     if (expected.type() == Schema.Type.STRUCT) {
       Assert.assertThat(actual.fields().size(), IsEqual.equalTo(expected.fields().size()));
@@ -44,13 +43,11 @@ public class SchemaConfigTests {
         Assert.assertThat(expectedField.index(), IsEqual.equalTo(expectedField.index()));
       }
     }
-
-
   }
 
   @Test
   public void schema() {
-    final SchemaConfig input = Data.getMockDataSchemaConfig();
+    final SchemaConfig input = Data.schemaConfig();
     final Schema expected = SchemaBuilder.struct()
         .name("io.confluent.kafka.connect.source.MockData")
         .field("id", Schema.INT32_SCHEMA)
@@ -64,7 +61,7 @@ public class SchemaConfigTests {
         .field("country", Schema.STRING_SCHEMA)
         .field("favorite_color", Schema.OPTIONAL_STRING_SCHEMA)
         .build();
-    final Schema actual = input.schema();
+    final Schema actual = input.parserConfigs().getValue().structSchema;
 
     assertSchema(expected, actual);
   }

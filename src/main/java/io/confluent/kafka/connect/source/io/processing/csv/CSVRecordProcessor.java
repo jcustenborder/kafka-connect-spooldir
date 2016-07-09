@@ -24,11 +24,11 @@ import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import io.confluent.kafka.connect.utils.Parser;
 import io.confluent.kafka.connect.utils.type.DateTypeParser;
-import org.apache.kafka.connect.data.Field;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.Schema;
-import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.data.Timestamp;
+import org.apache.kafka.connect.errors.DataException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,32 +49,10 @@ public class CSVRecordProcessor implements RecordProcessor {
   private InputStreamReader streamReader;
 
   private SchemaConfig schemaConfig;
-  private Schema valueSchema;
-  private Schema keySchema;
+  private SchemaConfig.ParserConfig valueParserConfig;
+  private SchemaConfig.ParserConfig keyParserConfig;
   private String fileName;
-  private Parser converter = new Parser();
-
-  private Schema buildValueSchema() {
-    SchemaBuilder builder = SchemaBuilder.struct();
-
-    for (FieldConfig fieldConfig : schemaConfig.fields) {
-      builder.field(fieldConfig.name, fieldConfig.schema());
-    }
-
-    return builder.build();
-  }
-
-  private Schema buildKeySchema() {
-    SchemaBuilder builder = SchemaBuilder.struct();
-
-    for (String key : this.config.keyFields()) {
-      Field field = this.valueSchema.field(key);
-      Preconditions.checkState(null != field, "Could not find key '%s' in available fields.", key);
-      builder.field(field.name(), field.schema());
-    }
-
-    return builder.build();
-  }
+  private Parser parser = new Parser();
 
 
   @Override
@@ -85,33 +64,89 @@ public class CSVRecordProcessor implements RecordProcessor {
     }
 
     DateTypeParser timestampDateConverter = new DateTypeParser(this.config.parserTimestampTimezone(), this.config.parserTimestampDateFormats());
-    this.converter.registerTypeParser(Timestamp.SCHEMA, timestampDateConverter);
+    this.parser.registerTypeParser(Timestamp.SCHEMA, timestampDateConverter);
 
     this.csvParser = this.config.createCSVParserBuilder().build();
     this.streamReader = new InputStreamReader(inputStream, this.config.charset());
     this.csvReader = this.config.createCSVReaderBuilder(this.streamReader, csvParser).build();
 
-    if (this.config.firstRowAsHeader()) {
-      String[] fieldNames = this.csvReader.readNext();
+    String[] fieldNames;
 
+    if (this.config.firstRowAsHeader()) {
       if (log.isDebugEnabled()) {
-        log.debug("Field names for the file are {}", Joiner.on(", ").join(fieldNames));
+        log.debug("Reading the first line ");
       }
+      fieldNames = this.csvReader.readNext();
+      if (log.isDebugEnabled()) {
+        log.debug("FieldMapping names for the file are {}", Joiner.on(", ").join(fieldNames));
+      }
+    } else {
+      fieldNames = null;
+    }
+
+    if (this.config.inferSchemaFromHeader()) {
+      Preconditions.checkState(
+          this.config.firstRowAsHeader(),
+          "If the %s is set to true, then %s must be set to true as well.",
+          this.config.inferSchemaFromHeader(),
+          this.config.firstRowAsHeader()
+      );
 
       SchemaConfig schemaConfig = new SchemaConfig();
 
       for (int i = 0; i < fieldNames.length; i++) {
         FieldConfig fieldConfig = FieldConfig.create(Schema.OPTIONAL_STRING_SCHEMA);
         fieldConfig.name = fieldNames[i];
+        fieldConfig.index = i;
         schemaConfig.fields.add(fieldConfig);
       }
       this.schemaConfig = schemaConfig;
     } else {
       this.schemaConfig = this.config.schemaConfig();
+
+      if (this.config.firstRowAsHeader()) {
+        Map<String, FieldConfig> map = new LinkedHashMap<>();
+        for (FieldConfig field : this.schemaConfig.fields) {
+          String mapKey = this.config.caseSensitiveFieldNames() ? field.name : field.name.toLowerCase();
+          Preconditions.checkState(!map.containsKey(mapKey), "Schema already has a field with name '%s' defined.", field.name);
+          map.put(mapKey, field);
+        }
+
+        int fieldIndex = 0;
+        for (String fieldName : fieldNames) {
+          String mapKey = this.config.caseSensitiveFieldNames() ? fieldName : fieldName.toLowerCase();
+          FieldConfig field = map.get(mapKey);
+
+          if (null == field) {
+            if (log.isDebugEnabled()) {
+              log.debug("FieldMapping '{}' was not found in structSchema. Skipping.", fieldName);
+            }
+            continue;
+          }
+          field.index = fieldIndex;
+          fieldIndex++;
+        }
+
+      } else {
+        if (log.isDebugEnabled()) {
+          log.debug("Laying out fields in the order they are in the structSchema.");
+        }
+
+        for (int i = 0; i < this.schemaConfig.fields.size(); i++) {
+          FieldConfig field = this.schemaConfig.fields.get(i);
+          field.index = i;
+          if (log.isDebugEnabled()) {
+            log.debug("FieldMapping {} index {}.", field.name, field.index);
+          }
+        }
+      }
+
     }
 
-    this.valueSchema = this.schemaConfig.schema();
-    this.keySchema = buildKeySchema();
+    Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> parserConfigs = this.schemaConfig.parserConfigs();
+
+    this.keyParserConfig = parserConfigs.getKey();
+    this.valueParserConfig = parserConfigs.getValue();
 
     this.fileName = fileName;
   }
@@ -132,26 +167,42 @@ public class CSVRecordProcessor implements RecordProcessor {
         break;
       }
 
-      Struct valueStruct = new Struct(this.valueSchema);
-      Struct keyStruct = new Struct(this.keySchema);
+      Struct valueStruct = new Struct(this.valueParserConfig.structSchema);
+      Struct keyStruct;
 
-      Preconditions.checkState(this.valueSchema.fields().size() == record.length, "Record has %s columns but schemaConfig has %s columns.",
-          this.valueSchema.fields().size(),
+      if (this.keyParserConfig.mappings.isEmpty()) {
+        keyStruct = null;
+      } else {
+        keyStruct = new Struct(this.keyParserConfig.structSchema);
+      }
+
+
+      Preconditions.checkState(this.valueParserConfig.mappings.size() == record.length, "Record has %s columns but schemaConfig has %s columns.",
+          this.valueParserConfig.mappings.size(),
           record.length
       );
 
-      for (int i = 0; i < record.length; i++) {
-        Field field = this.valueSchema.fields().get(i);
-        String input = record[i];
-        Object value = converter.parseString(field.schema(), input);
-        valueStruct.put(field.name(), value);
+      //Keep the objects in an array that way we don't parse them for the key.
+      Object[] values = new Object[record.length];
+
+      for (SchemaConfig.FieldMapping mapping : this.valueParserConfig.mappings) {
+        String input = record[mapping.index];
+        try {
+          values[mapping.index] = parser.parseString(mapping.schema, input);
+        } catch (Exception ex) {
+          String message = String.format("Exception thrown while parsing data for '%s'. linenumber=%s", mapping.fieldName, this.lineNumber());
+          throw new DataException(message, ex);
+        }
       }
 
-      //Read the key values from the converted value struct.
-      for (Field field : this.keySchema.fields()) {
-        Object value = valueStruct.get(field);
-        keyStruct.put(field.name(), value);
+      for (SchemaConfig.FieldMapping mapping : this.valueParserConfig.mappings) {
+        valueStruct.put(mapping.fieldName, values[mapping.index]);
       }
+
+      for (SchemaConfig.FieldMapping mapping : this.keyParserConfig.mappings) {
+        keyStruct.put(mapping.fieldName, values[mapping.index]);
+      }
+
 
       if (log.isInfoEnabled() && this.csvReader.getLinesRead() % ((long) this.config.batchSize() * 20) == 0) {
         log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.fileName);
@@ -164,9 +215,9 @@ public class CSVRecordProcessor implements RecordProcessor {
           partitions,
           offset,
           this.config.topic(),
-          this.keySchema,
-          keyStruct,
-          this.valueSchema,
+          null == keyStruct ? null : this.keyParserConfig.structSchema,
+          null == keyStruct ? null : keyStruct,
+          this.valueParserConfig.structSchema,
           valueStruct);
       records.add(sourceRecord);
     }

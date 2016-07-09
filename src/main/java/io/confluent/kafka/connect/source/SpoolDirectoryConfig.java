@@ -100,6 +100,8 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public static final String PARSER_TIMESTAMP_DATE_FORMATS_CONF = "parser.timestamp.date.formats";
   public static final String PARSER_TIMESTAMP_TIMEZONE_CONF = "parser.timestamp.timezone";
   public static final String SCHEMA_CONF = "schema";
+  public static final String INFER_SCHEMA_FROM_HEADER_CONF = "infer.structSchema.from.header";
+  public static final String CASE_SENSITIVE_FIELD_NAMES_CONF = "case.sensitive.field.names";
 
   static final String SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
@@ -135,10 +137,8 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   static final String PARSER_TIMESTAMP_TIMEZONE_DOC = "The timezone that all of the dates will be parsed with.";
   static final String PARSER_TIMESTAMP_TIMEZONE_DEFAULT = "UTC";
   static final String SCHEMA_DOC = "Schema representaiton in json.";
-
-//  public SpoolDirectoryConfig(ConfigDef config, Map<?, ?> parsedConfig) {
-//    super(config, parsedConfig);
-//  }
+  static final String INFER_SCHEMA_FROM_HEADER_DOC = "Flag to determine if the structSchema should be generated based on the header row.";
+  static final String CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
 
   public SpoolDirectoryConfig(Map<?, ?> parsedConfig) {
     super(getConf(), parsedConfig);
@@ -178,8 +178,8 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         .define(PARSER_TIMESTAMP_TIMEZONE_CONF, ConfigDef.Type.STRING, PARSER_TIMESTAMP_TIMEZONE_DEFAULT, ConfigDef.Importance.MEDIUM, PARSER_TIMESTAMP_TIMEZONE_DOC)
         .define(PARSER_TIMESTAMP_DATE_FORMATS_CONF, ConfigDef.Type.LIST, PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT, ConfigDef.Importance.MEDIUM, PARSER_TIMESTAMP_DATE_FORMATS_DOC)
         .define(SCHEMA_CONF, Type.STRING, "", ConfigDef.Importance.MEDIUM, SCHEMA_DOC)
-
-        ;
+        .define(INFER_SCHEMA_FROM_HEADER_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, INFER_SCHEMA_FROM_HEADER_DOC)
+        .define(CASE_SENSITIVE_FIELD_NAMES_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CASE_SENSITIVE_FIELD_NAMES_DOC);
 
 
   }
@@ -293,8 +293,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         .withQuoteChar(this.quoteChar())
         .withSeparator(this.separatorChar())
         .withStrictQuotes(this.strictQuotes())
-        .withFieldAsNull(nullFieldIndicator())
-        ;
+        .withFieldAsNull(nullFieldIndicator());
   }
 
   public CSVReaderBuilder createCSVReaderBuilder(Reader reader, CSVParser parser) {
@@ -303,8 +302,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         .withKeepCarriageReturn(this.keepCarriageReturn())
         .withSkipLines(this.skipLines())
         .withVerifyReader(this.verifyReader())
-        .withFieldAsNull(nullFieldIndicator())
-        ;
+        .withFieldAsNull(nullFieldIndicator());
   }
 
   public SimpleDateFormat[] parserTimestampDateFormats() {
@@ -331,7 +329,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public SchemaConfig schemaConfig() {
     String fieldContent = this.getString(SCHEMA_CONF);
 
-    Preconditions.checkState(null != fieldContent && !fieldContent.isEmpty(), "%s must be configured with a valid schema.", SCHEMA_CONF);
+    Preconditions.checkState(null != fieldContent && !fieldContent.isEmpty(), "%s must be configured with a valid structSchema.", SCHEMA_CONF);
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
@@ -341,6 +339,14 @@ public class SpoolDirectoryConfig extends AbstractConfig {
     } catch (IOException e) {
       throw new ConnectException("Could not parse schemaConfig json", e);
     }
+  }
+
+  public boolean inferSchemaFromHeader() {
+    return this.getBoolean(INFER_SCHEMA_FROM_HEADER_CONF);
+  }
+
+  public boolean caseSensitiveFieldNames() {
+    return this.getBoolean(CASE_SENSITIVE_FIELD_NAMES_CONF);
   }
 
 }

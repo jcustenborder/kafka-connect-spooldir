@@ -15,6 +15,7 @@
  */
 package io.confluent.kafka.connect.source.io.processing.csv;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -35,6 +36,8 @@ public class FieldConfig implements Comparable<FieldConfig> {
   public FieldConfig.Type type;
   public Integer scale;
   public boolean required;
+  @JsonIgnore
+  public int index;
 
   private static int scale(Schema schema) {
     String scaleString = (String) schema.parameters().get("scale");

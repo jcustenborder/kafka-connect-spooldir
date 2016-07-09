@@ -39,21 +39,10 @@ import java.util.Map;
 public class DirectoryMonitorTests {
 
   File tempDirectory;
-  File inputDirectory;
-  File errorDirectory;
-  File finishedDirectory;
-  SpoolDirectoryConfig settings;
+  SpoolDirectoryConfig config;
 
   @Test(expected = ConnectException.class)
   public void configure_MissingDirectories() {
-    Map<String, String> settings = getSettings();
-
-
-    PollingDirectoryMonitor monitor = new PollingDirectoryMonitor();
-    monitor.configure(new SpoolDirectoryConfig(settings));
-  }
-
-  Map<String, String> getSettings() {
     Map<String, String> settings = new HashMap<>();
     settings.put(SpoolDirectoryConfig.INPUT_PATH_CONFIG, "/missing");
     settings.put(SpoolDirectoryConfig.ERROR_PATH_CONFIG, "/missing2");
@@ -62,46 +51,27 @@ public class DirectoryMonitorTests {
     settings.put(SpoolDirectoryConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");
     settings.put(SpoolDirectoryConfig.TOPIC_CONF, "input");
 
-    return settings;
+    PollingDirectoryMonitor monitor = new PollingDirectoryMonitor();
+    monitor.configure(new SpoolDirectoryConfig(settings));
   }
-
 
   @Before
   public void before() {
     this.tempDirectory = Files.createTempDir();
-    this.inputDirectory = new File(tempDirectory, "input");
-    this.inputDirectory.mkdirs();
-    this.errorDirectory = new File(tempDirectory, "error");
-    this.errorDirectory.mkdirs();
-    this.finishedDirectory = new File(tempDirectory, "finished");
-    this.finishedDirectory.mkdirs();
-
-    Map<String, String> settings = new HashMap<>();
-
-    settings.put(SpoolDirectoryConfig.INPUT_PATH_CONFIG, inputDirectory.getAbsolutePath());
-    settings.put(SpoolDirectoryConfig.ERROR_PATH_CONFIG, errorDirectory.getAbsolutePath());
-    settings.put(SpoolDirectoryConfig.FINISHED_PATH_CONFIG, finishedDirectory.getAbsolutePath());
-    settings.put(SpoolDirectoryConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
-    settings.put(SpoolDirectoryConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");
-    settings.put(SpoolDirectoryConfig.TOPIC_CONF, "csv");
-    settings.put(SpoolDirectoryConfig.KEY_FIELDS_CONF, "id");
-    settings.put(SpoolDirectoryConfig.FIRST_ROW_AS_HEADER_CONF, "true");
-    settings.put(SpoolDirectoryConfig.SCHEMA_CONF, "{\"fields\":[{\"name\":\"id\",\"type\":\"int32\",\"required\":true},{\"name\":\"first_name\",\"type\":\"string\",\"required\":true},{\"name\":\"last_name\",\"type\":\"string\",\"required\":true},{\"name\":\"email\",\"type\":\"string\",\"required\":true},{\"name\":\"gender\",\"type\":\"string\",\"required\":true},{\"name\":\"ip_address\",\"type\":\"string\",\"required\":true},{\"name\":\"last_login\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"account_balance\",\"type\":\"decimal\",\"scale\":10,\"required\":false},{\"name\":\"country\",\"type\":\"string\",\"required\":true},{\"name\":\"favorite_color\",\"type\":\"string\",\"required\":false}]]");
-
-
-    this.settings = new SpoolDirectoryConfig(settings);
+    Map<String, String> settings = Data.settings(this.tempDirectory);
+    this.config = new SpoolDirectoryConfig(settings);
   }
 
   @Test
   public void configure() {
     PollingDirectoryMonitor monitor = new PollingDirectoryMonitor();
-    monitor.configure(settings);
+    monitor.configure(config);
   }
 
   @Test
   public void poll_empty() {
     PollingDirectoryMonitor monitor = new PollingDirectoryMonitor();
-    monitor.configure(settings);
+    monitor.configure(config);
     List<SourceRecord> results = monitor.poll();
     Assert.assertNotNull(results);
     Assert.assertTrue(results.isEmpty());
@@ -110,11 +80,11 @@ public class DirectoryMonitorTests {
   @Test
   public void poll() throws IOException {
     PollingDirectoryMonitor monitor = new PollingDirectoryMonitor();
-    monitor.configure(settings);
+    monitor.configure(config);
 
-    File inputFile = new File(this.inputDirectory, "input.csv");
+    File inputFile = new File(this.config.inputPath(), "input.csv");
     try (FileOutputStream outputStream = new FileOutputStream(inputFile)) {
-      try (InputStream inputStream = Data.getMockData()) {
+      try (InputStream inputStream = Data.mockData()) {
         ByteStreams.copy(inputStream, outputStream);
       }
     }
