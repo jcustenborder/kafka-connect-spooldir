@@ -19,6 +19,7 @@ import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.Data;
 import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
 import org.apache.kafka.connect.source.SourceRecord;
+import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,8 +54,45 @@ public class CSVRecordProcessorTests {
       List<SourceRecord> results = this.csvRecordProcessor.poll();
       Assert.assertNotNull(results);
     }
-
   }
 
+  @Test
+  public void schemaNotDefined() throws IOException {
+    Map<String, String> settings = Data.settings(Files.createTempDir());
+    settings.put(SpoolDirectoryConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
+    settings.remove(SpoolDirectoryConfig.CSV_SCHEMA_CONF);
+    settings.put(SpoolDirectoryConfig.CSV_SCHEMA_FROM_HEADER_CONF, "true");
+    settings.put(SpoolDirectoryConfig.CSV_FIRST_ROW_AS_HEADER_CONF, "true");
+
+    this.config = new SpoolDirectoryConfig(settings);
+
+    final String fileName = "Testing";
+
+    try (InputStream inputStream = Data.mockDataSmall()) {
+      this.csvRecordProcessor.configure(config, inputStream, fileName);
+      List<SourceRecord> results = this.csvRecordProcessor.poll();
+      Assert.assertNotNull(results);
+      Assert.assertFalse(results.isEmpty());
+      Assert.assertThat(results.size(), IsEqual.equalTo(20));
+    }
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void schemaNotDefinedWithoutHeader() throws IOException {
+    Map<String, String> settings = Data.settings(Files.createTempDir());
+    settings.put(SpoolDirectoryConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
+    settings.remove(SpoolDirectoryConfig.CSV_SCHEMA_CONF);
+    settings.put(SpoolDirectoryConfig.CSV_SCHEMA_FROM_HEADER_CONF, "true");
+    settings.put(SpoolDirectoryConfig.CSV_FIRST_ROW_AS_HEADER_CONF, "false");
+
+    this.config = new SpoolDirectoryConfig(settings);
+
+    final String fileName = "Testing";
+
+    try (InputStream inputStream = Data.mockDataSmall()) {
+      this.csvRecordProcessor.configure(config, inputStream, fileName);
+      List<SourceRecord> results = this.csvRecordProcessor.poll();
+    }
+  }
 
 }

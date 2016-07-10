@@ -16,6 +16,7 @@
 package io.confluent.kafka.connect.source.io.processing.csv;
 
 import io.confluent.kafka.connect.source.Data;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
@@ -48,7 +49,7 @@ public class SchemaConfigTests {
   @Test
   public void schema() {
     final SchemaConfig input = Data.schemaConfig();
-    final Schema expected = SchemaBuilder.struct()
+    final Schema expectedValueSchema = SchemaBuilder.struct()
         .name("io.confluent.kafka.connect.source.MockData")
         .field("id", Schema.INT32_SCHEMA)
         .field("first_name", Schema.STRING_SCHEMA)
@@ -61,9 +62,16 @@ public class SchemaConfigTests {
         .field("country", Schema.STRING_SCHEMA)
         .field("favorite_color", Schema.OPTIONAL_STRING_SCHEMA)
         .build();
-    final Schema actual = input.parserConfigs().getValue().structSchema;
+    final Schema expectedKeySchema = SchemaBuilder.struct()
+        .name("io.confluent.kafka.connect.source.MockDataKey")
+        .field("id", Schema.INT32_SCHEMA)
+        .build();
 
-    assertSchema(expected, actual);
+    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs();
+    System.out.println(actual.getKey());
+    System.out.println(actual.getValue());
+    assertSchema(expectedKeySchema, actual.getKey().structSchema);
+    assertSchema(expectedValueSchema, actual.getValue().structSchema);
   }
 
 

@@ -22,8 +22,8 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
-import io.confluent.kafka.connect.utils.Parser;
-import io.confluent.kafka.connect.utils.type.DateTypeParser;
+import io.confluent.kafka.connect.utils.data.Parser;
+import io.confluent.kafka.connect.utils.data.type.DateTypeParser;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
@@ -84,12 +84,12 @@ public class CSVRecordProcessor implements RecordProcessor {
       fieldNames = null;
     }
 
-    if (this.config.inferSchemaFromHeader()) {
+    if (this.config.schemaFromHeader()) {
       Preconditions.checkState(
           this.config.firstRowAsHeader(),
           "If the %s is set to true, then %s must be set to true as well.",
-          this.config.inferSchemaFromHeader(),
-          this.config.firstRowAsHeader()
+          SpoolDirectoryConfig.CSV_SCHEMA_FROM_HEADER_KEYS_CONF,
+          SpoolDirectoryConfig.CSV_FIRST_ROW_AS_HEADER_CONF
       );
 
       SchemaConfig schemaConfig = new SchemaConfig();
@@ -100,6 +100,7 @@ public class CSVRecordProcessor implements RecordProcessor {
         fieldConfig.index = i;
         schemaConfig.fields.add(fieldConfig);
       }
+      schemaConfig.keys = this.config.schemaFromHeaderKeys();
       this.schemaConfig = schemaConfig;
     } else {
       this.schemaConfig = this.config.schemaConfig();

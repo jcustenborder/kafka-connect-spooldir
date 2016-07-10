@@ -93,7 +93,8 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public static final String CSV_PARSER_TIMESTAMP_DATE_FORMATS_CONF = "csv.parser.timestamp.date.formats";
   public static final String CSV_PARSER_TIMESTAMP_TIMEZONE_CONF = "csv.parser.timestamp.timezone";
   public static final String CSV_SCHEMA_CONF = "csv.schema";
-  public static final String CSV_INFER_SCHEMA_FROM_HEADER_CONF = "csv.schema.from.header";
+  public static final String CSV_SCHEMA_FROM_HEADER_CONF = "csv.schema.from.header";
+  public static final String CSV_SCHEMA_FROM_HEADER_KEYS_CONF = "csv.schema.from.header.keys";
   public static final String CSV_CASE_SENSITIVE_FIELD_NAMES_CONF = "csv.case.sensitive.field.names";
 
   static final String CSV_SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
@@ -131,6 +132,8 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   static final String CSV_SCHEMA_DOC = "Schema representation in json.";
   static final String CSV_INFER_SCHEMA_FROM_HEADER_DOC = "Flag to determine if the structSchema should be generated based on the header row.";
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
+  static final String CSV_SCHEMA_FROM_HEADER_KEYS_DOC = "csv.schema.from.header.keys";
+
 
   public SpoolDirectoryConfig(Map<?, ?> parsedConfig) {
     super(getConf(), parsedConfig);
@@ -179,10 +182,9 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         .define(CSV_PARSER_TIMESTAMP_TIMEZONE_CONF, ConfigDef.Type.STRING, CSV_PARSER_TIMESTAMP_TIMEZONE_DEFAULT, ConfigDef.Importance.LOW, CSV_PARSER_TIMESTAMP_TIMEZONE_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_PARSER_TIMESTAMP_DATE_FORMATS_CONF, ConfigDef.Type.LIST, CSV_PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT, ConfigDef.Importance.LOW, CSV_PARSER_TIMESTAMP_DATE_FORMATS_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_SCHEMA_CONF, Type.STRING, "", ConfigDef.Importance.MEDIUM, CSV_SCHEMA_DOC)
-        .define(CSV_INFER_SCHEMA_FROM_HEADER_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_INFER_SCHEMA_FROM_HEADER_DOC)
-        .define(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_CASE_SENSITIVE_FIELD_NAMES_DOC);
-
-
+        .define(CSV_SCHEMA_FROM_HEADER_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_INFER_SCHEMA_FROM_HEADER_DOC)
+        .define(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_CASE_SENSITIVE_FIELD_NAMES_DOC)
+        .define(CSV_SCHEMA_FROM_HEADER_KEYS_CONF, Type.LIST, new ArrayList<>(), ConfigDef.Importance.LOW, CSV_SCHEMA_FROM_HEADER_KEYS_DOC);
   }
 
 
@@ -270,9 +272,9 @@ public class SpoolDirectoryConfig extends AbstractConfig {
     return this.getBoolean(CSV_FIRST_ROW_AS_HEADER_CONF);
   }
 
-//  public List<String> keyFields() {
-//    return this.getList(KEY_FIELDS_CONF);
-//  }
+  public List<String> schemaFromHeaderKeys() {
+    return this.getList(CSV_SCHEMA_FROM_HEADER_KEYS_CONF);
+  }
 
   public Charset charset() {
     String value = this.getString(CSV_CHARSET_CONF);
@@ -335,8 +337,8 @@ public class SpoolDirectoryConfig extends AbstractConfig {
     }
   }
 
-  public boolean inferSchemaFromHeader() {
-    return this.getBoolean(CSV_INFER_SCHEMA_FROM_HEADER_CONF);
+  public boolean schemaFromHeader() {
+    return this.getBoolean(CSV_SCHEMA_FROM_HEADER_CONF);
   }
 
   public boolean caseSensitiveFieldNames() {

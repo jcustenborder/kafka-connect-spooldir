@@ -23,16 +23,30 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import io.confluent.kafka.connect.source.io.processing.csv.CSVRecordProcessor;
 import io.confluent.kafka.connect.source.io.processing.csv.FieldConfig;
 import io.confluent.kafka.connect.source.io.processing.csv.SchemaConfig;
+import org.apache.kafka.connect.connector.ConnectRecord;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Data {
 
   public static InputStream mockData() {
     return Data.class.getResourceAsStream("MOCK_DATA.csv");
+  }
+
+  public static InputStream mockDataSmall() {
+    return Data.class.getResourceAsStream("MOCK_DATA_SMALL.csv");
+  }
+
+  public static List<ConnectRecord> mockDataSmallExpected() {
+    List<ConnectRecord> connectRecords = new ArrayList<>();
+
+
+    return connectRecords;
   }
 
 
@@ -47,6 +61,7 @@ public class Data {
 
   public static SchemaConfig schemaConfig() {
     SchemaConfig schemaConfig = new SchemaConfig();
+    schemaConfig.keys.add("id");
     schemaConfig.name = "io.confluent.kafka.connect.source.MockData";
     addField(schemaConfig, "id", FieldConfig.Type.INT32, true, null);
     addField(schemaConfig, "first_name", FieldConfig.Type.STRING, true, null);
@@ -60,6 +75,8 @@ public class Data {
     addField(schemaConfig, "favorite_color", FieldConfig.Type.STRING, false, null);
     return schemaConfig;
   }
+
+  public static final String TOPIC = "csv";
 
   public static Map<String, String> settings(File targetDir) {
     SchemaConfig config = schemaConfig();
@@ -85,7 +102,7 @@ public class Data {
     File errorDirectory = new File(targetDir, "error");
     result.put(SpoolDirectoryConfig.ERROR_PATH_CONFIG, errorDirectory.getAbsolutePath());
     errorDirectory.mkdirs();
-    result.put(SpoolDirectoryConfig.TOPIC_CONF, "csv");
+    result.put(SpoolDirectoryConfig.TOPIC_CONF, TOPIC);
 //    result.put(SpoolDirectoryConfig.KEY_FIELDS_CONF, "id");
     result.put(SpoolDirectoryConfig.CSV_FIRST_ROW_AS_HEADER_CONF, "true");
     result.put(SpoolDirectoryConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");

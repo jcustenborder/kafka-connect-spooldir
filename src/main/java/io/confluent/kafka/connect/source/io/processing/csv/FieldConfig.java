@@ -93,6 +93,7 @@ public class FieldConfig implements Comparable<FieldConfig> {
         .add("type", this.type)
         .add("scale", this.scale)
         .add("required", this.required)
+        .omitNullValues()
         .toString();
   }
 

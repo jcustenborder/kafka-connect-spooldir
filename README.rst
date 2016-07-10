@@ -33,7 +33,8 @@ Schema Configuration
 ====================
 
 This connector allows you to either infer a schema with nullable strings from the header row, or you can specify the schema in json format.
-The example below works is for the mock data. ::
+To use the automatic schema generation set ``csv.first.row.as.header=true``, ``csv.schema.from.header=true``, ``csv.schema.from.header.keys=key1,key2``.
+To manually define the schema set ``csv.schema`` to a json representation of the schema. The example below works is for the mock data in the test class. ::
 
     {
       "keys": [
