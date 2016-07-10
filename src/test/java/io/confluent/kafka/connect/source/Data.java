@@ -71,7 +71,7 @@ public class Data {
 
     try {
       String content = objectMapper.writeValueAsString(config);
-      result.put(SpoolDirectoryConfig.SCHEMA_CONF, content);
+      result.put(SpoolDirectoryConfig.CSV_SCHEMA_CONF, content);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException(e);
     }
@@ -86,11 +86,11 @@ public class Data {
     result.put(SpoolDirectoryConfig.ERROR_PATH_CONFIG, errorDirectory.getAbsolutePath());
     errorDirectory.mkdirs();
     result.put(SpoolDirectoryConfig.TOPIC_CONF, "csv");
-    result.put(SpoolDirectoryConfig.KEY_FIELDS_CONF, "id");
-    result.put(SpoolDirectoryConfig.FIRST_ROW_AS_HEADER_CONF, "true");
+//    result.put(SpoolDirectoryConfig.KEY_FIELDS_CONF, "id");
+    result.put(SpoolDirectoryConfig.CSV_FIRST_ROW_AS_HEADER_CONF, "true");
     result.put(SpoolDirectoryConfig.INPUT_FILE_PATTERN_CONF, "^.+\\.csv$");
-    result.put(SpoolDirectoryConfig.NULL_FIELD_INDICATOR_CONF, CSVReaderNullFieldIndicator.BOTH.name());
-    result.put(SpoolDirectoryConfig.PARSER_TIMESTAMP_DATE_FORMATS_CONF, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    result.put(SpoolDirectoryConfig.CSV_NULL_FIELD_INDICATOR_CONF, CSVReaderNullFieldIndicator.BOTH.name());
+    result.put(SpoolDirectoryConfig.CSV_PARSER_TIMESTAMP_DATE_FORMATS_CONF, "yyyy-MM-dd'T'HH:mm:ss'Z'");
     result.put(SpoolDirectoryConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
     result.put(SpoolDirectoryConfig.BATCH_SIZE_CONF, "100");
     return result;

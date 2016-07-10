@@ -29,6 +29,92 @@ Running on your workstation
 ===========================
 
 
+Schema Configuration
+====================
+
+This connector allows you to either infer a schema with nullable strings from the header row, or you can specify the schema in json format.
+The example below works is for the mock data.
+
+::
+    {
+      "keys": [
+        "id"
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "name": "first_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "gender",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "ip_address",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "last_login",
+          "type": "timestamp",
+          "required": false
+        },
+        {
+          "name": "account_balance",
+          "type": "decimal",
+          "scale": 10,
+          "required": false
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "favorite_color",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+
+``name``
+    The name of the schema. If you are using the Confluent schema registry this will be the name of the AVRO schema.
+
+``keys``
+    The field names for the keys of the message. These fields must exist in the fields array.
+
+``fields``
+    The field definitions for the schema.
+
++------------+------------+-----------+-----------+------------+-----------+-----------+------------+-----------+-----------+-----------+-----------+-----------+
+| Property   | Description            | Notes                                                                                                                   |
++============+============+===========+===========+============+===========+===========+============+===========+===========+===========+===========+===========+
+| name       | Name of the field.     |                                                                                                                         |
++------------+------------+-----------+-----------+------------+-----------+-----------+------------+-----------+-----------+-----------+-----------+-----------+
+| type       | Type for the field     | Valid values are decimal, time, timestamp, date, int8, int16, int32, int64, float32, float64, boolean, string, bytes    |
++------------+------------+-----------+-----------+------------+-----------+-----------+------------+-----------+-----------+-----------+-----------+-----------+
+| required   | Is the field required? |                                                                                                                         |
++------------+------------+-----------+-----------+------------+-----------+-----------+------------+-----------+-----------+-----------+-----------+-----------+
+| scale      | Scale for a decimal    | Only used for decimals. Ignored for all other types                                                                     |
++------------+------------+-----------+-----------+------------+-----------+-----------+------------+-----------+-----------+-----------+-----------+-----------+
 
 
 Configuration Options
@@ -49,7 +135,7 @@ Configuration Options
   * Importance: high
 
 ``input.file.pattern``
-  Regular expression to check input file names against.
+  Regular expression to check input file names against. This expression must match the entire filename. The equivalent of Matcher.matches().
 
   * Type: string
   * Default: ""
@@ -76,20 +162,6 @@ Configuration Options
   * Default: ""
   * Importance: high
 
-``file.minimum.age.ms``
-  The amount of time in milliseconds after the file was last written to before the file can be processed.
-
-  * Type: long
-  * Default: 0
-  * Importance: high
-
-``first.row.as.header``
-  Flag to indicate if the fist row of data contains the header of the file.
-
-  * Type: boolean
-  * Default: false
-  * Importance: high
-
 ``halt.on.error``
   Should the task halt when it encounters an error or continue to the next file.
 
@@ -97,117 +169,139 @@ Configuration Options
   * Default: true
   * Importance: high
 
-``key.fields``
-  The fields that should be used as a key for the message.
+``csv.first.row.as.header``
+  Flag to indicate if the fist row of data contains the header of the file.
 
-  * Type: list
-  * Default: []
-  * Importance: high
-
-``escape.char``
-  Escape character.
-
-  * Type: int
-  * Default: 92
+  * Type: boolean
+  * Default: false
   * Importance: medium
 
-``file.charset``
-  Character set to read wth file with.
-
-  * Type: string
-  * Default: "UTF-8"
-  * Importance: medium
-
-``parser.timestamp.date.formats``
-  The date formats that are expected in the file. This is a list of strings that will be used to parse the date fields in order. The most accurate date format should be the first in the list. Take a look at the Java documentation for more info. https://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html
-
-  * Type: list
-  * Default: [yyyy-MM-dd' 'HH:mm:ss]
-  * Importance: medium
-
-``parser.timestamp.timezone``
-  The timezone that all of the dates will be parsed with.
-
-  * Type: string
-  * Default: "UTC"
-  * Importance: medium
-
-``quote.char``
-  The character that is used to quote a field. This typically happens when the separator.char character is within the data.
-
-  * Type: int
-  * Default: 34
-  * Importance: medium
-
-``schema``
-  Schema representaiton in json.
+``csv.schema``
+  Schema representation in json.
 
   * Type: string
   * Default: ""
-  * Importance: medium
-
-``separator.char``
-  The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \t.
-
-  * Type: int
-  * Default: 44
   * Importance: medium
 
 ``batch.size``
   The number of records that should be returned with each batch.
 
   * Type: int
-  * Default: 100
+  * Default: 1000
   * Importance: low
 
-``ignore.leading.whitespace``
-  Flag to determine if the whitespace leading the field should be ignored.
-
-  * Type: boolean
-  * Default: true
-  * Importance: low
-
-``ignore.quotations``
-  ignore_quotations character.
+``csv.case.sensitive.field.names``
+  Flag to determine if the field names in the header row should be treated as case sensitive.
 
   * Type: boolean
   * Default: false
   * Importance: low
 
-``keep.carriage.return``
+``csv.escape.char``
+  Escape character.
+
+  * Type: int
+  * Default: 92
+  * Importance: low
+
+``csv.file.charset``
+  Character set to read wth file with.
+
+  * Type: string
+  * Default: "UTF-8"
+  * Importance: low
+
+``csv.ignore.leading.whitespace``
+  Sets the ignore leading whitespace setting - if true, white space in front of a quote in a field is ignored.
+
+  * Type: boolean
+  * Default: true
+  * Importance: low
+
+``csv.ignore.quotations``
+  Sets the ignore quotations mode - if true, quotations are ignored.
+
+  * Type: boolean
+  * Default: false
+  * Importance: low
+
+``csv.keep.carriage.return``
   Flag to determine if the carriage return at the end of the line should be maintained.
 
   * Type: boolean
   * Default: false
   * Importance: low
 
-``null.field.indicator``
+``csv.null.field.indicator``
   Indicator to determine how the CSV Reader can determine if a field is null. Valid values are EMPTY_SEPARATORS, EMPTY_QUOTES, BOTH, NEITHER. For more information see http://opencsv.sourceforge.net/apidocs/com/opencsv/enums/CSVReaderNullFieldIndicator.html.
 
   * Type: string
   * Default: "NEITHER"
   * Importance: low
 
-``skip.lines``
+``csv.parser.timestamp.date.formats``
+  The date formats that are expected in the file. This is a list of strings that will be used to parse the date fields in order. The most accurate date format should be the first in the list. Take a look at the Java documentation for more info. https://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html
+
+  * Type: list
+  * Default: [yyyy-MM-dd' 'HH:mm:ss]
+  * Importance: low
+
+``csv.parser.timestamp.timezone``
+  The timezone that all of the dates will be parsed with.
+
+  * Type: string
+  * Default: "UTC"
+  * Importance: low
+
+``csv.quote.char``
+  The character that is used to quote a field. This typically happens when the csv.separator.char character is within the data.
+
+  * Type: int
+  * Default: 34
+  * Importance: low
+
+``csv.schema.from.header``
+  Flag to determine if the structSchema should be generated based on the header row.
+
+  * Type: boolean
+  * Default: false
+  * Importance: low
+
+``csv.separator.char``
+  The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \t.
+
+  * Type: int
+  * Default: 44
+  * Importance: low
+
+``csv.skip.lines``
   Number of lines to skip in the beginning of the file.
 
   * Type: int
   * Default: 0
   * Importance: low
 
-``strict.quotes``
-  strict quotes.
+``csv.strict.quotes``
+  Sets the strict quotes setting - if true, characters outside the quotes are ignored.
 
   * Type: boolean
   * Default: false
   * Importance: low
 
-``verify.reader``
+``csv.verify.reader``
   Flag to determine if the reader should be verified.
 
   * Type: boolean
   * Default: true
   * Importance: low
+
+``file.minimum.age.ms``
+  The amount of time in milliseconds after the file was last written to before the file can be processed.
+
+  * Type: long
+  * Default: 0
+  * Importance: low
+
 
 
 
