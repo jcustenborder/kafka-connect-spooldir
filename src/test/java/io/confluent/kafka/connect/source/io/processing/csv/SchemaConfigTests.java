@@ -74,5 +74,37 @@ public class SchemaConfigTests {
     assertSchema(expectedValueSchema, actual.getValue().structSchema);
   }
 
+  @Test(expected = IllegalStateException.class)
+  public void schemaInvalidKeys() {
+    final SchemaConfig input = Data.schemaConfig();
+    input.keys.clear();
+    input.keys.add("ID");
+    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs();
+  }
 
+  @Test
+  public void schemaNoKeys() {
+    final SchemaConfig input = Data.schemaConfig();
+    input.keys.clear();
+    final Schema expectedValueSchema = SchemaBuilder.struct()
+        .name("io.confluent.kafka.connect.source.MockData")
+        .field("id", Schema.INT32_SCHEMA)
+        .field("first_name", Schema.STRING_SCHEMA)
+        .field("last_name", Schema.STRING_SCHEMA)
+        .field("email", Schema.STRING_SCHEMA)
+        .field("gender", Schema.STRING_SCHEMA)
+        .field("ip_address", Schema.STRING_SCHEMA)
+        .field("last_login", Timestamp.builder().optional())
+        .field("account_balance", Decimal.builder(10).optional())
+        .field("country", Schema.STRING_SCHEMA)
+        .field("favorite_color", Schema.OPTIONAL_STRING_SCHEMA)
+        .build();
+    final Schema expectedKeySchema = null;
+
+    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs();
+    System.out.println(actual.getKey());
+    System.out.println(actual.getValue());
+    Assert.assertNull(actual.getKey().structSchema);
+    assertSchema(expectedValueSchema, actual.getValue().structSchema);
+  }
 }

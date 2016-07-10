@@ -62,9 +62,10 @@ public class SchemaConfig {
       }
     }
 
-    Preconditions.checkState(keyLookup.isEmpty(), "Keys specified were not found in the structSchema., %s", Joiner.on(",").join(keyLookup));
+    Preconditions.checkState(keyLookup.isEmpty(), "Keys specified were not found in the schema. The following key field(s) " +
+        "were not found: %s", Joiner.on(",").join(keyLookup));
 
-    ParserConfig keyParserConfig = new ParserConfig(keyBuilder.build(), keyMaps);
+    ParserConfig keyParserConfig = new ParserConfig(this.keys.isEmpty() ? null : keyBuilder.build(), keyMaps);
     ParserConfig valueParserConfig = new ParserConfig(valueBuilder.build(), valueMaps);
 
 
