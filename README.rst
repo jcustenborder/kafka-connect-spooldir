@@ -33,9 +33,8 @@ Schema Configuration
 ====================
 
 This connector allows you to either infer a schema with nullable strings from the header row, or you can specify the schema in json format.
-The example below works is for the mock data.
+The example below works is for the mock data. ::
 
-::
     {
       "keys": [
         "id"
