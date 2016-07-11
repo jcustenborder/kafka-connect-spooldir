@@ -120,7 +120,7 @@ public class CSVRecordProcessor implements RecordProcessor {
 
           if (null == field) {
             if (log.isDebugEnabled()) {
-              log.debug("FieldMapping '{}' was not found in structSchema. Skipping.", fieldName);
+              log.debug("FieldMapping '{}' was not found in schema. Skipping.", fieldName);
             }
             continue;
           }
@@ -130,7 +130,7 @@ public class CSVRecordProcessor implements RecordProcessor {
 
       } else {
         if (log.isDebugEnabled()) {
-          log.debug("Laying out fields in the order they are in the structSchema.");
+          log.debug("Laying out fields in the order they are in the schema.");
         }
 
         for (int i = 0; i < this.schemaConfig.fields.size(); i++) {

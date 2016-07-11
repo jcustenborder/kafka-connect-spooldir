@@ -261,7 +261,7 @@ Configuration Options
   * Importance: low
 
 ``csv.schema.from.header``
-  Flag to determine if the structSchema should be generated based on the header row.
+  Flag to determine if the schema should be generated based on the header row.
 
   * Type: boolean
   * Default: false

@@ -129,7 +129,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   static final String CSV_PARSER_TIMESTAMP_TIMEZONE_DOC = "The timezone that all of the dates will be parsed with.";
   static final String CSV_PARSER_TIMESTAMP_TIMEZONE_DEFAULT = "UTC";
   static final String CSV_SCHEMA_DOC = "Schema representation in json.";
-  static final String CSV_INFER_SCHEMA_FROM_HEADER_DOC = "Flag to determine if the structSchema should be generated based on the header row.";
+  static final String CSV_INFER_SCHEMA_FROM_HEADER_DOC = "Flag to determine if the schema should be generated based on the header row.";
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
   static final String CSV_SCHEMA_FROM_HEADER_KEYS_DOC = "csv.schema.from.header.keys";
   static final String CSV_GROUP = "csv";
@@ -320,7 +320,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public SchemaConfig schemaConfig() {
     String fieldContent = this.getString(CSV_SCHEMA_CONF);
 
-    Preconditions.checkState(null != fieldContent && !fieldContent.isEmpty(), "%s must be configured with a valid structSchema.", CSV_SCHEMA_CONF);
+    Preconditions.checkState(null != fieldContent && !fieldContent.isEmpty(), "%s must be configured with a valid schema.", CSV_SCHEMA_CONF);
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);

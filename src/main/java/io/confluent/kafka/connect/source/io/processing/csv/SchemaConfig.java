@@ -108,7 +108,7 @@ public class SchemaConfig {
     public String toString() {
       return MoreObjects.toStringHelper(this)
           .add("mappings", this.mappings)
-          .add("structSchema", this.structSchema)
+          .add("schema", this.structSchema)
           .omitNullValues()
           .toString();
     }
