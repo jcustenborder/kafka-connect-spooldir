@@ -267,6 +267,13 @@ Configuration Options
   * Default: false
   * Importance: low
 
+``csv.schema.from.header.keys``
+  csv.schema.from.header.keys
+
+  * Type: list
+  * Default: []
+  * Importance: low
+
 ``csv.separator.char``
   The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \t.
 
@@ -301,6 +308,14 @@ Configuration Options
   * Type: long
   * Default: 0
   * Importance: low
+
+``processing.file.extension``
+  Before a file is processed, it is renamed to indicate that it is currently being processed. This setting is appended to the end of the file.
+
+  * Type: string
+  * Default: ".PROCESSING"
+  * Importance: low
+
 
 
 

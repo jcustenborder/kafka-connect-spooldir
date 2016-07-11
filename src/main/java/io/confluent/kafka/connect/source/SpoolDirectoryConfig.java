@@ -29,6 +29,7 @@ import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import io.confluent.kafka.connect.source.io.processing.csv.SchemaConfig;
 import io.confluent.kafka.connect.utils.config.ConfigUtils;
 import io.confluent.kafka.connect.utils.config.ValidEnum;
+import io.confluent.kafka.connect.utils.config.ValidPattern;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Type;
@@ -52,8 +53,6 @@ public class SpoolDirectoryConfig extends AbstractConfig {
 
   //DirectoryMonitorConfig
   public static final String RECORD_PROCESSOR_CLASS_CONF = "record.processor.class";
-  static final String RECORD_PROCESSOR_CLASS_DOC = "Class that implements RecordProcessor. This class is used to process data as it arrives.";
-
   //PollingDirectoryMonitorConfig
   public static final String INPUT_PATH_CONFIG = "input.path";
   public static final String FINISHED_PATH_CONFIG = "finished.path";
@@ -61,22 +60,14 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public static final String INPUT_FILE_PATTERN_CONF = "input.file.pattern";
   public static final String HALT_ON_ERROR_CONF = "halt.on.error";
   public static final String FILE_MINIMUM_AGE_MS_CONF = "file.minimum.age.ms";
-  static final String INPUT_PATH_DOC = "The directory to read files that will be processed. This directory must exist and be writable by the user running Kafka Connect.";
-  static final String FINISHED_PATH_DOC = "The directory to place files that have been successfully processed. This directory must exist and be writable by the user running Kafka Connect.";
-  static final String ERROR_PATH_DOC = "The directory to place files in which have error(s). This directory must exist and be writable by the user running Kafka Connect.";
-  static final String INPUT_FILE_PATTERN_DOC = "Regular expression to check input file names against. This expression " +
-      "must match the entire filename. The equivalent of Matcher.matches().";
-  static final String HALT_ON_ERROR_DOC = "Should the task halt when it encounters an error or continue to the next file.";
-  static final String FILE_MINIMUM_AGE_MS_DOC = "The amount of time in milliseconds after the file was last written to before the file can be processed.";
-
+  public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
   //RecordProcessorConfig
   public static final String BATCH_SIZE_CONF = "batch.size";
   public static final String BATCH_SIZE_DOC = "The number of records that should be returned with each batch.";
   public static final int BATCH_SIZE_DEFAULT = 1000;
-
+  public static final String PROCESSING_FILE_EXTENSION_DEFAULT = ".PROCESSING";
   public static final String TOPIC_CONF = "topic";
   public static final String TOPIC_DOC = "The Kafka topic to write the data to.";
-
   //CSVRecordProcessorConfig
   public static final String CSV_SKIP_LINES_CONF = "csv.skip.lines";
   public static final String CSV_SEPARATOR_CHAR_CONF = "csv.separator.char";
@@ -96,7 +87,15 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public static final String CSV_SCHEMA_FROM_HEADER_CONF = "csv.schema.from.header";
   public static final String CSV_SCHEMA_FROM_HEADER_KEYS_CONF = "csv.schema.from.header.keys";
   public static final String CSV_CASE_SENSITIVE_FIELD_NAMES_CONF = "csv.case.sensitive.field.names";
-
+  static final String RECORD_PROCESSOR_CLASS_DOC = "Class that implements RecordProcessor. This class is used to process data as it arrives.";
+  static final String INPUT_PATH_DOC = "The directory to read files that will be processed. This directory must exist and be writable by the user running Kafka Connect.";
+  static final String FINISHED_PATH_DOC = "The directory to place files that have been successfully processed. This directory must exist and be writable by the user running Kafka Connect.";
+  static final String ERROR_PATH_DOC = "The directory to place files in which have error(s). This directory must exist and be writable by the user running Kafka Connect.";
+  static final String INPUT_FILE_PATTERN_DOC = "Regular expression to check input file names against. This expression " +
+      "must match the entire filename. The equivalent of Matcher.matches().";
+  static final String HALT_ON_ERROR_DOC = "Should the task halt when it encounters an error or continue to the next file.";
+  static final String FILE_MINIMUM_AGE_MS_DOC = "The amount of time in milliseconds after the file was last written to before the file can be processed.";
+  static final String PROCESSING_FILE_EXTENSION_DOC = "Before a file is processed, it is renamed to indicate that it is currently being processed. This setting is appended to the end of the file.";
   static final String CSV_SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int CSV_SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
   static final String CSV_SEPARATOR_CHAR_DOC = "The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \\t.";
@@ -133,15 +132,11 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   static final String CSV_INFER_SCHEMA_FROM_HEADER_DOC = "Flag to determine if the structSchema should be generated based on the header row.";
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
   static final String CSV_SCHEMA_FROM_HEADER_KEYS_DOC = "csv.schema.from.header.keys";
-
-
+  static final String CSV_GROUP = "csv";
+  static final String CSV_DISPLAY_NAME = "CSV Settings";
   public SpoolDirectoryConfig(Map<?, ?> parsedConfig) {
     super(getConf(), parsedConfig);
   }
-
-  static final String CSV_GROUP = "csv";
-  static final String CSV_DISPLAY_NAME = "CSV Settings";
-
 
   public static ConfigDef getConf() {
 
@@ -159,6 +154,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         .define(INPUT_FILE_PATTERN_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, INPUT_FILE_PATTERN_DOC)
         .define(HALT_ON_ERROR_CONF, ConfigDef.Type.BOOLEAN, true, ConfigDef.Importance.HIGH, HALT_ON_ERROR_DOC)
         .define(FILE_MINIMUM_AGE_MS_CONF, ConfigDef.Type.LONG, 0L, ConfigDef.Range.between(0L, Long.MAX_VALUE), ConfigDef.Importance.LOW, FILE_MINIMUM_AGE_MS_DOC)
+        .define(PROCESSING_FILE_EXTENSION_CONF, ConfigDef.Type.STRING, PROCESSING_FILE_EXTENSION_DEFAULT, ValidPattern.of("^.*\\..+$"), ConfigDef.Importance.LOW, PROCESSING_FILE_EXTENSION_DOC)
 
         //RecordProcessorConfig
         .define(BATCH_SIZE_CONF, ConfigDef.Type.INT, BATCH_SIZE_DEFAULT, ConfigDef.Importance.LOW, BATCH_SIZE_DOC)
@@ -186,7 +182,6 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         .define(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_CASE_SENSITIVE_FIELD_NAMES_DOC)
         .define(CSV_SCHEMA_FROM_HEADER_KEYS_CONF, Type.LIST, new ArrayList<>(), ConfigDef.Importance.LOW, CSV_SCHEMA_FROM_HEADER_KEYS_DOC);
   }
-
 
 
   public File inputPath() {
@@ -345,4 +340,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
     return this.getBoolean(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF);
   }
 
+  public String processingFileExtension() {
+    return this.getString(PROCESSING_FILE_EXTENSION_CONF);
+  }
 }

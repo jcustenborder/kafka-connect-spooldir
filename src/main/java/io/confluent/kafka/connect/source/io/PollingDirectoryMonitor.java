@@ -182,6 +182,21 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
     return result;
   }
 
+  File renameFileForProcessing(File inputFile) throws IOException {
+    File parentDirectory = inputFile.getParentFile();
+    String filenameWithoutExtension = Files.getNameWithoutExtension(inputFile.getName());
+    String originalExtension = Files.getFileExtension(inputFile.getName());
+    String processingFileName = String.format("%s.%s%s", filenameWithoutExtension, originalExtension, this.config.processingFileExtension());
+    File processingFile = new File(parentDirectory, processingFileName);
+
+    if (log.isInfoEnabled()) {
+      log.info("Renaming {} to {} for processing.", inputFile, processingFile);
+    }
+
+    Files.move(inputFile, processingFile);
+    return processingFile;
+  }
+
   @Override
   public List<SourceRecord> poll() {
     try {
@@ -193,9 +208,8 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
           return new ArrayList<>();
         }
 
-        //TODO: Before opening the file, rename the file to processing.
-
-        this.inputFile = nextFile;
+        File processingFile = renameFileForProcessing(nextFile);
+        this.inputFile = processingFile;
         this.inputFileName = Files.getNameWithoutExtension(this.inputFile.getName());
         try {
           if (log.isInfoEnabled()) {
