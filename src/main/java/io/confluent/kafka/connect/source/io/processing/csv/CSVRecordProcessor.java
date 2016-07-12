@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.FileMetadata;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import io.confluent.kafka.connect.utils.data.Parser;
 import io.confluent.kafka.connect.utils.data.type.DateTypeParser;
@@ -47,16 +48,15 @@ public class CSVRecordProcessor implements RecordProcessor {
   private CSVParser csvParser;
   private CSVReader csvReader;
   private InputStreamReader streamReader;
-
+  private FileMetadata fileMetadata;
   private SchemaConfig schemaConfig;
   private SchemaConfig.ParserConfig valueParserConfig;
   private SchemaConfig.ParserConfig keyParserConfig;
-  private String fileName;
   private Parser parser = new Parser();
 
 
   @Override
-  public void configure(SpoolDirectoryConfig config, InputStream inputStream, String fileName) throws IOException {
+  public void configure(SpoolDirectoryConfig config, InputStream inputStream, FileMetadata fileMetadata) throws IOException {
     this.config = config;
 
     if (log.isDebugEnabled()) {
@@ -144,12 +144,12 @@ public class CSVRecordProcessor implements RecordProcessor {
 
     }
 
-    Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> parserConfigs = this.schemaConfig.parserConfigs();
+    Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> parserConfigs = this.schemaConfig.parserConfigs(this.config);
 
     this.keyParserConfig = parserConfigs.getKey();
     this.valueParserConfig = parserConfigs.getValue();
 
-    this.fileName = fileName;
+    this.fileMetadata = fileMetadata;
   }
 
   @Override
@@ -204,13 +204,16 @@ public class CSVRecordProcessor implements RecordProcessor {
         keyStruct.put(mapping.fieldName, values[mapping.index]);
       }
 
+      if (this.config.includeFileMetadata()) {
+        this.fileMetadata.addToStruct(valueStruct, this.csvReader.getLinesRead());
+      }
 
       if (log.isInfoEnabled() && this.csvReader.getLinesRead() % ((long) this.config.batchSize() * 20) == 0) {
-        log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.fileName);
+        log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.fileMetadata);
       }
 
       Map<String, ?> partitions = ImmutableMap.of();
-      Map<String, ?> offset = ImmutableMap.of(this.fileName, csvReader.getLinesRead());
+      Map<String, ?> offset = ImmutableMap.of(this.fileMetadata.fileName(), csvReader.getLinesRead());
 
       SourceRecord sourceRecord = new SourceRecord(
           partitions,

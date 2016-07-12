@@ -18,6 +18,7 @@ package io.confluent.kafka.connect.source.io.processing.csv;
 import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.Data;
 import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.FileMetadata;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
@@ -29,7 +30,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-public class CSVRecordProcessorTests {
+public class CSVRecordProcessorTest {
 
 
   CSVRecordProcessor csvRecordProcessor;
@@ -50,7 +51,7 @@ public class CSVRecordProcessorTests {
     final String fileName = "Testing";
 
     try (InputStream inputStream = Data.mockData()) {
-      this.csvRecordProcessor.configure(config, inputStream, fileName);
+      this.csvRecordProcessor.configure(config, inputStream, new FileMetadata(Files.createTempDir()));
       List<SourceRecord> results = this.csvRecordProcessor.poll();
       Assert.assertNotNull(results);
     }
@@ -69,7 +70,7 @@ public class CSVRecordProcessorTests {
     final String fileName = "Testing";
 
     try (InputStream inputStream = Data.mockDataSmall()) {
-      this.csvRecordProcessor.configure(config, inputStream, fileName);
+      this.csvRecordProcessor.configure(config, inputStream, new FileMetadata(Files.createTempDir()));
       List<SourceRecord> results = this.csvRecordProcessor.poll();
       Assert.assertNotNull(results);
       Assert.assertFalse(results.isEmpty());
@@ -90,7 +91,7 @@ public class CSVRecordProcessorTests {
     final String fileName = "Testing";
 
     try (InputStream inputStream = Data.mockDataSmall()) {
-      this.csvRecordProcessor.configure(config, inputStream, fileName);
+      this.csvRecordProcessor.configure(config, inputStream, new FileMetadata(Files.createTempDir()));
       List<SourceRecord> results = this.csvRecordProcessor.poll();
     }
   }

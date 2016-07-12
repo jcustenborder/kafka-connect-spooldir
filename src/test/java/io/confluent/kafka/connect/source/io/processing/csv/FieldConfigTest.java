@@ -24,7 +24,7 @@ import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class FieldConfigTests {
+public class FieldConfigTest {
 
   void assertCreate(final Schema schema, final FieldConfig.Type expectedType) {
     FieldConfig expected = FieldConfig.create(schema);

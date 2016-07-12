@@ -18,6 +18,8 @@ package io.confluent.kafka.connect.source.io.processing.csv;
 import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.FileMetadata;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.Schema;
@@ -34,7 +36,7 @@ public class SchemaConfig {
   public List<FieldConfig> fields = new ArrayList<>();
 
 
-  public Pair<ParserConfig, ParserConfig> parserConfigs() {
+  public Pair<ParserConfig, ParserConfig> parserConfigs(SpoolDirectoryConfig config) {
     Preconditions.checkNotNull(fields, "fields cannot be null.");
     SchemaBuilder valueBuilder = SchemaBuilder.struct();
     valueBuilder.name(this.name);
@@ -64,6 +66,10 @@ public class SchemaConfig {
 
     Preconditions.checkState(keyLookup.isEmpty(), "Keys specified were not found in the schema. The following key field(s) " +
         "were not found: %s", Joiner.on(",").join(keyLookup));
+
+    if (config.includeFileMetadata()) {
+      FileMetadata.addFieldSchema(valueBuilder);
+    }
 
     ParserConfig keyParserConfig = new ParserConfig(this.keys.isEmpty() ? null : keyBuilder.build(), keyMaps);
     ParserConfig valueParserConfig = new ParserConfig(valueBuilder.build(), valueMaps);

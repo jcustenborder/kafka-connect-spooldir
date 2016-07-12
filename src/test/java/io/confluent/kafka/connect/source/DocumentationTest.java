@@ -17,7 +17,7 @@ package io.confluent.kafka.connect.source;
 
 import org.junit.Test;
 
-public class DocumentationTests {
+public class DocumentationTest {
 
   @Test
   public void generateRST() {

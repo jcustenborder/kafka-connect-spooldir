@@ -17,6 +17,7 @@ package io.confluent.kafka.connect.source.io.processing.line;
 
 import com.google.common.collect.ImmutableMap;
 import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.FileMetadata;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
@@ -38,11 +39,11 @@ public class LineRecordProcessor implements RecordProcessor {
   final static String FIELD_FILENAME = "filename";
   final static String FIELD_LINENUMBER = "linenumber";
   final Schema defaultKeySchema;
-  private String inputFileName;
   private InputStream inputStream;
   private InputStreamReader inputStreamReader;
   private LineNumberReader lineNumberReader;
   private SpoolDirectoryConfig config;
+  private FileMetadata fileMetadata;
 
   public LineRecordProcessor() {
     this.defaultKeySchema = SchemaBuilder.struct()
@@ -52,10 +53,10 @@ public class LineRecordProcessor implements RecordProcessor {
   }
 
   @Override
-  public void configure(SpoolDirectoryConfig config, InputStream inputStream, String fileName) {
+  public void configure(SpoolDirectoryConfig config, InputStream inputStream, FileMetadata fileMetadata) {
     this.config = config;
     this.inputStream = inputStream;
-    this.inputFileName = fileName;
+    this.fileMetadata = fileMetadata;
     this.inputStreamReader = new InputStreamReader(this.inputStream, this.config.charset());
     this.lineNumberReader = new LineNumberReader(this.inputStreamReader);
   }
@@ -73,23 +74,23 @@ public class LineRecordProcessor implements RecordProcessor {
       String topic,
       String line) {
 
-    Struct key = new Struct(this.defaultKeySchema);
-    key.put(FIELD_FILENAME, this.inputFileName);
-    key.put(FIELD_LINENUMBER, lineNumber);
+    Struct value = new Struct(this.defaultKeySchema);
+    value.put(FIELD_FILENAME, this.fileMetadata.fileName());
+    value.put(FIELD_LINENUMBER, lineNumber);
 
     return new SourceRecord(
         sourcePartition,
         sourceOffset,
         topic,
         this.defaultKeySchema,
-        key,
+        value,
         Schema.STRING_SCHEMA,
         line
     );
   }
 
   private Map<String, ?> getSourceOffset(int lineNumber) {
-    return ImmutableMap.of(this.inputFileName, lineNumber);
+    return ImmutableMap.of(this.fileMetadata.fileName(), lineNumber);
   }
 
 

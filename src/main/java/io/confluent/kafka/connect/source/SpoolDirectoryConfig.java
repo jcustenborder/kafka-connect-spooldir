@@ -68,6 +68,12 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public static final String PROCESSING_FILE_EXTENSION_DEFAULT = ".PROCESSING";
   public static final String TOPIC_CONF = "topic";
   public static final String TOPIC_DOC = "The Kafka topic to write the data to.";
+
+  public static final String INCLUDE_FILE_METADATA_CONF = "include.file.metadata";
+  public static final String INCLUDE_FILE_METADATA_DOC = "Flag to determine if the metadata about the file should be included.";
+  public static final boolean INCLUDE_FILE_METADATA_DEFAULT = false;
+
+
   //CSVRecordProcessorConfig
   public static final String CSV_SKIP_LINES_CONF = "csv.skip.lines";
   public static final String CSV_SEPARATOR_CHAR_CONF = "csv.separator.char";
@@ -134,6 +140,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   static final String CSV_SCHEMA_FROM_HEADER_KEYS_DOC = "csv.schema.from.header.keys";
   static final String CSV_GROUP = "csv";
   static final String CSV_DISPLAY_NAME = "CSV Settings";
+
   public SpoolDirectoryConfig(Map<?, ?> parsedConfig) {
     super(getConf(), parsedConfig);
   }
@@ -159,6 +166,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         //RecordProcessorConfig
         .define(BATCH_SIZE_CONF, ConfigDef.Type.INT, BATCH_SIZE_DEFAULT, ConfigDef.Importance.LOW, BATCH_SIZE_DOC)
         .define(TOPIC_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, TOPIC_DOC)
+        .define(INCLUDE_FILE_METADATA_CONF, Type.BOOLEAN, INCLUDE_FILE_METADATA_DEFAULT, ConfigDef.Importance.LOW, INCLUDE_FILE_METADATA_DOC)
 
         //CSVRecordProcessorConfig
 //    String group, int orderInGroup, ConfigDef.Width width, String displayName
@@ -342,5 +350,9 @@ public class SpoolDirectoryConfig extends AbstractConfig {
 
   public String processingFileExtension() {
     return this.getString(PROCESSING_FILE_EXTENSION_CONF);
+  }
+
+  public boolean includeFileMetadata() {
+    return this.getBoolean(INCLUDE_FILE_METADATA_CONF);
   }
 }

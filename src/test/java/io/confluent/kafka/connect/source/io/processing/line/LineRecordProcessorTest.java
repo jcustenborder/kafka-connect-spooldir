@@ -21,6 +21,7 @@ import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.Data;
 import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.FileMetadata;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class LineRecordProcessorTests {
+public class LineRecordProcessorTest {
 
   LineRecordProcessor lineRecordProcessor;
   SpoolDirectoryConfig config;
@@ -57,7 +58,7 @@ public class LineRecordProcessorTests {
 
   @Test
   public void poll() throws IOException {
-    File tempfile = File.createTempFile(LineRecordProcessorTests.class.getSimpleName(), "test");
+    File tempfile = File.createTempFile(LineRecordProcessorTest.class.getSimpleName(), "test");
     tempfile.deleteOnExit();
     String inputFileName = Files.getNameWithoutExtension(tempfile.getName());
 
@@ -104,7 +105,7 @@ public class LineRecordProcessorTests {
 
     List<SourceRecord> actualRecords;
     try (FileInputStream inputStream = new FileInputStream(tempfile)) {
-      this.lineRecordProcessor.configure(this.config, inputStream, inputFileName);
+      this.lineRecordProcessor.configure(this.config, inputStream, new FileMetadata(tempfile));
       actualRecords = this.lineRecordProcessor.poll();
     }
 

@@ -15,7 +15,9 @@
  */
 package io.confluent.kafka.connect.source.io.processing.csv;
 
+import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.Data;
+import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
@@ -26,7 +28,7 @@ import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SchemaConfigTests {
+public class SchemaConfigTest {
 
   void assertSchema(Schema expected, Schema actual) {
     Assert.assertNotNull(actual);
@@ -48,6 +50,7 @@ public class SchemaConfigTests {
 
   @Test
   public void schema() {
+    SpoolDirectoryConfig config = new SpoolDirectoryConfig(Data.settings(Files.createTempDir()));
     final SchemaConfig input = Data.schemaConfig();
     final Schema expectedValueSchema = SchemaBuilder.struct()
         .name("io.confluent.kafka.connect.source.MockData")
@@ -67,7 +70,7 @@ public class SchemaConfigTests {
         .field("id", Schema.INT32_SCHEMA)
         .build();
 
-    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs();
+    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs(config);
     System.out.println(actual.getKey());
     System.out.println(actual.getValue());
     assertSchema(expectedKeySchema, actual.getKey().structSchema);
@@ -76,14 +79,17 @@ public class SchemaConfigTests {
 
   @Test(expected = IllegalStateException.class)
   public void schemaInvalidKeys() {
+    SpoolDirectoryConfig config = new SpoolDirectoryConfig(Data.settings(Files.createTempDir()));
     final SchemaConfig input = Data.schemaConfig();
     input.keys.clear();
     input.keys.add("ID");
-    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs();
+    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs(config);
   }
 
   @Test
   public void schemaNoKeys() {
+    SpoolDirectoryConfig config = new SpoolDirectoryConfig(Data.settings(Files.createTempDir()));
+
     final SchemaConfig input = Data.schemaConfig();
     input.keys.clear();
     final Schema expectedValueSchema = SchemaBuilder.struct()
@@ -101,7 +107,7 @@ public class SchemaConfigTests {
         .build();
     final Schema expectedKeySchema = null;
 
-    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs();
+    final Pair<SchemaConfig.ParserConfig, SchemaConfig.ParserConfig> actual = input.parserConfigs(config);
     System.out.println(actual.getKey());
     System.out.println(actual.getValue());
     Assert.assertNull(actual.getKey().structSchema);

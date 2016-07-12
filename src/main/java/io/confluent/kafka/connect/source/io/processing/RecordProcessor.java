@@ -25,7 +25,7 @@ import java.util.List;
 public interface RecordProcessor extends AutoCloseable {
   void configure(SpoolDirectoryConfig config,
                  InputStream inputStream,
-                 String fileName) throws IOException;
+                 FileMetadata fileMetadata) throws IOException;
 
   long lineNumber();
 

@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.Files;
 import io.confluent.kafka.connect.source.SpoolDirectoryConfig;
+import io.confluent.kafka.connect.source.io.processing.FileMetadata;
 import io.confluent.kafka.connect.source.io.processing.RecordProcessor;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -47,7 +48,6 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
   private RecordProcessor recordProcessor;
   private FilenameFilter inputPatternFilter;
   private File inputFile;
-  private String inputFileName;
   private InputStream inputStream;
   private boolean hasRecords = false;
 
@@ -208,15 +208,15 @@ public class PollingDirectoryMonitor implements DirectoryMonitor {
           return new ArrayList<>();
         }
 
+        FileMetadata fileMetadata = new FileMetadata(nextFile);
         File processingFile = renameFileForProcessing(nextFile);
         this.inputFile = processingFile;
-        this.inputFileName = Files.getNameWithoutExtension(this.inputFile.getName());
         try {
           if (log.isInfoEnabled()) {
             log.info("Opening {}", this.inputFile);
           }
           this.inputStream = new FileInputStream(this.inputFile);
-          this.recordProcessor.configure(this.config, this.inputStream, this.inputFileName);
+          this.recordProcessor.configure(this.config, this.inputStream, fileMetadata);
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }
