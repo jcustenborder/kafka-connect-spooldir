@@ -90,6 +90,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   public static final String CSV_PARSER_TIMESTAMP_DATE_FORMATS_CONF = "csv.parser.timestamp.date.formats";
   public static final String CSV_PARSER_TIMESTAMP_TIMEZONE_CONF = "csv.parser.timestamp.timezone";
   public static final String CSV_SCHEMA_CONF = "csv.schema";
+  public static final String CSV_SCHEMA_NAME_CONF = "csv.schema.name";
   public static final String CSV_SCHEMA_FROM_HEADER_CONF = "csv.schema.from.header";
   public static final String CSV_SCHEMA_FROM_HEADER_KEYS_CONF = "csv.schema.from.header.keys";
   public static final String CSV_CASE_SENSITIVE_FIELD_NAMES_CONF = "csv.case.sensitive.field.names";
@@ -134,6 +135,7 @@ public class SpoolDirectoryConfig extends AbstractConfig {
   static final List<String> CSV_PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT = Arrays.asList("yyyy-MM-dd' 'HH:mm:ss");
   static final String CSV_PARSER_TIMESTAMP_TIMEZONE_DOC = "The timezone that all of the dates will be parsed with.";
   static final String CSV_PARSER_TIMESTAMP_TIMEZONE_DEFAULT = "UTC";
+  static final String CSV_SCHEMA_SCHEMA_NAME_DOC = "Fully qualified name for the schema. This setting is ignored if " + CSV_SCHEMA_CONF + " is set.";
   static final String CSV_SCHEMA_DOC = "Schema representation in json.";
   static final String CSV_INFER_SCHEMA_FROM_HEADER_DOC = "Flag to determine if the schema should be generated based on the header row.";
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
@@ -188,7 +190,8 @@ public class SpoolDirectoryConfig extends AbstractConfig {
         .define(CSV_SCHEMA_CONF, Type.STRING, "", ConfigDef.Importance.MEDIUM, CSV_SCHEMA_DOC)
         .define(CSV_SCHEMA_FROM_HEADER_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_INFER_SCHEMA_FROM_HEADER_DOC)
         .define(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_CASE_SENSITIVE_FIELD_NAMES_DOC)
-        .define(CSV_SCHEMA_FROM_HEADER_KEYS_CONF, Type.LIST, new ArrayList<>(), ConfigDef.Importance.LOW, CSV_SCHEMA_FROM_HEADER_KEYS_DOC);
+        .define(CSV_SCHEMA_FROM_HEADER_KEYS_CONF, Type.LIST, new ArrayList<>(), ConfigDef.Importance.LOW, CSV_SCHEMA_FROM_HEADER_KEYS_DOC)
+        .define(CSV_SCHEMA_NAME_CONF, Type.STRING, "", ConfigDef.Importance.LOW, CSV_SCHEMA_SCHEMA_NAME_DOC);
   }
 
 
@@ -354,5 +357,9 @@ public class SpoolDirectoryConfig extends AbstractConfig {
 
   public boolean includeFileMetadata() {
     return this.getBoolean(INCLUDE_FILE_METADATA_CONF);
+  }
+
+  public String schemaName() {
+    return this.getString(CSV_SCHEMA_NAME_CONF);
   }
 }

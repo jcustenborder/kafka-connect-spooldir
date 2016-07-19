@@ -37,6 +37,8 @@ To use the automatic schema generation set ``csv.first.row.as.header=true``, ``c
 To manually define the schema set ``csv.schema`` to a json representation of the schema. The example below works is for the mock data in the test class. ::
 
     {
+      "name": "io.confluent.examples.spool.MockData",
+      "keyName": "io.confluent.examples.spool.MockDataKey",
       "keys": [
         "id"
       ],
@@ -274,6 +276,13 @@ Configuration Options
   * Default: []
   * Importance: low
 
+``csv.schema.name``
+  Fully qualified name for the schema. This setting is ignored if csv.schema is set.
+
+  * Type: string
+  * Default: ""
+  * Importance: low
+
 ``csv.separator.char``
   The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \t.
 
@@ -307,6 +316,13 @@ Configuration Options
 
   * Type: long
   * Default: 0
+  * Importance: low
+
+``include.file.metadata``
+  Flag to determine if the metadata about the file should be included.
+
+  * Type: boolean
+  * Default: false
   * Importance: low
 
 ``processing.file.extension``

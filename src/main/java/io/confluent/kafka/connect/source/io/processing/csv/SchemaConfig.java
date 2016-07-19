@@ -32,19 +32,29 @@ import java.util.Set;
 
 public class SchemaConfig {
   public String name;
+  public String keyName;
   public List<String> keys = new ArrayList<>();
   public List<FieldConfig> fields = new ArrayList<>();
 
 
   public Pair<ParserConfig, ParserConfig> parserConfigs(SpoolDirectoryConfig config) {
     Preconditions.checkNotNull(fields, "fields cannot be null.");
+    Preconditions.checkNotNull(name, "SchemaConfig.name cannot be null");
+    Preconditions.checkState(!name.isEmpty(), "SchemaConfig.name cannot be null");
+    Preconditions.checkState(!name.equalsIgnoreCase(keyName), "SchemaConfig.name and SchemaConfig.keyName cannot be the same.");
+
     SchemaBuilder valueBuilder = SchemaBuilder.struct();
     valueBuilder.name(this.name);
 
     Preconditions.checkNotNull(keys, "keys cannot be null.");
     SchemaBuilder keyBuilder = SchemaBuilder.struct();
-    String keySchemaName = (this.name == null ? "" : this.name) + "Key";
-    keyBuilder.name(keySchemaName);
+
+    if (null == this.keyName || this.keyName.isEmpty()) {
+      String keySchemaName = (this.name == null ? "" : this.name) + "Key";
+      keyBuilder.name(keySchemaName);
+    } else {
+      keyBuilder.name(this.keyName);
+    }
 
     Set<String> keyLookup = new HashSet<>(this.keys);
 

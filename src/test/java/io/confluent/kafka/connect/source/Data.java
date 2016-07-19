@@ -110,6 +110,7 @@ public class Data {
     result.put(SpoolDirectoryConfig.CSV_PARSER_TIMESTAMP_DATE_FORMATS_CONF, "yyyy-MM-dd'T'HH:mm:ss'Z'");
     result.put(SpoolDirectoryConfig.RECORD_PROCESSOR_CLASS_CONF, CSVRecordProcessor.class.getName());
     result.put(SpoolDirectoryConfig.BATCH_SIZE_CONF, "100");
+    result.put(SpoolDirectoryConfig.CSV_SCHEMA_NAME_CONF, Data.class.getName() + "Schema");
     return result;
   }
 

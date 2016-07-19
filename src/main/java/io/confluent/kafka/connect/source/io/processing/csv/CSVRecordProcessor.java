@@ -101,6 +101,9 @@ public class CSVRecordProcessor implements RecordProcessor {
         schemaConfig.fields.add(fieldConfig);
       }
       schemaConfig.keys = this.config.schemaFromHeaderKeys();
+      schemaConfig.name = this.config.schemaName();
+      Preconditions.checkNotNull(schemaConfig.name, "%s must be configured when generating the schema from the header row.", SpoolDirectoryConfig.CSV_SCHEMA_NAME_CONF);
+      Preconditions.checkState(!schemaConfig.name.isEmpty(), "%s must be configured when generating the schema from the header row.", SpoolDirectoryConfig.CSV_SCHEMA_NAME_CONF);
       this.schemaConfig = schemaConfig;
     } else {
       this.schemaConfig = this.config.schemaConfig();
