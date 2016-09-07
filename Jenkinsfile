@@ -12,13 +12,12 @@ node {
     }
 
     stage 'build'
-    sh "${mvnHome}/bin/mvn -B -P maven-central clean package"
+    sh "${mvnHome}/bin/mvn -B -P maven-central clean verify package"
 
     junit '**/target/surefire-reports/TEST-*.xml'
 
     if (env.BRANCH_NAME == 'master') {
         stage 'publishing'
-        sh "git tag ${mvnBuildNumber}"
-        sh "git push origin ${mvnBuildNumber}"
+        sh "${mvnHome}/bin/mvn -B -P github,maven-central deploy"
     }
 }
