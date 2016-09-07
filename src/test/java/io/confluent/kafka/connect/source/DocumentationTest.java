@@ -15,13 +15,14 @@
  */
 package io.confluent.kafka.connect.source;
 
+import io.confluent.kafka.connect.utils.config.MarkdownFormatter;
 import org.junit.Test;
 
 public class DocumentationTest {
 
   @Test
-  public void generateRST() {
-    System.out.println(SpoolDirectoryConfig.getConf().toRst());
+  public void toMarkdown() {
+    System.out.println(MarkdownFormatter.toMarkdown(SpoolDirectoryConfig.getConf()));
   }
 
 
