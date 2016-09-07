@@ -29,7 +29,37 @@
     <packaging>jar</packaging>
 
     <name>kafka-connect-spooldir</name>
+
+    <url>https://github.com/jcustenborder/kafka-connect-spooldir</url>
+
+    <description>
+        A Kafka Connect connector reading delimited files from the file system.
+    </description>
+
     <inceptionYear>2016</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>jcustenborder</id>
+            <name>Jeremy Custenborder</name>
+            <email>jcustenborder@gmail.com</email>
+            <timezone>America/Chicago</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/jcustenborder/kafka-connect-spooldir</url>
+        <connection>scm:git:https://github.com/jcustenborder/kafka-connect-spooldir.git</connection>
+        <developerConnection>scm:git:git@github.com:jcustenborder/kafka-connect-spooldir.git</developerConnection>
+    </scm>
 
     <properties>
         <confluent.version>3.0.0</confluent.version>
