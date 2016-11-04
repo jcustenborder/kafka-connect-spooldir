@@ -33,7 +33,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: "confluent:2181"
     network_mode: "host"
   schema-registry:
-    image: confluent/schemaConfig-registry
+    image: confluent/schema-registry
     depends_on:
       - kafka
       - zookeeper
