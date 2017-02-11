@@ -16,11 +16,28 @@
 #
 
 : ${SUSPEND:='n'}
+: ${INPUT_PATH:='/tmp/spooldir/input'}
+: ${ERROR_PATH:='/tmp/spooldir/error'}
+: ${FINISHED_PATH:='/tmp/spooldir/finished'}
 
 set -e
 
 mvn clean package
 export KAFKA_JMX_OPTS="-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=${SUSPEND},address=5005"
-export CLASSPATH="$(find target/kafka-connect-target/share/java -type f -name '*.jar' | tr '\n' ':')"
+export CLASSPATH="$(find target/kafka-connect-target/usr/share/java -type f -name '*.jar' | tr '\n' ':')"
 
-connect-standalone config/connect-avro-docker.properties
+if [ ! -d "${INPUT_PATH}" ]; then
+    mkdir -p "${INPUT_PATH}"
+fi
+
+if [ ! -d "${ERROR_PATH}" ]; then
+    mkdir -p "${ERROR_PATH}"
+fi
+
+if [ ! -d "${FINISHED_PATH}" ]; then
+    mkdir -p "${FINISHED_PATH}"
+fi
+
+cp src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data "${INPUT_PATH}/FieldsMatch.csv"
+
+connect-standalone config/connect-avro-docker.properties config/CSVExample.properties
