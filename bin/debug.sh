@@ -15,13 +15,12 @@
 # limitations under the License.
 #
 
+: ${SUSPEND:='n'}
+
+set -e
+
 mvn clean package
+export KAFKA_JMX_OPTS="-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=${SUSPEND},address=5005"
+export CLASSPATH="$(find target/kafka-connect-target/share/java -type f -name '*.jar' | tr '\n' ':')"
 
-export CLASSPATH="$(find `pwd`/target/kafka-connect-spooldir-1.0-SNAPSHOT-package/share/java/ -type f -name '*.jar' | tr '\n' ':')"
-#export KAFKA_JMX_OPTS='-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
-
-mkdir -p /tmp/spooldir/input /tmp/spooldir/finished /tmp/spooldir/error
-
-cp src/test/resources/io/confluent/kafka/connect/source/MOCK_DATA.csv /tmp/spooldir/input
-
-$CONFLUENT_HOME/bin/connect-standalone connect/connect-avro-docker.properties config/CSVExample.properties
+connect-standalone config/connect-avro-docker.properties
