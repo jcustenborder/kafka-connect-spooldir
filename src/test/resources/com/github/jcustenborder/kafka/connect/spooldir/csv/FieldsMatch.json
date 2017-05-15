@@ -1,7 +1,8 @@
 {
-  "settings": {
-    "csv.first.row.as.header": "true"
+  "settings" : {
+    "csv.first.row.as.header" : "true"
   },
+  "offset" : { },
   "keySchema" : {
     "name" : "com.example.users.UserKey",
     "type" : "STRUCT",
@@ -68,9 +69,11 @@
     }
   },
   "expected" : [ {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 2
+      "offset" : 2
     },
     "topic" : "testing",
     "keySchema" : {
@@ -264,7 +267,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1443571200000
+        "storage" : 1443644943000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -294,9 +297,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 3
+      "offset" : 3
     },
     "topic" : "testing",
     "keySchema" : {
@@ -490,7 +495,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1447459200000
+        "storage" : 1447518849000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -520,9 +525,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 4
+      "offset" : 4
     },
     "topic" : "testing",
     "keySchema" : {
@@ -744,9 +751,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 5
+      "offset" : 5
     },
     "topic" : "testing",
     "keySchema" : {
@@ -940,7 +949,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1451260800000
+        "storage" : 1451335021000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -970,9 +979,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 6
+      "offset" : 6
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1166,7 +1177,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1467244800000
+        "storage" : 1467330078000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -1195,9 +1206,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 7
+      "offset" : 7
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1391,7 +1404,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1439424000000
+        "storage" : 1439450031000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -1420,9 +1433,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 8
+      "offset" : 8
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1616,7 +1631,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1450742400000
+        "storage" : 1450805397000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -1646,9 +1661,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 9
+      "offset" : 9
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1842,7 +1859,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1457222400000
+        "storage" : 1457286070000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -1871,9 +1888,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 10
+      "offset" : 10
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2067,7 +2086,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1445990400000
+        "storage" : 1446001644000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -2096,9 +2115,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 11
+      "offset" : 11
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2292,7 +2313,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1446854400000
+        "storage" : 1446916372000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -2322,9 +2343,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 12
+      "offset" : 12
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2518,7 +2541,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1440201600000
+        "storage" : 1440267378000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -2548,9 +2571,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 13
+      "offset" : 13
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2744,7 +2769,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1445126400000
+        "storage" : 1445151015000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -2774,9 +2799,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 14
+      "offset" : 14
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2970,7 +2997,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1452729600000
+        "storage" : 1452815469000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -2999,9 +3026,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 15
+      "offset" : 15
     },
     "topic" : "testing",
     "keySchema" : {
@@ -3195,7 +3224,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1441238400000
+        "storage" : 1441248787000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -3225,9 +3254,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 16
+      "offset" : 16
     },
     "topic" : "testing",
     "keySchema" : {
@@ -3421,7 +3452,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1443312000000
+        "storage" : 1443337848000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -3451,9 +3482,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 17
+      "offset" : 17
     },
     "topic" : "testing",
     "keySchema" : {
@@ -3647,7 +3680,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1459382400000
+        "storage" : 1459402154000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -3676,9 +3709,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 18
+      "offset" : 18
     },
     "topic" : "testing",
     "keySchema" : {
@@ -3872,7 +3907,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1455062400000
+        "storage" : 1455136175000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -3901,9 +3936,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 19
+      "offset" : 19
     },
     "topic" : "testing",
     "keySchema" : {
@@ -4097,7 +4134,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1462924800000
+        "storage" : 1462954510000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -4126,9 +4163,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 20
+      "offset" : 20
     },
     "topic" : "testing",
     "keySchema" : {
@@ -4322,7 +4361,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1456617600000
+        "storage" : 1456706963000
       }, {
         "name" : "account_balance",
         "schema" : {
@@ -4351,9 +4390,11 @@
       } ]
     }
   }, {
-    "sourcePartition" : { "fileName": "FieldsMatch.csv" },
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.csv"
+    },
     "sourceOffset" : {
-      "offset": 21
+      "offset" : 21
     },
     "topic" : "testing",
     "keySchema" : {
@@ -4547,7 +4588,7 @@
           "version" : 1,
           "isOptional" : true
         },
-        "storage" : 1455494400000
+        "storage" : 1455520004000
       }, {
         "name" : "account_balance",
         "schema" : {

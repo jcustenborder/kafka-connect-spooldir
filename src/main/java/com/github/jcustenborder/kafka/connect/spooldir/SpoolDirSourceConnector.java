@@ -15,6 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import org.apache.kafka.connect.source.SourceConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnect
 
   @Override
   public String version() {
-    return VersionUtil.getVersion();
+    return VersionUtil.version(this.getClass());
   }
 
   @Override

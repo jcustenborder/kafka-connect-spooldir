@@ -61,7 +61,6 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
       while (this.iterator.hasNext() && skippedRecords < lastOffset) {
         next();
         skippedRecords++;
-
       }
       log.trace("configure() - skipped {} record(s).", skippedRecords);
       log.info("configure() - Starting on offset {}", this.offset);
@@ -83,16 +82,17 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
 
       Struct valueStruct = new Struct(this.config.valueSchema);
       Struct keyStruct = new Struct(this.config.keySchema);
-      log.trace("{}", node);
+      log.trace("process() - input = {}", node);
       for (Field field : this.config.valueSchema.fields()) {
-        log.trace("field: {}", field.name());
         JsonNode fieldNode = node.get(field.name());
+        log.trace("process() - field: {} input = '{}'", field.name(), fieldNode);
         Object fieldValue = this.parser.parseJsonNode(field.schema(), fieldNode);
+        log.trace("process() - field: {} output = '{}'", field.name(), fieldValue);
         valueStruct.put(field, fieldValue);
 
         Field keyField = this.config.keySchema.field(field.name());
         if (null != keyField) {
-          log.trace("Setting key field '{}' to '{}'", keyField, fieldValue);
+          log.trace("process() - Setting key field '{}' to '{}'", keyField.name(), fieldValue);
           keyStruct.put(keyField, fieldValue);
         }
       }

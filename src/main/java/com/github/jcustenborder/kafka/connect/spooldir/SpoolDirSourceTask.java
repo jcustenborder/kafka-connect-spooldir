@@ -15,13 +15,19 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import com.github.jcustenborder.kafka.connect.utils.data.Parser;
 import com.github.jcustenborder.kafka.connect.utils.data.type.DateTypeParser;
+import com.github.jcustenborder.kafka.connect.utils.data.type.TimestampTypeParser;
+import com.github.jcustenborder.kafka.connect.utils.data.type.TypeParser;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
+import org.apache.kafka.connect.data.Date;
+import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.data.Time;
 import org.apache.kafka.connect.data.Timestamp;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -35,7 +41,6 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +124,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
   @Override
   public String version() {
-    return VersionUtil.getVersion();
+    return VersionUtil.version(this.getClass());
   }
 
   @Override
@@ -134,11 +139,15 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     this.inputPatternFilter = config.inputFilePattern();
 
     this.parser = new Parser();
-    DateTypeParser timestampDateConverter = new DateTypeParser(
-        this.config.parserTimestampTimezone,
-        this.config.parserTimestampDateFormats
+    Map<Schema, TypeParser> dateTypeParsers = ImmutableMap.of(
+        Timestamp.SCHEMA, new TimestampTypeParser(this.config.parserTimestampTimezone, this.config.parserTimestampDateFormats),
+        Date.SCHEMA, new DateTypeParser(this.config.parserTimestampTimezone, this.config.parserTimestampDateFormats),
+        Time.SCHEMA, new TimestampTypeParser(this.config.parserTimestampTimezone, this.config.parserTimestampDateFormats)
     );
-    this.parser.registerTypeParser(Timestamp.SCHEMA, timestampDateConverter);
+
+    for (Map.Entry<Schema, TypeParser> kvp : dateTypeParsers.entrySet()) {
+      this.parser.registerTypeParser(kvp.getKey(), kvp.getValue());
+    }
   }
 
   @Override
@@ -287,7 +296,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   protected void addRecord(List<SourceRecord> records, Struct keyStruct, Struct valueStruct) {
     Map<String, ?> sourceOffset = ImmutableMap.of(
         "offset",
-        BigInteger.valueOf(recordOffset())
+        recordOffset()
     );
     log.trace("addRecord() - {}", sourceOffset);
     if (this.config.hasKeyMetadataField && null != keyStruct) {

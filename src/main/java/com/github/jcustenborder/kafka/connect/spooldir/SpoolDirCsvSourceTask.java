@@ -100,26 +100,26 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
       if (row == null) {
         break;
       }
-      log.trace("Row on line {} has {} field(s)", recordOffset(), row.length);
+      log.trace("process() - Row on line {} has {} field(s)", recordOffset(), row.length);
 
       Struct keyStruct = new Struct(this.config.keySchema);
       Struct valueStruct = new Struct(this.config.valueSchema);
 
       for (int i = 0; i < this.fieldNames.length; i++) {
         String fieldName = this.fieldNames[i];
-        log.trace("Processing field {}", fieldName);
+        log.trace("process() - Processing field {}", fieldName);
         String input = row[i];
-        log.trace("input = '{}'", input);
+        log.trace("process() - input = '{}'", input);
         Object fieldValue = null;
 
         try {
           Field field = this.config.valueSchema.field(fieldName);
           if (null != field) {
             fieldValue = this.parser.parseString(field.schema(), input);
-            log.trace("Converted input to {}", fieldValue);
+            log.trace("process() - output = '{}'", fieldValue);
             valueStruct.put(field, fieldValue);
           } else {
-            log.trace("Field {} is not defined in the schema.", fieldName);
+            log.trace("process() - Field {} is not defined in the schema.", fieldName);
           }
         } catch (Exception ex) {
           String message = String.format("Exception thrown while parsing data for '%s'. linenumber=%s", fieldName, this.recordOffset());
@@ -128,7 +128,7 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
 
         Field keyField = this.config.keySchema.field(fieldName);
         if (null != keyField) {
-          log.trace("Setting key field '{}' to '{}'", keyField, fieldValue);
+          log.trace("process() - Setting key field '{}' to '{}'", keyField.name(), fieldValue);
           keyStruct.put(keyField, fieldValue);
         }
       }

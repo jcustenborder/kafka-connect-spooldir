@@ -5,7 +5,7 @@
         </encoder>
     </appender>
     <logger name="com.github.jcustenborder.kafka.connect.spooldir" level="TRACE"/>
-    <root level="debug">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

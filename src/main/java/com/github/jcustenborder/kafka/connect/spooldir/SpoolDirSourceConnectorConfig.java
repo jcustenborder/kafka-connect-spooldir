@@ -79,7 +79,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
       "of strings that will be used to parse the date fields in order. The most accurate date format should be the first " +
       "in the list. Take a look at the Java documentation for more info. " +
       "https://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html";
-  static final List<String> PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT = Arrays.asList("yyyy-MM-dd' 'HH:mm:ss");
+  static final List<String> PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT = Arrays.asList("yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd' 'HH:mm:ss");
   static final String PARSER_TIMESTAMP_TIMEZONE_DOC = "The timezone that all of the dates will be parsed with.";
   static final String PARSER_TIMESTAMP_TIMEZONE_DEFAULT = "UTC";
 
