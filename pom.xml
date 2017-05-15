@@ -26,7 +26,7 @@
     <parent>
         <groupId>com.github.jcustenborder.kafka.connect</groupId>
         <artifactId>kafka-connect-parent</artifactId>
-        <version>0.10.1.0-cp1</version>
+        <version>0.10.2.0-cp1</version>
     </parent>
 
     <artifactId>kafka-connect-spooldir</artifactId>
