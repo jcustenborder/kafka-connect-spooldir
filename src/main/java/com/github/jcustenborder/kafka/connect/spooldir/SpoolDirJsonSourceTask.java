@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.errors.DataException;
 import org.apache.kafka.connect.source.SourceRecord;
 
 import java.io.IOException;
@@ -86,14 +87,20 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
       for (Field field : this.config.valueSchema.fields()) {
         JsonNode fieldNode = node.get(field.name());
         log.trace("process() - field: {} input = '{}'", field.name(), fieldNode);
-        Object fieldValue = this.parser.parseJsonNode(field.schema(), fieldNode);
-        log.trace("process() - field: {} output = '{}'", field.name(), fieldValue);
-        valueStruct.put(field, fieldValue);
+        Object fieldValue;
+        try {
+          fieldValue = this.parser.parseJsonNode(field.schema(), fieldNode);
+          log.trace("process() - field: {} output = '{}'", field.name(), fieldValue);
+          valueStruct.put(field, fieldValue);
 
-        Field keyField = this.config.keySchema.field(field.name());
-        if (null != keyField) {
-          log.trace("process() - Setting key field '{}' to '{}'", keyField.name(), fieldValue);
-          keyStruct.put(keyField, fieldValue);
+          Field keyField = this.config.keySchema.field(field.name());
+          if (null != keyField) {
+            log.trace("process() - Setting key field '{}' to '{}'", keyField.name(), fieldValue);
+            keyStruct.put(keyField, fieldValue);
+          }
+        } catch (Exception ex) {
+          String message = String.format("Exception thrown while parsing data for '%s'. linenumber=%s", field.name(), this.recordOffset());
+          throw new DataException(message, ex);
         }
       }
 
