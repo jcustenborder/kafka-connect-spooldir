@@ -149,7 +149,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     return result;
   }
 
-  public SpoolDirSourceConnectorConfig(ConfigDef configDef, Map<String, String> settings) {
+  public SpoolDirSourceConnectorConfig(ConfigDef configDef, Map<String, ?> settings) {
     super(configDef, settings);
     this.inputPath = ConfigUtils.getAbsoluteFile(this, INPUT_PATH_CONFIG);
     this.finishedPath = ConfigUtils.getAbsoluteFile(this, FINISHED_PATH_CONFIG);

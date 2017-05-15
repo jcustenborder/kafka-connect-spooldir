@@ -14,6 +14,24 @@ This connector requires you to specify the schema of the files to be read. This 
 `key.schema` and the `value.schema` configuration settings. This setting is a schema in json form stored as a string. The 
 field schemas are used to parse the data in each row. This allows the user to strongly define the types for each field. 
 
+## Generating Schemas
+
+### Csv
+
+```bash
+mvn clean package
+export CLASSPATH="$(find target/kafka-connect-target/usr/share/java -type f -name '*.jar' | tr '\n' ':')"
+kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -type csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id
+```
+
+### Json
+
+```bash
+mvn clean package
+export CLASSPATH="$(find target/kafka-connect-target/usr/share/java -type f -name '*.jar' | tr '\n' ':')"
+kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t json -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data -c config/JsonExample.properties -i id
+```
+
 ## Key schema example 
 
 ```json

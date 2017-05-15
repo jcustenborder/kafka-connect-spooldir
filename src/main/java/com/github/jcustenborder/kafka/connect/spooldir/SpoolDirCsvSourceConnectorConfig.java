@@ -98,7 +98,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public final boolean caseSensitiveFieldNames;
 
 
-  public SpoolDirCsvSourceConnectorConfig(Map<String, String> settings) {
+  public SpoolDirCsvSourceConnectorConfig(Map<String, ?> settings) {
     super(conf(), settings);
     this.skipLines = this.getInt(SpoolDirCsvSourceConnectorConfig.CSV_SKIP_LINES_CONF);
     this.separatorChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_SEPARATOR_CHAR_CONF);

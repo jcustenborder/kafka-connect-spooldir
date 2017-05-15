@@ -66,15 +66,12 @@
         <developerConnection>scm:git:git@github.com:jcustenborder/kafka-connect-spooldir.git</developerConnection>
     </scm>
 
-    <properties>
-        <jackson.version>2.6.3</jackson.version>
-    </properties>
-
     <dependencies>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <groupId>net.sourceforge.argparse4j</groupId>
+            <artifactId>argparse4j</artifactId>
+            <version>0.7.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>

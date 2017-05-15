@@ -20,7 +20,7 @@ import org.apache.kafka.common.config.ConfigDef;
 import java.util.Map;
 
 class SpoolDirJsonSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
-  public SpoolDirJsonSourceConnectorConfig(Map<String, String> settings) {
+  public SpoolDirJsonSourceConnectorConfig(Map<String, ?> settings) {
     super(config(), settings);
   }
 

@@ -115,7 +115,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     }
   }
 
-  protected abstract CONF config(Map<String, String> settings);
+  protected abstract CONF config(Map<String, ?> settings);
 
   protected abstract void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException;
 

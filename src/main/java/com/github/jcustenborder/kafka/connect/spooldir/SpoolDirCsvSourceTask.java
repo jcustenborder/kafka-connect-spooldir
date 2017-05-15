@@ -40,7 +40,7 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
 
 
   @Override
-  protected SpoolDirCsvSourceConnectorConfig config(Map<String, String> settings) {
+  protected SpoolDirCsvSourceConnectorConfig config(Map<String, ?> settings) {
     return new SpoolDirCsvSourceConnectorConfig(settings);
   }
 

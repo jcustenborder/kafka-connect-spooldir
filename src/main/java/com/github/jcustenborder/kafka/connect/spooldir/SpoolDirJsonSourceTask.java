@@ -37,22 +37,25 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
   Iterator<JsonNode> iterator;
 
   @Override
-  protected SpoolDirJsonSourceConnectorConfig config(Map<String, String> settings) {
+  protected SpoolDirJsonSourceConnectorConfig config(Map<String, ?> settings) {
     return new SpoolDirJsonSourceConnectorConfig(settings);
   }
 
   @Override
   public void start(Map<String, String> settings) {
     super.start(settings);
-
     this.jsonFactory = new JsonFactory();
-
   }
 
   long offset;
 
   @Override
   protected void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException {
+    if (null != jsonParser) {
+      log.trace("configure() - Closing existing json parser.");
+      jsonParser.close();
+    }
+
     this.jsonParser = this.jsonFactory.createParser(inputStream);
     this.iterator = ObjectMapperFactory.INSTANCE.readValues(this.jsonParser, JsonNode.class);
     this.offset = -1;
@@ -63,7 +66,7 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
         next();
         skippedRecords++;
       }
-      log.trace("configure() - skipped {} record(s).", skippedRecords);
+      log.trace("configure() - Skipped {} record(s).", skippedRecords);
       log.info("configure() - Starting on offset {}", this.offset);
     }
 
