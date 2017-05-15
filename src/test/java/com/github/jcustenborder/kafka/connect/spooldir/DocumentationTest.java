@@ -15,12 +15,13 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.github.jcustenborder.kafka.connect.utils.config.MarkdownFormatter;
-import org.junit.jupiter.api.Test;
+import com.github.jcustenborder.kafka.connect.utils.BaseDocumentationTest;
 
-public class SpoolDirCsvSourceConnectorConfigTest {
-  @Test
-  public void toMarkdown() {
-    System.out.println(MarkdownFormatter.toMarkdown(SpoolDirCsvSourceConnectorConfig.config()));
+public class DocumentationTest extends BaseDocumentationTest {
+
+  @Override
+  protected String[] packages() {
+    return new String[]{this.getClass().getPackage().getName()};
   }
+
 }
