@@ -55,6 +55,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   private File errorDirectory;
   private FilenameFilter inputPatternFilter;
   private File inputFile;
+  private long inputFileModifiedTime;
   private InputStream inputStream;
   private boolean hasRecords = false;
   private Map<String, String> metadata;
@@ -251,6 +252,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
         this.metadata = ImmutableMap.of();
         this.inputFile = nextFile;
+        this.inputFileModifiedTime = this.inputFile.lastModified();
         File processingFile = processingFile(this.inputFile);
         Files.touch(processingFile);
 
@@ -307,7 +309,25 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       valueStruct.put(this.config.valueMetadataField, this.metadata);
     }
 
-    Long timestamp = null;
+    final Long timestamp;
+
+    switch (this.config.timestampMode) {
+      case FIELD:
+        log.trace("addRecord() - Reading date from timestamp field '{}'", this.config.timestampField);
+        java.util.Date date = (java.util.Date) valueStruct.get(this.config.timestampField);
+        timestamp = date.getTime();
+        break;
+      case FILE_TIME:
+        timestamp = this.inputFileModifiedTime;
+        break;
+      case PROCESS_TIME:
+        timestamp = null;
+        break;
+      default:
+        throw new UnsupportedOperationException(
+            String.format("Unsupported timestamp mode. %s", this.config.timestampMode)
+        );
+    }
 
 
     //TODO: Comeback and add timestamp support.

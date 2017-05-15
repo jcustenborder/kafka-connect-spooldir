@@ -15,16 +15,23 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.jcustenborder.kafka.connect.utils.config.ConfigUtils;
+import com.github.jcustenborder.kafka.connect.utils.config.ValidEnum;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidPattern;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
+import com.google.common.base.Strings;
 import com.google.common.io.PatternFilenameFilter;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Type;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.Timestamp;
+import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.DataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +46,27 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("WeakerAccess")
 abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
+  private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceConnectorConfig.class);
+
+  public enum TimestampMode {
+    FIELD,
+    FILE_TIME,
+    PROCESS_TIME
+  }
+
+  public static final String TIMESTAMP_FIELD_CONF = "timestamp.field";
+  static final String TIMESTAMP_FIELD_DOC = "The field in the value schema that will contain the parsed timestamp for the record. " +
+      "This field cannot be marked as optional and must be a " +
+      "[Timestamp](https://kafka.apache.org/0102/javadoc/org/apache/kafka/connect/data/Schema.html)";
+
+  public static final String TIMESTAMP_MODE_CONF = "timestamp.mode";
+  static final String TIMESTAMP_MODE_DOC = "Determines how the connector will set the timestamp for the " +
+      "[ConnectRecord](https://kafka.apache.org/0102/javadoc/org/apache/kafka/connect/connector/ConnectRecord.html#timestamp()). " +
+      "If set to `Field` then the timestamp will be read from a field in the value. This field cannot be optional and must be " +
+      "a [Timestamp](https://kafka.apache.org/0102/javadoc/org/apache/kafka/connect/data/Schema.html). Specify the field " +
+      " in `" + TIMESTAMP_FIELD_CONF + "`. " +
+      "If set to `FILE_TIME` then " +
+      "the last modified time of the file will be used. If set to `PROCESS_TIME` the time the record is read will be used.";
 
   //DirectoryMonitorConfig
   //PollingDirectoryMonitorConfig
@@ -51,11 +79,11 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
   //RecordProcessorConfig
   public static final String BATCH_SIZE_CONF = "batch.size";
-  public static final String BATCH_SIZE_DOC = "The number of records that should be returned with each batch.";
-  public static final int BATCH_SIZE_DEFAULT = 1000;
+  static final String BATCH_SIZE_DOC = "The number of records that should be returned with each batch.";
+  static final int BATCH_SIZE_DEFAULT = 1000;
   public static final String PROCESSING_FILE_EXTENSION_DEFAULT = ".PROCESSING";
   public static final String TOPIC_CONF = "topic";
-  public static final String TOPIC_DOC = "The Kafka topic to write the data to.";
+  static final String TOPIC_DOC = "The Kafka topic to write the data to.";
 
   public static final String KEY_SCHEMA_CONF = "key.schema";
   public static final String VALUE_SCHEMA_CONF = "value.schema";
@@ -103,6 +131,8 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public final TimeZone parserTimestampTimezone;
   public final long emptyPollWaitMs;
   public final String processingFileExtension;
+  public final TimestampMode timestampMode;
+  public final String timestampField;
 
   public static final String METADATA_SCHEMA_NAME = "com.github.jcustenborder.kafka.connect.spooldir.Metadata";
 
@@ -148,6 +178,50 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     this.hasKeyMetadataField = null != this.keyMetadataField;
     this.valueMetadataField = findMetadataField(this.valueSchema);
     this.hasvalueMetadataField = null != this.valueMetadataField;
+    this.timestampMode = ConfigUtils.getEnum(TimestampMode.class, this, TIMESTAMP_MODE_CONF);
+
+    if (TimestampMode.FIELD == this.timestampMode) {
+      this.timestampField = this.getString(TIMESTAMP_FIELD_CONF);
+
+      if (Strings.isNullOrEmpty(this.timestampField)) {
+        throw new ConnectException(
+            String.format(
+                "When `%s` is set to `%s`, `%s` must be set to a timestamp field. Cannot be null or empty.",
+                TIMESTAMP_MODE_CONF,
+                TimestampMode.FIELD,
+                TIMESTAMP_FIELD_CONF
+            )
+        );
+      }
+
+      log.trace("ctor() - Looking for timestamp field '{}'", this.timestampField);
+      Field timestampField = this.valueSchema.field(this.timestampField);
+
+      if (null == timestampField ||
+          timestampField.schema().isOptional() ||
+          !Timestamp.LOGICAL_NAME.equals(timestampField.schema().name())) {
+
+        String example;
+
+        try {
+          example = ObjectMapperFactory.INSTANCE.writeValueAsString(Timestamp.SCHEMA);
+        } catch (JsonProcessingException e) {
+          example = null;
+        }
+
+        log.trace("ctor() - example: {}", example);
+
+        throw new ConnectException(
+            String.format(
+                "Field '%s' must be present and set to a timestamp and cannot be optional. Example %s",
+                this.timestampField,
+                example
+            )
+        );
+      }
+    } else {
+      this.timestampField = null;
+    }
   }
 
   public static ConfigDef config() {
@@ -171,7 +245,9 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
         .define(PARSER_TIMESTAMP_TIMEZONE_CONF, ConfigDef.Type.STRING, PARSER_TIMESTAMP_TIMEZONE_DEFAULT, ConfigDef.Importance.LOW, PARSER_TIMESTAMP_TIMEZONE_DOC)
         .define(PARSER_TIMESTAMP_DATE_FORMATS_CONF, ConfigDef.Type.LIST, PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT, ConfigDef.Importance.LOW, PARSER_TIMESTAMP_DATE_FORMATS_DOC)
 
-        .define(EMPTY_POLL_WAIT_MS_CONF, ConfigDef.Type.LONG, 1000L, ConfigDef.Range.between(1L, Long.MAX_VALUE), ConfigDef.Importance.LOW, EMPTY_POLL_WAIT_MS_DOC);
+        .define(EMPTY_POLL_WAIT_MS_CONF, ConfigDef.Type.LONG, 1000L, ConfigDef.Range.between(1L, Long.MAX_VALUE), ConfigDef.Importance.LOW, EMPTY_POLL_WAIT_MS_DOC)
+        .define(TIMESTAMP_MODE_CONF, Type.STRING, TimestampMode.PROCESS_TIME.toString(), ValidEnum.of(TimestampMode.class), ConfigDef.Importance.MEDIUM, TIMESTAMP_MODE_DOC)
+        .define(TIMESTAMP_FIELD_CONF, Type.STRING, "", ConfigDef.Importance.MEDIUM, TIMESTAMP_FIELD_DOC);
   }
 
   Schema readSchema(final String key) {

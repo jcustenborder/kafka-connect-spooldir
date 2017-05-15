@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,11 +15,12 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.github.jcustenborder.kafka.connect.utils.config.MarkdownFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class SpoolDirSourceConnectorTest<T extends SpoolDirSourceConnector> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceConnectorTest.class);
@@ -33,7 +34,7 @@ public abstract class SpoolDirSourceConnectorTest<T extends SpoolDirSourceConnec
   }
 
   @Test
-  public void doc() {
-    log.info("\n{}", MarkdownFormatter.toMarkdown(this.connector.config()));
+  public void taskClass() {
+    assertNotNull(this.connector.taskClass());
   }
 }
