@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,12 +17,15 @@ package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.config.ConfigUtils;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidEnum;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.apache.kafka.common.config.ConfigDef;
+import org.apache.kafka.connect.errors.DataException;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -87,16 +90,9 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public final boolean keepCarriageReturn;
   public final boolean verifyReader;
   public final CSVReaderNullFieldIndicator nullFieldIndicator;
-
   public final boolean firstRowAsHeader;
   public final Charset charset;
-
-//  public List<String> schemaFromHeaderKeys() {
-//    return this.getList(SpoolDirCsvSourceConnectorConfig.CSV_SCHEMA_FROM_HEADER_KEYS_CONF);
-//  }
-
   public final boolean caseSensitiveFieldNames;
-
 
   public SpoolDirCsvSourceConnectorConfig(Map<String, ?> settings) {
     super(conf(), settings);
@@ -115,10 +111,32 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     String charsetName = this.getString(SpoolDirCsvSourceConnectorConfig.CSV_CHARSET_CONF);
     this.charset = Charset.forName(charsetName);
 
-
     this.caseSensitiveFieldNames = this.getBoolean(SpoolDirCsvSourceConnectorConfig.CSV_CASE_SENSITIVE_FIELD_NAMES_CONF);
+  }
 
+  static class CharsetValidator implements ConfigDef.Validator {
+    @Override
+    public void ensureValid(String s, Object o) {
+      try {
+        Preconditions.checkState(o instanceof String);
+        String input = (String) o;
+        Charset.forName(input);
+      } catch (IllegalArgumentException e) {
+        throw new DataException(
+            String.format("Charset '%s' is invalid for %s", o, s),
+            e
+        );
+      }
+    }
 
+    @Override
+    public String toString() {
+      return Joiner.on(",").join(Charset.availableCharsets().keySet());
+    }
+
+    static CharsetValidator of() {
+      return new CharsetValidator();
+    }
   }
 
   static final ConfigDef conf() {
@@ -136,7 +154,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
         .define(CSV_VERIFY_READER_CONF, ConfigDef.Type.BOOLEAN, CSV_VERIFY_READER_DEFAULT, ConfigDef.Importance.LOW, CSV_VERIFY_READER_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_NULL_FIELD_INDICATOR_CONF, ConfigDef.Type.STRING, CSV_NULL_FIELD_INDICATOR_DEFAULT, ValidEnum.of(CSVReaderNullFieldIndicator.class), ConfigDef.Importance.LOW, CSV_NULL_FIELD_INDICATOR_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_FIRST_ROW_AS_HEADER_CONF, ConfigDef.Type.BOOLEAN, CSV_FIRST_ROW_AS_HEADER_DEFAULT, ConfigDef.Importance.MEDIUM, CSV_FIRST_ROW_AS_HEADER_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_CHARSET_CONF, ConfigDef.Type.STRING, CSV_CHARSET_DEFAULT, ConfigDef.Importance.LOW, CSV_CHARSET_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
+        .define(CSV_CHARSET_CONF, ConfigDef.Type.STRING, CSV_CHARSET_DEFAULT, CharsetValidator.of(), ConfigDef.Importance.LOW, CSV_CHARSET_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, ConfigDef.Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_CASE_SENSITIVE_FIELD_NAMES_DOC);
   }
 
