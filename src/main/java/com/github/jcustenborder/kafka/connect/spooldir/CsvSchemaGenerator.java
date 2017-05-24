@@ -36,7 +36,7 @@ public class CsvSchemaGenerator extends SchemaGenerator<SpoolDirCsvSourceConnect
 
   @Override
   protected SpoolDirCsvSourceConnectorConfig config(Map<String, ?> settings) {
-    return new SpoolDirCsvSourceConnectorConfig(settings);
+    return new SpoolDirCsvSourceConnectorConfig(false, settings);
   }
 
   @Override

@@ -15,7 +15,6 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.junit.jupiter.api.Test;
@@ -27,14 +26,12 @@ import java.util.Map;
 
 import static com.github.jcustenborder.kafka.connect.utils.AssertSchema.assertSchema;
 
-public class CsvSchemaGeneratorTest {
+public class CsvSchemaGeneratorTest extends SchemaGeneratorTest {
 
   @Test
   public void foo() throws IOException {
     File inputFile = new File("src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data");
-    Map<String, ?> settings = ImmutableMap.of(
-        SpoolDirCsvSourceConnectorConfig.CSV_FIRST_ROW_AS_HEADER_CONF, "true"
-    );
+    this.settings.put(SpoolDirCsvSourceConnectorConfig.CSV_FIRST_ROW_AS_HEADER_CONF, "true");
     CsvSchemaGenerator schemaGenerator = new CsvSchemaGenerator(settings);
     Map.Entry<Schema, Schema> kvp = schemaGenerator.generate(inputFile, Arrays.asList("id"));
     final Schema expectedKeySchema = SchemaBuilder.struct()

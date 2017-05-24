@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -48,19 +47,15 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorConfig> extends SourceTask {
   static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTask.class);
+  protected Parser parser;
+  protected Map<String, ?> sourcePartition;
   CONF config;
   Stopwatch processingTime = Stopwatch.createStarted();
-  private File inputDirectory;
-  private File finishedDirectory;
-  private File errorDirectory;
-  private FilenameFilter inputPatternFilter;
   private File inputFile;
   private long inputFileModifiedTime;
   private InputStream inputStream;
   private boolean hasRecords = false;
   private Map<String, String> metadata;
-  protected Parser parser;
-  protected Map<String, ?> sourcePartition;
 
   private static void checkDirectory(String key, File directoryPath) {
     if (log.isInfoEnabled()) {
@@ -131,13 +126,10 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   @Override
   public void start(Map<String, String> settings) {
     this.config = config(settings);
-    this.inputDirectory = this.config.inputPath;
-    checkDirectory(SpoolDirSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputDirectory);
-    this.finishedDirectory = this.config.finishedPath;
-    checkDirectory(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedDirectory);
-    this.errorDirectory = this.config.errorPath;
-    checkDirectory(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorDirectory);
-    this.inputPatternFilter = config.inputFilePattern();
+
+    checkDirectory(SpoolDirSourceConnectorConfig.INPUT_PATH_CONFIG, this.config.inputPath);
+    checkDirectory(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.config.finishedPath);
+    checkDirectory(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.config.errorPath);
 
     this.parser = new Parser();
     Map<Schema, TypeParser> dateTypeParsers = ImmutableMap.of(
@@ -203,9 +195,9 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   }
 
   File findNextInputFile() {
-    File[] input = this.inputDirectory.listFiles(this.inputPatternFilter);
+    File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
     if (null == input || input.length == 0) {
-      log.debug("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.inputDirectory);
+      log.debug("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
       return null;
     }
     List<File> files = new ArrayList<>(input.length);
@@ -243,7 +235,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   public List<SourceRecord> read() {
     try {
       if (!hasRecords) {
-        closeAndMoveToFinished(this.finishedDirectory, false);
+        closeAndMoveToFinished(this.config.finishedPath, false);
 
         File nextFile = findNextInputFile();
         if (null == nextFile) {
@@ -283,9 +275,9 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       log.error("Exception encountered processing line {} of {}.", recordOffset(), this.inputFile, ex);
 
       try {
-        closeAndMoveToFinished(this.errorDirectory, true);
+        closeAndMoveToFinished(this.config.errorPath, true);
       } catch (IOException ex0) {
-        log.error("Exception thrown while moving {} to {}", this.inputFile, this.errorDirectory, ex0);
+        log.error("Exception thrown while moving {} to {}", this.inputFile, this.config.errorPath, ex0);
       }
       if (this.config.haltOnError) {
         throw new ConnectException(ex);

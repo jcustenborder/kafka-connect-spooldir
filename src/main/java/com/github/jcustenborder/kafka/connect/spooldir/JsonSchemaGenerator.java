@@ -34,7 +34,7 @@ public class JsonSchemaGenerator extends SchemaGenerator<SpoolDirJsonSourceConne
 
   @Override
   protected SpoolDirJsonSourceConnectorConfig config(Map<String, ?> settings) {
-    return new SpoolDirJsonSourceConnectorConfig(settings);
+    return new SpoolDirJsonSourceConnectorConfig(false, settings);
   }
 
   @Override

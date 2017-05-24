@@ -15,7 +15,6 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.junit.jupiter.api.Test;
@@ -27,13 +26,11 @@ import java.util.Map;
 
 import static com.github.jcustenborder.kafka.connect.utils.AssertSchema.assertSchema;
 
-public class JsonSchemaGeneratorTest {
+public class JsonSchemaGeneratorTest extends SchemaGeneratorTest {
 
   @Test
   public void schema() throws IOException {
     File inputFile = new File("src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data");
-    Map<String, ?> settings = ImmutableMap.of(
-    );
     JsonSchemaGenerator schemaGenerator = new JsonSchemaGenerator(settings);
     Map.Entry<Schema, Schema> kvp = schemaGenerator.generate(inputFile, Arrays.asList("id"));
     final Schema expectedKeySchema = SchemaBuilder.struct()

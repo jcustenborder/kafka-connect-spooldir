@@ -21,7 +21,7 @@ field schemas are used to parse the data in each row. This allows the user to st
 ```bash
 mvn clean package
 export CLASSPATH="$(find target/kafka-connect-target/usr/share/java -type f -name '*.jar' | tr '\n' ':')"
-kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -type csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id
+kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id
 ```
 
 ### Json

@@ -94,8 +94,8 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public final Charset charset;
   public final boolean caseSensitiveFieldNames;
 
-  public SpoolDirCsvSourceConnectorConfig(Map<String, ?> settings) {
-    super(conf(), settings);
+  public SpoolDirCsvSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
+    super(isTask, conf(), settings);
     this.skipLines = this.getInt(SpoolDirCsvSourceConnectorConfig.CSV_SKIP_LINES_CONF);
     this.separatorChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_SEPARATOR_CHAR_CONF);
     this.quoteChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_QUOTE_CHAR_CONF);
@@ -112,31 +112,6 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     this.charset = Charset.forName(charsetName);
 
     this.caseSensitiveFieldNames = this.getBoolean(SpoolDirCsvSourceConnectorConfig.CSV_CASE_SENSITIVE_FIELD_NAMES_CONF);
-  }
-
-  static class CharsetValidator implements ConfigDef.Validator {
-    @Override
-    public void ensureValid(String s, Object o) {
-      try {
-        Preconditions.checkState(o instanceof String);
-        String input = (String) o;
-        Charset.forName(input);
-      } catch (IllegalArgumentException e) {
-        throw new DataException(
-            String.format("Charset '%s' is invalid for %s", o, s),
-            e
-        );
-      }
-    }
-
-    @Override
-    public String toString() {
-      return Joiner.on(",").join(Charset.availableCharsets().keySet());
-    }
-
-    static CharsetValidator of() {
-      return new CharsetValidator();
-    }
   }
 
   static final ConfigDef conf() {
@@ -182,5 +157,30 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
         .withSkipLines(this.skipLines)
         .withVerifyReader(this.verifyReader)
         .withFieldAsNull(nullFieldIndicator);
+  }
+
+  static class CharsetValidator implements ConfigDef.Validator {
+    static CharsetValidator of() {
+      return new CharsetValidator();
+    }
+
+    @Override
+    public void ensureValid(String s, Object o) {
+      try {
+        Preconditions.checkState(o instanceof String);
+        String input = (String) o;
+        Charset.forName(input);
+      } catch (IllegalArgumentException e) {
+        throw new DataException(
+            String.format("Charset '%s' is invalid for %s", o, s),
+            e
+        );
+      }
+    }
+
+    @Override
+    public String toString() {
+      return Joiner.on(",").join(Charset.availableCharsets().keySet());
+    }
   }
 }

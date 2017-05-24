@@ -35,10 +35,11 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
   JsonFactory jsonFactory;
   JsonParser jsonParser;
   Iterator<JsonNode> iterator;
+  long offset;
 
   @Override
   protected SpoolDirJsonSourceConnectorConfig config(Map<String, ?> settings) {
-    return new SpoolDirJsonSourceConnectorConfig(settings);
+    return new SpoolDirJsonSourceConnectorConfig(true, settings);
   }
 
   @Override
@@ -46,8 +47,6 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
     super.start(settings);
     this.jsonFactory = new JsonFactory();
   }
-
-  long offset;
 
   @Override
   protected void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException {

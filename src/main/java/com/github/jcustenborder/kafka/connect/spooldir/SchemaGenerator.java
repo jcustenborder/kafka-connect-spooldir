@@ -41,14 +41,9 @@ import java.util.Map;
 import java.util.Properties;
 
 public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConfig> {
-  private static final Logger log = LoggerFactory.getLogger(SchemaGenerator.class);
-  protected CONFIG config;
-
-  protected abstract CONFIG config(Map<String, ?> settings);
-
-  protected abstract Map<String, Schema.Type> determineFieldTypes(InputStream inputStream) throws IOException;
-
   static final String DUMMY_SCHEMA;
+  static final Map<String, Object> DEFAULTS;
+  private static final Logger log = LoggerFactory.getLogger(SchemaGenerator.class);
 
   static {
     String dummySchema;
@@ -61,8 +56,6 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
     DUMMY_SCHEMA = dummySchema;
   }
 
-  static final Map<String, Object> DEFAULTS;
-
   static {
     Map<String, Object> defaultSettings = new LinkedHashMap<>();
     defaultSettings.put(SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, ".*");
@@ -72,9 +65,12 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
     defaultSettings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, DUMMY_SCHEMA);
     defaultSettings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, DUMMY_SCHEMA);
     defaultSettings.put(SpoolDirSourceConnectorConfig.TOPIC_CONF, "dummy");
+    defaultSettings.put(SpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
+
     DEFAULTS = ImmutableMap.copyOf(defaultSettings);
   }
 
+  protected CONFIG config;
 
   public SchemaGenerator(Map<String, ?> settings) {
     Map<String, Object> copySettings = new LinkedHashMap<>(settings);
@@ -87,50 +83,6 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
 
     this.config = config(copySettings);
   }
-
-  void addField(SchemaBuilder builder, String name, Schema.Type schemaType) {
-    log.trace("addField() - name = {} schemaType = {}", name, schemaType);
-    builder.field(
-        name,
-        SchemaBuilder.type(schemaType).optional().build()
-    );
-  }
-
-  public Map.Entry<Schema, Schema> generate(File inputFile, List<String> keyFields) throws IOException {
-    log.trace("generate() - inputFile = '{}', keyFields = {}", inputFile, keyFields);
-
-    final Map<String, Schema.Type> fieldTypes;
-
-    log.info("Determining fields from {}", inputFile);
-    try (InputStream inputStream = new FileInputStream(inputFile)) {
-      fieldTypes = determineFieldTypes(inputStream);
-    }
-
-    log.trace("generate() - Building key schema.");
-    SchemaBuilder keySchemaBuilder = SchemaBuilder.struct()
-        .name("com.github.jcustenborder.kafka.connect.model.Key");
-
-    for (String keyFieldName : keyFields) {
-      log.trace("generate() - Adding keyFieldName field '{}'", keyFieldName);
-      if (fieldTypes.containsKey(keyFieldName)) {
-        Schema.Type schemaType = fieldTypes.get(keyFieldName);
-        addField(keySchemaBuilder, keyFieldName, schemaType);
-      } else {
-        log.warn("Key field '{}' is not in the data.", keyFieldName);
-      }
-    }
-
-    log.trace("generate() - Building value schema.");
-    SchemaBuilder valueSchemaBuilder = SchemaBuilder.struct()
-        .name("com.github.jcustenborder.kafka.connect.model.Value");
-
-    for (Map.Entry<String, Schema.Type> kvp : fieldTypes.entrySet()) {
-      addField(valueSchemaBuilder, kvp.getKey(), kvp.getValue());
-    }
-
-    return new AbstractMap.SimpleEntry<>(keySchemaBuilder.build(), valueSchemaBuilder.build());
-  }
-
 
   public static void main(String... args) throws Exception {
     ArgumentParser parser = ArgumentParsers.newArgumentParser("CsvSchemaGenerator")
@@ -213,6 +165,53 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
         properties.store(outputStream, comment);
       }
     }
+  }
+
+  protected abstract CONFIG config(Map<String, ?> settings);
+
+  protected abstract Map<String, Schema.Type> determineFieldTypes(InputStream inputStream) throws IOException;
+
+  void addField(SchemaBuilder builder, String name, Schema.Type schemaType) {
+    log.trace("addField() - name = {} schemaType = {}", name, schemaType);
+    builder.field(
+        name,
+        SchemaBuilder.type(schemaType).optional().build()
+    );
+  }
+
+  public Map.Entry<Schema, Schema> generate(File inputFile, List<String> keyFields) throws IOException {
+    log.trace("generate() - inputFile = '{}', keyFields = {}", inputFile, keyFields);
+
+    final Map<String, Schema.Type> fieldTypes;
+
+    log.info("Determining fields from {}", inputFile);
+    try (InputStream inputStream = new FileInputStream(inputFile)) {
+      fieldTypes = determineFieldTypes(inputStream);
+    }
+
+    log.trace("generate() - Building key schema.");
+    SchemaBuilder keySchemaBuilder = SchemaBuilder.struct()
+        .name("com.github.jcustenborder.kafka.connect.model.Key");
+
+    for (String keyFieldName : keyFields) {
+      log.trace("generate() - Adding keyFieldName field '{}'", keyFieldName);
+      if (fieldTypes.containsKey(keyFieldName)) {
+        Schema.Type schemaType = fieldTypes.get(keyFieldName);
+        addField(keySchemaBuilder, keyFieldName, schemaType);
+      } else {
+        log.warn("Key field '{}' is not in the data.", keyFieldName);
+      }
+    }
+
+    log.trace("generate() - Building value schema.");
+    SchemaBuilder valueSchemaBuilder = SchemaBuilder.struct()
+        .name("com.github.jcustenborder.kafka.connect.model.Value");
+
+    for (Map.Entry<String, Schema.Type> kvp : fieldTypes.entrySet()) {
+      addField(valueSchemaBuilder, kvp.getKey(), kvp.getValue());
+    }
+
+    return new AbstractMap.SimpleEntry<>(keySchemaBuilder.build(), valueSchemaBuilder.build());
   }
 
 }
