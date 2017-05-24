@@ -78,11 +78,5 @@
             <artifactId>opencsv</artifactId>
             <version>3.8</version>
         </dependency>
-        <dependency>
-            <groupId>io.codearte.jfairy</groupId>
-            <artifactId>jfairy</artifactId>
-            <version>0.5.6</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>
