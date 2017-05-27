@@ -154,14 +154,17 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
 
 
     String timestampTimezone = this.getString(PARSER_TIMESTAMP_TIMEZONE_CONF);
+    this.parserTimestampTimezone = TimeZone.getTimeZone(timestampTimezone);
 
     List<SimpleDateFormat> results = new ArrayList<>();
     List<String> formats = this.getList(PARSER_TIMESTAMP_DATE_FORMATS_CONF);
     for (String s : formats) {
-      results.add(new SimpleDateFormat(s));
+      SimpleDateFormat dateFormat = new SimpleDateFormat(s);
+      dateFormat.setTimeZone(this.parserTimestampTimezone);
+      results.add(dateFormat);
     }
     this.parserTimestampDateFormats = results.toArray(new SimpleDateFormat[results.size()]);
-    this.parserTimestampTimezone = TimeZone.getTimeZone(timestampTimezone);
+
 
     this.keySchema = readSchema(KEY_SCHEMA_CONF);
     this.valueSchema = readSchema(VALUE_SCHEMA_CONF);

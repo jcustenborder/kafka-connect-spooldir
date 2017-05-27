@@ -18,6 +18,7 @@ package com.github.jcustenborder.kafka.connect.spooldir;
 import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import com.github.jcustenborder.kafka.connect.utils.data.Parser;
 import com.github.jcustenborder.kafka.connect.utils.data.type.DateTypeParser;
+import com.github.jcustenborder.kafka.connect.utils.data.type.TimeTypeParser;
 import com.github.jcustenborder.kafka.connect.utils.data.type.TimestampTypeParser;
 import com.github.jcustenborder.kafka.connect.utils.data.type.TypeParser;
 import com.google.common.base.Preconditions;
@@ -135,7 +136,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     Map<Schema, TypeParser> dateTypeParsers = ImmutableMap.of(
         Timestamp.SCHEMA, new TimestampTypeParser(this.config.parserTimestampTimezone, this.config.parserTimestampDateFormats),
         Date.SCHEMA, new DateTypeParser(this.config.parserTimestampTimezone, this.config.parserTimestampDateFormats),
-        Time.SCHEMA, new TimestampTypeParser(this.config.parserTimestampTimezone, this.config.parserTimestampDateFormats)
+        Time.SCHEMA, new TimeTypeParser(this.config.parserTimestampTimezone, this.config.parserTimestampDateFormats)
     );
 
     for (Map.Entry<Schema, TypeParser> kvp : dateTypeParsers.entrySet()) {
