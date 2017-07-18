@@ -21,7 +21,7 @@ import org.apache.kafka.connect.connector.Task;
 
 import java.util.Map;
 
-@Description("This connector is used to [stream](https://en.wikipedia.org/wiki/JSON_Streaming) JSON files from a directory " +
+@Description("This connector is used to `stream <https://en.wikipedia.org/wiki/JSON_Streaming>` JSON files from a directory " +
     "while converting the data based on the schema supplied in the configuration.")
 public class SpoolDirJsonSourceConnector extends SpoolDirSourceConnector<SpoolDirJsonSourceConnectorConfig> {
 

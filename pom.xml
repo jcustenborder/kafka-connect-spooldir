@@ -19,14 +19,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <prerequisites>
-        <maven>3.3.0</maven>
-    </prerequisites>
-
     <parent>
         <groupId>com.github.jcustenborder.kafka.connect</groupId>
         <artifactId>kafka-connect-parent</artifactId>
-        <version>0.10.2.0-cp1</version>
+        <version>0.10.2.1-cp2</version>
     </parent>
 
     <artifactId>kafka-connect-spooldir</artifactId>
