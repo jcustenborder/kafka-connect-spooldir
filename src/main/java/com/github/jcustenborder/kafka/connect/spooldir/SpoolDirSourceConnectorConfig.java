@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.jcustenborder.kafka.connect.utils.config.ConfigUtils;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidEnum;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidPattern;
+import com.github.jcustenborder.kafka.connect.utils.config.validators.filesystem.ValidDirectoryWritable;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -35,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -285,9 +285,9 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public static ConfigDef config() {
     return new ConfigDef()
         //PollingDirectoryMonitorConfig
-        .define(INPUT_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, WritableDirectoryValidator.of(), ConfigDef.Importance.HIGH, INPUT_PATH_DOC)
-        .define(FINISHED_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, WritableDirectoryValidator.of(), ConfigDef.Importance.HIGH, FINISHED_PATH_DOC)
-        .define(ERROR_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, WritableDirectoryValidator.of(), ConfigDef.Importance.HIGH, ERROR_PATH_DOC)
+        .define(INPUT_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, INPUT_PATH_DOC)
+        .define(FINISHED_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, FINISHED_PATH_DOC)
+        .define(ERROR_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, ERROR_PATH_DOC)
         .define(INPUT_FILE_PATTERN_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, INPUT_FILE_PATTERN_DOC)
         .define(HALT_ON_ERROR_CONF, ConfigDef.Type.BOOLEAN, true, ConfigDef.Importance.HIGH, HALT_ON_ERROR_DOC)
         .define(FILE_MINIMUM_AGE_MS_CONF, ConfigDef.Type.LONG, 0L, ConfigDef.Range.between(0L, Long.MAX_VALUE), ConfigDef.Importance.LOW, FILE_MINIMUM_AGE_MS_DOC)
@@ -331,64 +331,5 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     FIELD,
     FILE_TIME,
     PROCESS_TIME
-  }
-
-  static class WritableDirectoryValidator implements ConfigDef.Validator {
-    public static WritableDirectoryValidator of() {
-      return new WritableDirectoryValidator();
-    }
-
-    @Override
-    public void ensureValid(final String key, Object value) {
-      String valueString = (String) value;
-      File directoryPath = new File(valueString);
-
-      log.info("Checking if directory {} '{}' exists.",
-          key,
-          directoryPath
-      );
-
-
-      String errorMessage = String.format(
-          "Directory for '%s' '%s' does not exist ",
-          key,
-          directoryPath
-      );
-
-      if (!directoryPath.isDirectory()) {
-        throw new ConnectException(
-            errorMessage,
-            new FileNotFoundException(directoryPath.getAbsolutePath())
-        );
-      }
-
-      log.info("Checking to ensure {} '{}' is writable ", key, directoryPath);
-
-
-      errorMessage = String.format(
-          "Directory for '%s' '%s' it not writable.",
-          key,
-          directoryPath
-      );
-
-      File temporaryFile = null;
-
-      try {
-        temporaryFile = File.createTempFile(".permission", ".testing", directoryPath);
-      } catch (IOException ex) {
-        throw new ConnectException(
-            errorMessage,
-            ex
-        );
-      } finally {
-        try {
-          if (null != temporaryFile && temporaryFile.exists()) {
-            Preconditions.checkState(temporaryFile.delete(), "Unable to delete temp file in %s", directoryPath);
-          }
-        } catch (Exception ex) {
-          log.warn("Exception thrown while deleting {}.", temporaryFile, ex);
-        }
-      }
-    }
   }
 }
