@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorConfig> extends SourceTask {
   static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTask.class);
@@ -262,6 +263,9 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
             lastOffset = number.longValue();
           }
           this.inputStream = new FileInputStream(this.inputFile);
+          if (this.config.compressionMode.equals("gzip")) {
+            inputStream = new GZIPInputStream(inputStream);
+          }
           configure(this.inputStream, this.metadata, lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);

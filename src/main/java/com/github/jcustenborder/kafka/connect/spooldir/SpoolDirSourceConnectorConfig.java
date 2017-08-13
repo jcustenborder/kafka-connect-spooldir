@@ -56,6 +56,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public static final String FINISHED_PATH_CONFIG = "finished.path";
   public static final String ERROR_PATH_CONFIG = "error.path";
   public static final String INPUT_FILE_PATTERN_CONF = "input.file.pattern";
+  public static final String INPUT_FILE_COMPRESSION_CONF = "input.file.compression";
   public static final String HALT_ON_ERROR_CONF = "halt.on.error";
   public static final String FILE_MINIMUM_AGE_MS_CONF = "file.minimum.age.ms";
   public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
@@ -89,6 +90,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   static final String KEY_SCHEMA_DOC = "The schema for the key written to Kafka.";
   static final String VALUE_SCHEMA_DOC = "The schema for the value written to Kafka.";
   static final String INPUT_PATH_DOC = "The directory to read files that will be processed. This directory must exist and be writable by the user running Kafka Connect.";
+  static final String INPUT_COMPRESSION_DOC = "The optinal compression mode. Currently only `gzip` is supported.";
   static final String FINISHED_PATH_DOC = "The directory to place files that have been successfully processed. This directory must exist and be writable by the user running Kafka Connect.";
   static final String ERROR_PATH_DOC = "The directory to place files in which have error(s). This directory must exist and be writable by the user running Kafka Connect.";
   static final String INPUT_FILE_PATTERN_DOC = "Regular expression to check input file names against. This expression " +
@@ -113,6 +115,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceConnectorConfig.class);
   public final File inputPath;
   public final File finishedPath;
+  public final String compressionMode;
   public final File errorPath;
   public final boolean haltOnError;
   public final long minimumFileAgeMS;
@@ -151,7 +154,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     this.schemaGenerationEnabled = this.getBoolean(SCHEMA_GENERATION_ENABLED_CONF);
     this.schemaGenerationKeyName = this.getString(SCHEMA_GENERATION_KEY_NAME_CONF);
     this.schemaGenerationValueName = this.getString(SCHEMA_GENERATION_VALUE_NAME_CONF);
-
+    this.compressionMode = this.getString(INPUT_FILE_COMPRESSION_CONF);
 
     String timestampTimezone = this.getString(PARSER_TIMESTAMP_TIMEZONE_CONF);
     this.parserTimestampTimezone = TimeZone.getTimeZone(timestampTimezone);
@@ -286,6 +289,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     return new ConfigDef()
         //PollingDirectoryMonitorConfig
         .define(INPUT_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, INPUT_PATH_DOC)
+        .define(INPUT_FILE_COMPRESSION_CONF, Type.STRING, "", ConfigDef.Importance.MEDIUM, INPUT_COMPRESSION_DOC)
         .define(FINISHED_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, FINISHED_PATH_DOC)
         .define(ERROR_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, ERROR_PATH_DOC)
         .define(INPUT_FILE_PATTERN_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, INPUT_FILE_PATTERN_DOC)
