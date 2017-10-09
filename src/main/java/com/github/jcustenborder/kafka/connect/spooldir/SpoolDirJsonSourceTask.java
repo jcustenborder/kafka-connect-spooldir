@@ -15,9 +15,12 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.ctc.wstx.stax.WstxInputFactory;
+import com.ctc.wstx.stax.WstxOutputFactory;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Struct;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourceConnectorConfig> {
+  public static final String XML_TYPE = "xml";
   JsonFactory jsonFactory;
   JsonParser jsonParser;
   Iterator<JsonNode> iterator;
@@ -45,7 +49,12 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
   @Override
   public void start(Map<String, String> settings) {
     super.start(settings);
-    this.jsonFactory = new JsonFactory();
+    if (null != settings && !this.config.fileType.equalsIgnoreCase(XML_TYPE)) {
+      this.jsonFactory = new JsonFactory();
+    } else {
+      Class jsonFactoryClass = XmlFactory.class;
+      this.jsonFactory = new XmlFactory(new WstxInputFactory(), new WstxOutputFactory());
+    }
   }
 
   @Override

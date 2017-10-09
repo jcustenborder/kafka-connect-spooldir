@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <account_balance>347.77</account_balance>
+  <country>IT</country>
+  <email>jgarcia0@shop-pro.jp</email>
+  <favorite_color>#4a2313</favorite_color>
+  <first_name>Jack</first_name>
+  <gender>Male</gender>
+  <id>1</id>
+  <ip_address>196.56.44.185</ip_address>
+  <last_login>2015-09-30T15:29:03Z</last_login>
+  <last_name>Garcia</last_name>
+</root>

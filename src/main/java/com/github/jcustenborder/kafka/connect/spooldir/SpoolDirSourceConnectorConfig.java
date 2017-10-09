@@ -53,6 +53,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   //DirectoryMonitorConfig
   //PollingDirectoryMonitorConfig
   public static final String INPUT_PATH_CONFIG = "input.path";
+  public static final String FILE_TYPE = "file.type";
   public static final String FINISHED_PATH_CONFIG = "finished.path";
   public static final String ERROR_PATH_CONFIG = "error.path";
   public static final String INPUT_FILE_PATTERN_CONF = "input.file.pattern";
@@ -135,10 +136,12 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public final String schemaGenerationValueName;
   public boolean hasKeyMetadataField;
   public boolean hasvalueMetadataField;
+  public final String fileType;
 
   public SpoolDirSourceConnectorConfig(final boolean isTask, ConfigDef configDef, Map<String, ?> settings) {
     super(configDef, settings);
     this.inputPath = ConfigUtils.getAbsoluteFile(this, INPUT_PATH_CONFIG);
+    this.fileType = this.getString(FILE_TYPE);
     this.finishedPath = ConfigUtils.getAbsoluteFile(this, FINISHED_PATH_CONFIG);
     this.errorPath = ConfigUtils.getAbsoluteFile(this, ERROR_PATH_CONFIG);
     this.haltOnError = this.getBoolean(HALT_ON_ERROR_CONF);
@@ -295,6 +298,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
 
         .define(BATCH_SIZE_CONF, ConfigDef.Type.INT, BATCH_SIZE_DEFAULT, ConfigDef.Importance.LOW, BATCH_SIZE_DOC)
         .define(TOPIC_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, TOPIC_DOC)
+        .define(FILE_TYPE, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, FILE_TYPE)
 
         .define(KEY_SCHEMA_CONF, Type.STRING, "", ConfigDef.Importance.HIGH, KEY_SCHEMA_DOC)
         .define(VALUE_SCHEMA_CONF, Type.STRING, "", ConfigDef.Importance.HIGH, VALUE_SCHEMA_DOC)

@@ -29,6 +29,7 @@ public class SchemaGeneratorTest {
     this.settings.put(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
     this.settings.put(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
     this.settings.put(SpoolDirSourceConnectorConfig.TOPIC_CONF, "dummy");
+    this.settings.put(SpoolDirSourceConnectorConfig.FILE_TYPE, "json");
   }
 
 }

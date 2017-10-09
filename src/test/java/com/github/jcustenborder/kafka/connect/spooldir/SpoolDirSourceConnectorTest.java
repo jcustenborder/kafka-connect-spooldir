@@ -70,6 +70,7 @@ public abstract class SpoolDirSourceConnectorTest<T extends SpoolDirSourceConnec
     this.settings.put(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
     this.settings.put(SpoolDirSourceConnectorConfig.TOPIC_CONF, "dummy");
     this.settings.put(SpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
+    this.settings.put(SpoolDirSourceConnectorConfig.FILE_TYPE, "json");
   }
 
   @AfterEach

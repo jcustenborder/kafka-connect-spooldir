@@ -89,6 +89,7 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
     settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
     settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
     settings.put(SpoolDirSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");
+    settings.put(SpoolDirSourceConnectorConfig.FILE_TYPE, "json");
     settings(settings);
     if (null != testCase.settings && !testCase.settings.isEmpty()) {
       settings.putAll(testCase.settings);
