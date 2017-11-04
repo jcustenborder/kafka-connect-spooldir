@@ -15,16 +15,15 @@
 # limitations under the License.
 #
 
-: ${SUSPEND:='n'}
 : ${INPUT_PATH:='/tmp/spooldir/input'}
 : ${ERROR_PATH:='/tmp/spooldir/error'}
 : ${FINISHED_PATH:='/tmp/spooldir/finished'}
+: ${DEBUG_SUSPEND_FLAG:='n'}
+export KAFKA_DEBUG='y'
 
 set -e
 
 mvn clean package
-export KAFKA_JMX_OPTS="-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=${SUSPEND},address=5005"
-export CLASSPATH="$(find target/kafka-connect-target/usr/share/java -type f -name '*.jar' | tr '\n' ':')"
 
 if [ ! -d "${INPUT_PATH}" ]; then
     mkdir -p "${INPUT_PATH}"

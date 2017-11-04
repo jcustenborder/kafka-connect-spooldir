@@ -17,30 +17,27 @@
 version: "2"
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:3.1.2-1
+    image: confluentinc/cp-zookeeper:3.3.0
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
-    network_mode: "host"
   kafka:
-    image: confluentinc/cp-kafka:3.1.2-1
+    image: confluentinc/cp-kafka:3.3.0
     depends_on:
       - zookeeper
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: "confluent:2181"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_ADVERTISED_LISTENERS: "plaintext://confluent:9092"
-    network_mode: "host"
   schema-registry:
-    image: confluentinc/cp-schema-registry:3.1.2-1
+    image: confluentinc/cp-schema-registry:3.3.0
     depends_on:
       - kafka
       - zookeeper
     ports:
       - "8081:8081"
     environment:
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "confluent:2181"
-      SCHEMA_REGISTRY_HOST_NAME: confluent
-    network_mode: "host"
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
