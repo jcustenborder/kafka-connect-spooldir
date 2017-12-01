@@ -164,7 +164,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     return results;
   }
 
-  private void closeAndMoveToFinished(File outputDirectory, boolean errored, boolean toDelete) throws IOException {
+  private void closeAndMoveToFinished(File outputDirectory, boolean errored) throws IOException {
     if (null != inputStream) {
       log.info("Closing {}", this.inputFile);
 
@@ -180,7 +180,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       }
 
       // delete files that are successfully ingested
-      if (!toDelete) {
+      if (this.config.keepFinishedFiles) {
         Files.move(this.inputFile, finishedFile);
       } else {
         this.inputFile.delete();
@@ -241,7 +241,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   public List<SourceRecord> read() {
     try {
       if (!hasRecords) {
-        closeAndMoveToFinished(this.config.finishedPath, false, true);
+        closeAndMoveToFinished(this.config.finishedPath, false);
 
         File nextFile = findNextInputFile();
         if (null == nextFile) {
@@ -281,7 +281,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       log.error("Exception encountered processing line {} of {}.", recordOffset(), this.inputFile, ex);
 
       try {
-        closeAndMoveToFinished(this.config.errorPath, true, false);
+        closeAndMoveToFinished(this.config.errorPath, true);
       } catch (IOException ex0) {
         log.error("Exception thrown while moving {} to {}", this.inputFile, this.config.errorPath, ex0);
       }

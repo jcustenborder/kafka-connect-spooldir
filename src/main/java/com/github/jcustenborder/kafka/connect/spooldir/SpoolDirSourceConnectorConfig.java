@@ -54,6 +54,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   //PollingDirectoryMonitorConfig
   public static final String INPUT_PATH_CONFIG = "input.path";
   public static final String FINISHED_PATH_CONFIG = "finished.path";
+  public static final String KEEP_FINISHED_FILES_CONF = "keep.finished.files";
   public static final String ERROR_PATH_CONFIG = "error.path";
   public static final String INPUT_FILE_PATTERN_CONF = "input.file.pattern";
   public static final String HALT_ON_ERROR_CONF = "halt.on.error";
@@ -90,6 +91,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   static final String VALUE_SCHEMA_DOC = "The schema for the value written to Kafka.";
   static final String INPUT_PATH_DOC = "The directory to read files that will be processed. This directory must exist and be writable by the user running Kafka Connect.";
   static final String FINISHED_PATH_DOC = "The directory to place files that have been successfully processed. This directory must exist and be writable by the user running Kafka Connect.";
+  static final String KEEP_FINISHED_FILES_DOC = "Should the task keep successfully ingested files.";
   static final String ERROR_PATH_DOC = "The directory to place files in which have error(s). This directory must exist and be writable by the user running Kafka Connect.";
   static final String INPUT_FILE_PATTERN_DOC = "Regular expression to check input file names against. This expression " +
       "must match the entire filename. The equivalent of Matcher.matches().";
@@ -113,6 +115,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceConnectorConfig.class);
   public final File inputPath;
   public final File finishedPath;
+  public final boolean keepFinishedFiles;
   public final File errorPath;
   public final boolean haltOnError;
   public final long minimumFileAgeMS;
@@ -140,6 +143,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     super(configDef, settings);
     this.inputPath = ConfigUtils.getAbsoluteFile(this, INPUT_PATH_CONFIG);
     this.finishedPath = ConfigUtils.getAbsoluteFile(this, FINISHED_PATH_CONFIG);
+    this.keepFinishedFiles = this.getBoolean(KEEP_FINISHED_FILES_CONF);
     this.errorPath = ConfigUtils.getAbsoluteFile(this, ERROR_PATH_CONFIG);
     this.haltOnError = this.getBoolean(HALT_ON_ERROR_CONF);
     this.minimumFileAgeMS = this.getLong(FILE_MINIMUM_AGE_MS_CONF);
@@ -287,6 +291,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
         //PollingDirectoryMonitorConfig
         .define(INPUT_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, INPUT_PATH_DOC)
         .define(FINISHED_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, FINISHED_PATH_DOC)
+        .define(KEEP_FINISHED_FILES_CONF, ConfigDef.Type.BOOLEAN, true, ConfigDef.Importance.MEDIUM, KEEP_FINISHED_FILES_DOC)
         .define(ERROR_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, ERROR_PATH_DOC)
         .define(INPUT_FILE_PATTERN_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, INPUT_FILE_PATTERN_DOC)
         .define(HALT_ON_ERROR_CONF, ConfigDef.Type.BOOLEAN, true, ConfigDef.Importance.HIGH, HALT_ON_ERROR_DOC)

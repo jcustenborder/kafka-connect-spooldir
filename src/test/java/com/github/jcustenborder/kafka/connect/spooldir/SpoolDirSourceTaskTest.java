@@ -146,6 +146,10 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
     assertFalse(processingFile.exists(), String.format("processingFile %s should not exist.", processingFile));
 
     assertTrue(records.isEmpty(), "records should be empty.");
+
+    final File finishedFile = new File(this.finishedPath, inputFileName);
+    assertTrue(finishedFile.exists(), String.format("finishedFile %s should exist.", finishedFile));
+
   }
 
   protected List<TestCase> loadTestCases(String packageName) throws IOException {
