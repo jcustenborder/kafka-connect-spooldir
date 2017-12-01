@@ -175,15 +175,15 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
       if (errored) {
         log.error("Error during processing, moving {} to {}.", this.inputFile, outputDirectory);
-      } else {
-        log.info("Finished processing {} in {} second(s). Moving to {}.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS), outputDirectory);
       }
 
       // delete files that are successfully ingested
       if (this.config.keepFinishedFiles) {
         Files.move(this.inputFile, finishedFile);
+        log.info("Finished processing {} in {} second(s). Moving to {}.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS), outputDirectory);
       } else {
         this.inputFile.delete();
+        log.info("Finished processing {} in {} second(s). Deleting it.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS));
       }
 
       File processingFile = processingFile(this.inputFile);
