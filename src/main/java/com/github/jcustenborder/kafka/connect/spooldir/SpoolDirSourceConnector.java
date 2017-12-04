@@ -20,6 +20,8 @@ import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.DataException;
@@ -61,9 +63,12 @@ public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnect
       SchemaGenerator<CONF> generator = generator(settings);
 
       try {
-        List<File> inputFiles = Arrays.stream(this.config.inputPath.listFiles(this.config.inputFilenameFilter))
-            .limit(5)
-            .collect(Collectors.toList());
+        List<File> inputFiles = FileUtils.listFiles(
+                this.config.inputPath,
+                this.config.inputFilenameFilter,
+                DirectoryFileFilter.DIRECTORY
+        ).stream().limit(5).collect(Collectors.toList());
+
         Preconditions.checkState(
             !inputFiles.isEmpty(),
             "Could not find any input file(s) to infer schema from."

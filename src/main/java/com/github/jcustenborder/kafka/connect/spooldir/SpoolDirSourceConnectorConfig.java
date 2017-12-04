@@ -23,7 +23,7 @@ import com.github.jcustenborder.kafka.connect.utils.config.validators.filesystem
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.io.PatternFilenameFilter;
+import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Type;
@@ -132,7 +132,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public final TimestampMode timestampMode;
   public final String timestampField;
   public final List<String> keyFields;
-  public final PatternFilenameFilter inputFilenameFilter;
+  public final RegexFileFilter inputFilenameFilter;
   public final boolean schemaGenerationEnabled;
   public final String schemaGenerationKeyName;
   public final String schemaGenerationValueName;
@@ -270,7 +270,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
 
     final String inputPatternText = this.getString(INPUT_FILE_PATTERN_CONF);
     final Pattern inputPattern = Pattern.compile(inputPatternText);
-    this.inputFilenameFilter = new PatternFilenameFilter(inputPattern);
+    this.inputFilenameFilter = new RegexFileFilter(inputPattern);
   }
 
   private static final Field findMetadataField(Schema schema) {

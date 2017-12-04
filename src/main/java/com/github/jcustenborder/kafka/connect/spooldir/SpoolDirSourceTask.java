@@ -25,6 +25,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
@@ -42,6 +44,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -201,13 +204,20 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   }
 
   File findNextInputFile() {
-    File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
-    if (null == input || input.length == 0) {
+    // search for files recursively
+    Collection<File> toCheckFiles = FileUtils.listFiles(
+            this.config.inputPath,
+            this.config.inputFilenameFilter,
+            DirectoryFileFilter.DIRECTORY
+    );
+
+    if (toCheckFiles.isEmpty()) {
       log.debug("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
       return null;
     }
-    List<File> files = new ArrayList<>(input.length);
-    for (File f : input) {
+
+    List<File> files = new ArrayList<>();
+    for (File f : toCheckFiles) {
       File processingFile = processingFile(f);
       log.trace("Checking for processing file: {}", processingFile);
 
@@ -219,7 +229,6 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     }
 
     File result = null;
-
     for (File file : files) {
       long fileAgeMS = System.currentTimeMillis() - file.lastModified();
 
