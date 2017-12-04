@@ -43,6 +43,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -187,6 +191,12 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       } else {
         this.inputFile.delete();
         log.info("Finished processing {} in {} second(s). Deleting it.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS));
+
+        java.nio.file.Files.write(Paths.get(outputDirectory + "/finished.file.name.list"),
+                (this.inputFile.getAbsolutePath() + System.lineSeparator()).getBytes(Charset.defaultCharset()),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND);
+        log.info("Appending file name to {}.", outputDirectory + "/finished.file.name.list");
       }
 
       File processingFile = processingFile(this.inputFile);
