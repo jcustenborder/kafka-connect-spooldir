@@ -61,7 +61,7 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
 
     if (null != lastOffset) {
       int skippedRecords = 0;
-      while (this.iterator.hasNext() && skippedRecords < lastOffset) {
+      while (this.iterator.hasNext() && skippedRecords <= lastOffset) {
         next();
         skippedRecords++;
       }
@@ -77,7 +77,7 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
   }
 
   @Override
-  protected List<SourceRecord> process() throws IOException {
+  protected List<SourceRecord> process() {
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
 
     while (this.iterator.hasNext() && records.size() < this.config.batchSize) {
