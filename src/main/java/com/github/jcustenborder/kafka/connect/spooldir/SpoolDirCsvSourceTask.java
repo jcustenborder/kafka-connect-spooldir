@@ -23,6 +23,7 @@ import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.DataException;
 import org.apache.kafka.connect.source.SourceRecord;
+//import org.omg.CORBA.portable.ValueOutputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +38,7 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
   private CSVReader csvReader;
   private InputStreamReader streamReader;
   private Map<String, String> fileMetadata;
-
+  private List<Integer> ignoredColumns = new ArrayList<>();
 
   @Override
   protected SpoolDirCsvSourceConnectorConfig config(Map<String, ?> settings) {
@@ -78,6 +79,24 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
 
     this.fieldNames = fieldNames;
     this.fileMetadata = metadata;
+
+    createIgnoredColumnsList(this.config.ignoredColumns);
+  }
+
+  private void createIgnoredColumnsList(String columnsList) {
+    try {
+      log.info("Ignored Columns: {}", columnsList);
+      if (columnsList != null && !columnsList.trim().isEmpty()) {
+        String[] ignoredCols = columnsList.split(",");
+        if (ignoredCols.length > 0) {
+          for (int i = 0; i < ignoredCols.length; i++) {
+            ignoredColumns.add(Integer.valueOf(ignoredCols[i]));
+          }
+        }
+      }
+    } catch (Exception ex) {
+      log.error("process() - Error parsing ignored columns {}", ex);
+    }
   }
 
   @Override
@@ -95,18 +114,44 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
 
     while (records.size() < this.config.batchSize) {
-      String[] row = this.csvReader.readNext();
+      String[] currentRow = this.csvReader.readNext();
 
-      if (row == null) {
+      if (currentRow == null) {
         break;
       }
-      log.trace("process() - Row on line {} has {} field(s)", recordOffset(), row.length);
+      log.trace("process() - Row on line {} has {} field(s)", recordOffset(), currentRow.length);
+
+      // remove ignored columns
+      String[] row = null;
+      log.trace("Checking for ignored columns in process");
+      if ((ignoredColumns != null) && (ignoredColumns.size() > 0)) {
+        List<String> curRowList = new ArrayList<>(); //Arrays.asList(currentRow);
+        
+        for (int i = 0; i < currentRow.length; i++) {
+          if (!ignoredColumns.contains(i)) {
+            curRowList.add(currentRow[i]);
+          }
+        }
+        row = new String[curRowList.size()];
+        for (int i = 0; i < curRowList.size(); i++) {
+          row[i] = curRowList.get(i);
+        }
+        
+        curRowList.toArray(row);
+      } else {
+        row = currentRow;
+      }
+      log.trace("post checking for ignored columns");
+      log.info("currentRow has {} columns", currentRow.length);
+      log.info("row has {} columns", row.length);
 
       Struct keyStruct = new Struct(this.config.keySchema);
       Struct valueStruct = new Struct(this.config.valueSchema);
+      
 
       for (int i = 0; i < this.fieldNames.length; i++) {
         String fieldName = this.fieldNames[i];
+        
         log.trace("process() - Processing field {}", fieldName);
         String input = row[i];
         log.trace("process() - input = '{}'", input);

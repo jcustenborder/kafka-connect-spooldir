@@ -46,6 +46,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public static final String CSV_NULL_FIELD_INDICATOR_CONF = "csv.null.field.indicator";
   public static final String CSV_FIRST_ROW_AS_HEADER_CONF = "csv.first.row.as.header";
   public static final String CSV_CHARSET_CONF = "csv.file.charset";
+  public static final String CSV_IGNORED_COLUMNS_CONF = "csv.ignored.columns";
 
   public static final String CSV_CASE_SENSITIVE_FIELD_NAMES_CONF = "csv.case.sensitive.field.names";
   static final String CSV_SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
@@ -75,6 +76,8 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   static final boolean CSV_FIRST_ROW_AS_HEADER_DEFAULT = false;
   static final String CSV_CHARSET_DOC = "Character set to read wth file with.";
   static final String CSV_CHARSET_DEFAULT = Charset.defaultCharset().name();
+  static final String CSV_IGNORED_COLUMNS_DOC = "Comma separated list of columns to ignore during processing.";
+  static final String CSV_IGNORED_COLUMNS_DEFAULT = "";
 
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
   static final String CSV_GROUP = "csv";
@@ -93,6 +96,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public final boolean firstRowAsHeader;
   public final Charset charset;
   public final boolean caseSensitiveFieldNames;
+  public final String ignoredColumns;
 
   public SpoolDirCsvSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
     super(isTask, conf(), settings);
@@ -112,6 +116,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     this.charset = Charset.forName(charsetName);
 
     this.caseSensitiveFieldNames = this.getBoolean(SpoolDirCsvSourceConnectorConfig.CSV_CASE_SENSITIVE_FIELD_NAMES_CONF);
+    this.ignoredColumns = this.getString(SpoolDirCsvSourceConnectorConfig.CSV_IGNORED_COLUMNS_CONF);
   }
 
   static final ConfigDef conf() {
@@ -130,6 +135,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
         .define(CSV_NULL_FIELD_INDICATOR_CONF, ConfigDef.Type.STRING, CSV_NULL_FIELD_INDICATOR_DEFAULT, ValidEnum.of(CSVReaderNullFieldIndicator.class), ConfigDef.Importance.LOW, CSV_NULL_FIELD_INDICATOR_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_FIRST_ROW_AS_HEADER_CONF, ConfigDef.Type.BOOLEAN, CSV_FIRST_ROW_AS_HEADER_DEFAULT, ConfigDef.Importance.MEDIUM, CSV_FIRST_ROW_AS_HEADER_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_CHARSET_CONF, ConfigDef.Type.STRING, CSV_CHARSET_DEFAULT, CharsetValidator.of(), ConfigDef.Importance.LOW, CSV_CHARSET_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
+        .define(CSV_IGNORED_COLUMNS_CONF, ConfigDef.Type.STRING, CSV_IGNORED_COLUMNS_DEFAULT, ConfigDef.Importance.LOW, CSV_IGNORED_COLUMNS_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
         .define(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, ConfigDef.Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_CASE_SENSITIVE_FIELD_NAMES_DOC);
   }
 
