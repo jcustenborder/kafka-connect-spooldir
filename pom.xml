@@ -76,7 +76,6 @@
                             <dockerName>kafka-connect-docker</dockerName>
                             <pluginTypes>
                                 <pluginType>source</pluginType>
-                                <pluginType>sink</pluginType>
                             </pluginTypes>
                             <tags>
                                 <tag>File</tag>
