@@ -60,7 +60,7 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
     this.offset = -1;
 
     if (null != lastOffset) {
-      int skippedRecords = 0;
+      int skippedRecords = 1;
       while (this.iterator.hasNext() && skippedRecords <= lastOffset) {
         next();
         skippedRecords++;
