@@ -53,4 +53,45 @@
             <version>3.10</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-connect-maven-plugin</artifactId>
+                <version>0.9.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <ownerUsername>jcustenborder</ownerUsername>
+                            <confluentControlCenterIntegration>true
+                            </confluentControlCenterIntegration>
+                            <documentationUrl>
+                                https://jcustenborder.github.io/kafka-connect-documentation/
+                            </documentationUrl>
+                            <ownerName>Jeremy Custenborder</ownerName>
+                            <dockerNamespace>jcustenborder</dockerNamespace>
+                            <dockerName>kafka-connect-docker</dockerName>
+                            <pluginTypes>
+                                <pluginType>source</pluginType>
+                                <pluginType>sink</pluginType>
+                            </pluginTypes>
+                            <tags>
+                                <tag>File</tag>
+                                <tag>Flume</tag>
+                                <tag>csv</tag>
+                                <tag>json</tag>
+                            </tags>
+                            <title>Kafka Connect Spooldir</title>
+                            <supportUrl>${pom.issueManagement.url}</supportUrl>
+                            <supportSummary>Support provided through community involvement.
+                            </supportSummary>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
