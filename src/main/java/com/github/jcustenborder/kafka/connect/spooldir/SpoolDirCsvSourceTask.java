@@ -142,13 +142,17 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
         row = currentRow;
       }
       log.trace("post checking for ignored columns");
-      log.info("currentRow has {} columns", currentRow.length);
-      log.info("row has {} columns", row.length);
+      log.trace("currentRow has {} columns", currentRow.length);
+      log.trace("row has {} columns", row.length);
 
       Struct keyStruct = new Struct(this.config.keySchema);
       Struct valueStruct = new Struct(this.config.valueSchema);
-      
 
+      if (row.length != this.fieldNames.length) {
+        log.info("Ignoring row because row has {} columns while fieldNames has {} columns", row.length, this.fieldNames.length);
+        continue;
+      }
+      
       for (int i = 0; i < this.fieldNames.length; i++) {
         String fieldName = this.fieldNames[i];
         
