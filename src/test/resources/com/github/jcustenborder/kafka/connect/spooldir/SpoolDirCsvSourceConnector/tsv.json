@@ -1,0 +1,12 @@
+{
+  "name": "TSV",
+  "description": "This example will read a TSV",
+  "config": {
+    "finished.path": "/tmp",
+    "input.path": "/tmp",
+    "error.path": "/tmp",
+    "input.file.pattern": "^users\\d+\\.tsv",
+    "topic": "users",
+    "csv.separator.char": 11
+  }
+}

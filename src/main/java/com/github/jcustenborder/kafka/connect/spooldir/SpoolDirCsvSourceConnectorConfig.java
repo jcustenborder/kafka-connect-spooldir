@@ -36,19 +36,32 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
 
   //CSVRecordProcessorConfig
   public static final String CSV_SKIP_LINES_CONF = "csv.skip.lines";
+  static final String CSV_SKIP_LINES_DISPLAY = "Skip lins";
   public static final String CSV_SEPARATOR_CHAR_CONF = "csv.separator.char";
+  static final String CSV_SEPARATOR_CHAR_DISPLAY = "Separator Character";
   public static final String CSV_QUOTE_CHAR_CONF = "csv.quote.char";
+  static final String CSV_QUOTE_CHAR_DISPLAY = "Quote Character";
   public static final String CSV_ESCAPE_CHAR_CONF = "csv.escape.char";
+  static final String CSV_ESCAPE_CHAR_DISPLAY = "Escape Character";
   public static final String CSV_STRICT_QUOTES_CONF = "csv.strict.quotes";
+  static final String CSV_STRICT_QUOTES_DISPLAY = "Strict Quotes";
   public static final String CSV_IGNORE_LEADING_WHITESPACE_CONF = "csv.ignore.leading.whitespace";
+  static final String CSV_IGNORE_LEADING_WHITESPACE_DISPLAY = "Ignore leading whitespace";
   public static final String CSV_IGNORE_QUOTATIONS_CONF = "csv.ignore.quotations";
+  static final String CSV_IGNORE_QUOTATIONS_DISPLAY = "Ignore quotations";
   public static final String CSV_KEEP_CARRIAGE_RETURN_CONF = "csv.keep.carriage.return";
+  static final String CSV_KEEP_CARRIAGE_RETURN_DISPLAY = "Preserve Carriage Return?";
   public static final String CSV_VERIFY_READER_CONF = "csv.verify.reader";
+  static final String CSV_VERIFY_READER_DISPLAY = "Verify reader";
   public static final String CSV_NULL_FIELD_INDICATOR_CONF = "csv.null.field.indicator";
+  static final String CSV_NULL_FIELD_INDICATOR_DISPLAY = "Null field indicator";
   public static final String CSV_FIRST_ROW_AS_HEADER_CONF = "csv.first.row.as.header";
+  static final String CSV_FIRST_ROW_AS_HEADER_DISPLAY = "Treat first row as header.";
   public static final String CSV_CHARSET_CONF = "csv.file.charset";
-
+  static final String CSV_CHARSET_DISPLAY = "File character set.";
   public static final String CSV_CASE_SENSITIVE_FIELD_NAMES_CONF = "csv.case.sensitive.field.names";
+  static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DISPLAY = "Case sensitive field names.";
+
   static final String CSV_SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int CSV_SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
   static final String CSV_SEPARATOR_CHAR_DOC = "The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \\t.";
@@ -79,7 +92,6 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
 
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
   static final String CSV_GROUP = "CSV Parsing";
-  static final String CSV_DISPLAY_NAME = "CSV Settings";
   private static final String CSV_QUOTE_CHAR_DOC = "The character that is used to quote a field. This typically happens when the " + CSV_SEPARATOR_CHAR_CONF + " character is within the data.";
   public final int skipLines;
   public final char separatorChar;
@@ -125,7 +137,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .documentation(CSV_SKIP_LINES_DOC)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
-                .displayName(CSV_DISPLAY_NAME)
+                .displayName(CSV_SKIP_LINES_DISPLAY)
                 .build()
         )
         .define(
@@ -135,6 +147,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .documentation(CSV_SEPARATOR_CHAR_DOC)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
+                .displayName(CSV_SEPARATOR_CHAR_DISPLAY)
                 .build()
         )
         .define(
@@ -144,6 +157,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .documentation(CSV_QUOTE_CHAR_DOC)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
+                .displayName(CSV_QUOTE_CHAR_DISPLAY)
                 .build()
         )
         .define(
@@ -152,6 +166,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_ESCAPE_CHAR_DOC)
                 .group(CSV_GROUP)
+                .displayName(CSV_ESCAPE_CHAR_DISPLAY)
                 .width(ConfigDef.Width.LONG)
                 .build()
         )
@@ -160,6 +175,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .defaultValue(CSV_STRICT_QUOTES_DEFAULT)
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_STRICT_QUOTES_DOC)
+                .displayName(CSV_STRICT_QUOTES_DISPLAY)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
                 .build()
@@ -170,6 +186,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_IGNORE_LEADING_WHITESPACE_DOC)
                 .group(CSV_GROUP)
+                .displayName(CSV_IGNORE_LEADING_WHITESPACE_DISPLAY)
                 .width(ConfigDef.Width.LONG)
                 .build()
         )
@@ -178,6 +195,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .defaultValue(CSV_IGNORE_QUOTATIONS_DEFAULT)
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_IGNORE_QUOTATIONS_DOC)
+                .displayName(CSV_IGNORE_QUOTATIONS_DISPLAY)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
                 .build()
@@ -187,6 +205,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .defaultValue(CSV_KEEP_CARRIAGE_RETURN_DEFAULT)
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_KEEP_CARRIAGE_RETURN_DOC)
+                .displayName(CSV_KEEP_CARRIAGE_RETURN_DISPLAY)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
                 .build()
@@ -197,6 +216,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_VERIFY_READER_DOC)
                 .group(CSV_GROUP)
+                .displayName(CSV_VERIFY_READER_DISPLAY)
                 .width(ConfigDef.Width.LONG)
                 .build()
         )
@@ -206,6 +226,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .validator(ValidEnum.of(CSVReaderNullFieldIndicator.class))
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_NULL_FIELD_INDICATOR_DOC)
+                .displayName(CSV_NULL_FIELD_INDICATOR_DISPLAY)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
                 .build()
@@ -215,6 +236,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .defaultValue(CSV_FIRST_ROW_AS_HEADER_DEFAULT)
                 .importance(ConfigDef.Importance.MEDIUM)
                 .documentation(CSV_FIRST_ROW_AS_HEADER_DOC)
+                .displayName(CSV_FIRST_ROW_AS_HEADER_DISPLAY)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
                 .build()
@@ -225,6 +247,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .validator(CharsetValidator.of())
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_CHARSET_DOC)
+                .displayName(CSV_CHARSET_DISPLAY)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
                 .build()
@@ -234,6 +257,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .defaultValue(false)
                 .importance(ConfigDef.Importance.LOW)
                 .documentation(CSV_CASE_SENSITIVE_FIELD_NAMES_DOC)
+                .displayName(CSV_CASE_SENSITIVE_FIELD_NAMES_DISPLAY)
                 .build()
         );
   }

@@ -1,0 +1,11 @@
+{
+  "name":"Json",
+  "description":"This example will read json from the input directory.",
+  "config":{
+    "finished.path": "/tmp",
+    "input.path": "/tmp",
+    "error.path": "/tmp",
+    "input.file.pattern":"^users\\d+\\.json$",
+    "topic":"users"
+  }
+}
