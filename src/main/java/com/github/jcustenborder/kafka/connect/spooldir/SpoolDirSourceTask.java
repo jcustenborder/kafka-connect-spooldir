@@ -25,6 +25,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
@@ -41,7 +43,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -175,11 +183,25 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
       if (errored) {
         log.error("Error during processing, moving {} to {}.", this.inputFile, outputDirectory);
-      } else {
-        log.info("Finished processing {} in {} second(s). Moving to {}.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS), outputDirectory);
       }
 
-      Files.move(this.inputFile, finishedFile);
+      // delete files that are successfully ingested
+      if (this.config.keepFinishedFiles) {
+        Files.move(this.inputFile, finishedFile);
+        log.info("Finished processing {} in {} second(s). Moving to {}.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS), outputDirectory);
+      } else {
+        this.inputFile.delete();
+        log.info("Finished processing {} in {} second(s). Deleting it.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS));
+
+        String fileName = outputDirectory + "/finished.file.name.list";
+        String nowString = LocalDate.now() + " " + LocalTime.now();
+        String aLine = nowString + "\t" + this.inputFile.getAbsolutePath() + System.lineSeparator();
+        java.nio.file.Files.write(Paths.get(fileName),
+                aLine.getBytes(Charset.defaultCharset()),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND);
+        log.info("Appending file name to {}.", fileName);
+      }
 
       File processingFile = processingFile(this.inputFile);
       if (processingFile.exists()) {
@@ -196,13 +218,20 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   }
 
   File findNextInputFile() {
-    File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
-    if (null == input || input.length == 0) {
+    // search for files recursively
+    Collection<File> toCheckFiles = FileUtils.listFiles(
+            this.config.inputPath,
+            this.config.inputFilenameFilter,
+            DirectoryFileFilter.DIRECTORY
+    );
+
+    if (toCheckFiles.isEmpty()) {
       log.debug("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
       return null;
     }
-    List<File> files = new ArrayList<>(input.length);
-    for (File f : input) {
+
+    List<File> files = new ArrayList<>();
+    for (File f : toCheckFiles) {
       File processingFile = processingFile(f);
       log.trace("Checking for processing file: {}", processingFile);
 
@@ -214,7 +243,6 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     }
 
     File result = null;
-
     for (File file : files) {
       long fileAgeMS = System.currentTimeMillis() - file.lastModified();
 
