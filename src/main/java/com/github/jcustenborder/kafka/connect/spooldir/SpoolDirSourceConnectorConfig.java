@@ -16,6 +16,7 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
 import com.github.jcustenborder.kafka.connect.utils.config.ConfigUtils;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidEnum;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidPattern;
@@ -23,6 +24,7 @@ import com.github.jcustenborder.kafka.connect.utils.config.validators.filesystem
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.PatternFilenameFilter;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
@@ -282,32 +284,220 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     return result;
   }
 
+  public static final String GROUP_FILESYSTEM = "File System";
+  public static final String GROUP_SCHEMA_GENERATION = "Schema Generation";
+  public static final String GROUP_SCHEMA = "Schema";
+  public static final String GROUP_GENERAL = "General";
+  public static final String GROUP_TIMESTAMP = "Timestamps";
+
   public static ConfigDef config() {
+
+    ConfigDef.Recommender schemaRecommender = new ConfigDef.Recommender() {
+      @Override
+      public List<Object> validValues(String key, Map<String, Object> settings) {
+        return ImmutableList.of();
+      }
+
+      @Override
+      public boolean visible(String key, Map<String, Object> settings) {
+        boolean schemaGenerationEnabled = (boolean) settings.get(SCHEMA_GENERATION_ENABLED_CONF);
+
+        if (KEY_SCHEMA_CONF.endsWith(key)) {
+          return !schemaGenerationEnabled;
+        }
+        if (VALUE_SCHEMA_CONF.endsWith(key)) {
+          return !schemaGenerationEnabled;
+        }
+        if (SCHEMA_GENERATION_KEY_NAME_CONF.endsWith(key)) {
+          return schemaGenerationEnabled;
+        }
+        if (SCHEMA_GENERATION_VALUE_NAME_CONF.endsWith(key)) {
+          return schemaGenerationEnabled;
+        }
+        if (SCHEMA_GENERATION_KEY_FIELDS_CONF.endsWith(key)) {
+          return schemaGenerationEnabled;
+        }
+
+        return true;
+      }
+    };
+
+
     return new ConfigDef()
-        //PollingDirectoryMonitorConfig
-        .define(INPUT_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, INPUT_PATH_DOC)
-        .define(FINISHED_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, FINISHED_PATH_DOC)
-        .define(ERROR_PATH_CONFIG, ConfigDef.Type.STRING, ConfigDef.NO_DEFAULT_VALUE, ValidDirectoryWritable.of(), ConfigDef.Importance.HIGH, ERROR_PATH_DOC)
-        .define(INPUT_FILE_PATTERN_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, INPUT_FILE_PATTERN_DOC)
-        .define(HALT_ON_ERROR_CONF, ConfigDef.Type.BOOLEAN, true, ConfigDef.Importance.HIGH, HALT_ON_ERROR_DOC)
-        .define(FILE_MINIMUM_AGE_MS_CONF, ConfigDef.Type.LONG, 0L, ConfigDef.Range.between(0L, Long.MAX_VALUE), ConfigDef.Importance.LOW, FILE_MINIMUM_AGE_MS_DOC)
-        .define(PROCESSING_FILE_EXTENSION_CONF, ConfigDef.Type.STRING, PROCESSING_FILE_EXTENSION_DEFAULT, ValidPattern.of("^.*\\..+$"), ConfigDef.Importance.LOW, PROCESSING_FILE_EXTENSION_DOC)
 
-        .define(BATCH_SIZE_CONF, ConfigDef.Type.INT, BATCH_SIZE_DEFAULT, ConfigDef.Importance.LOW, BATCH_SIZE_DOC)
-        .define(TOPIC_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, TOPIC_DOC)
 
-        .define(KEY_SCHEMA_CONF, Type.STRING, "", ConfigDef.Importance.HIGH, KEY_SCHEMA_DOC)
-        .define(VALUE_SCHEMA_CONF, Type.STRING, "", ConfigDef.Importance.HIGH, VALUE_SCHEMA_DOC)
-        .define(PARSER_TIMESTAMP_TIMEZONE_CONF, ConfigDef.Type.STRING, PARSER_TIMESTAMP_TIMEZONE_DEFAULT, ConfigDef.Importance.LOW, PARSER_TIMESTAMP_TIMEZONE_DOC)
-        .define(PARSER_TIMESTAMP_DATE_FORMATS_CONF, ConfigDef.Type.LIST, PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT, ConfigDef.Importance.LOW, PARSER_TIMESTAMP_DATE_FORMATS_DOC)
+        .define(
+            ConfigKeyBuilder.of(TOPIC_CONF, Type.STRING)
+                .documentation(TOPIC_DOC)
+                .group(GROUP_GENERAL)
+                .importance(ConfigDef.Importance.HIGH)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(BATCH_SIZE_CONF, Type.INT)
+                .documentation(BATCH_SIZE_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(BATCH_SIZE_DEFAULT)
+                .group(GROUP_GENERAL)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(EMPTY_POLL_WAIT_MS_CONF, Type.LONG)
+                .documentation(EMPTY_POLL_WAIT_MS_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(1000L)
+                .validator(ConfigDef.Range.between(1L, Long.MAX_VALUE))
+                .group(GROUP_GENERAL)
+                .build()
+        )
 
-        .define(EMPTY_POLL_WAIT_MS_CONF, ConfigDef.Type.LONG, 1000L, ConfigDef.Range.between(1L, Long.MAX_VALUE), ConfigDef.Importance.LOW, EMPTY_POLL_WAIT_MS_DOC)
-        .define(TIMESTAMP_MODE_CONF, Type.STRING, TimestampMode.PROCESS_TIME.toString(), ValidEnum.of(TimestampMode.class), ConfigDef.Importance.MEDIUM, TIMESTAMP_MODE_DOC)
-        .define(TIMESTAMP_FIELD_CONF, Type.STRING, "", ConfigDef.Importance.MEDIUM, TIMESTAMP_FIELD_DOC)
-        .define(SCHEMA_GENERATION_KEY_FIELDS_CONF, Type.LIST, new ArrayList<>(), ConfigDef.Importance.MEDIUM, SCHEMA_GENERATION_KEY_FIELDS_DOC)
-        .define(SCHEMA_GENERATION_ENABLED_CONF, Type.BOOLEAN, false, ConfigDef.Importance.MEDIUM, SCHEMA_GENERATION_ENABLED_DOC)
-        .define(SCHEMA_GENERATION_KEY_NAME_CONF, Type.STRING, "com.github.jcustenborder.kafka.connect.model.Key", ConfigDef.Importance.MEDIUM, SCHEMA_GENERATION_KEY_NAME_DOC)
-        .define(SCHEMA_GENERATION_VALUE_NAME_CONF, Type.STRING, "com.github.jcustenborder.kafka.connect.model.Value", ConfigDef.Importance.MEDIUM, SCHEMA_GENERATION_VALUE_NAME_DOC);
+        // Filesystem
+        .define(
+            ConfigKeyBuilder.of(INPUT_PATH_CONFIG, ConfigDef.Type.STRING)
+                .documentation(INPUT_PATH_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .validator(ValidDirectoryWritable.of())
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(FINISHED_PATH_CONFIG, ConfigDef.Type.STRING)
+                .documentation(FINISHED_PATH_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .validator(ValidDirectoryWritable.of())
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(ERROR_PATH_CONFIG, ConfigDef.Type.STRING)
+                .documentation(ERROR_PATH_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .validator(ValidDirectoryWritable.of())
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(INPUT_FILE_PATTERN_CONF, ConfigDef.Type.STRING)
+                .documentation(INPUT_FILE_PATTERN_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HALT_ON_ERROR_CONF, Type.BOOLEAN)
+                .documentation(HALT_ON_ERROR_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .defaultValue(true)
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(FILE_MINIMUM_AGE_MS_CONF, Type.LONG)
+                .documentation(FILE_MINIMUM_AGE_MS_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .group(GROUP_FILESYSTEM)
+                .defaultValue(0L)
+                .validator(ConfigDef.Range.atLeast(0L))
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(PROCESSING_FILE_EXTENSION_CONF, Type.STRING)
+                .documentation(PROCESSING_FILE_EXTENSION_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .validator(ValidDirectoryWritable.of())
+                .group(GROUP_FILESYSTEM)
+                .defaultValue(PROCESSING_FILE_EXTENSION_DEFAULT)
+                .validator(ValidPattern.of("^.*\\..+$"))
+                .build()
+        )
+
+        .define(
+            ConfigKeyBuilder.of(KEY_SCHEMA_CONF, Type.STRING)
+                .documentation(KEY_SCHEMA_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .group(GROUP_SCHEMA)
+                .defaultValue("")
+                .width(ConfigDef.Width.LONG)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(VALUE_SCHEMA_CONF, Type.STRING)
+                .documentation(VALUE_SCHEMA_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .group(GROUP_SCHEMA)
+                .defaultValue("")
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+
+        .define(
+            ConfigKeyBuilder.of(SCHEMA_GENERATION_ENABLED_CONF, Type.BOOLEAN)
+                .documentation(SCHEMA_GENERATION_ENABLED_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .group(GROUP_SCHEMA_GENERATION)
+                .defaultValue(false)
+                .recommender(schemaRecommender)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(SCHEMA_GENERATION_KEY_FIELDS_CONF, Type.LIST)
+                .documentation(SCHEMA_GENERATION_KEY_FIELDS_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .group(GROUP_SCHEMA_GENERATION)
+                .defaultValue(ImmutableList.of())
+                .recommender(schemaRecommender)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(SCHEMA_GENERATION_KEY_NAME_CONF, Type.STRING)
+                .documentation(SCHEMA_GENERATION_KEY_NAME_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .group(GROUP_SCHEMA_GENERATION)
+                .defaultValue("com.github.jcustenborder.kafka.connect.model.Key")
+                .recommender(schemaRecommender)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(SCHEMA_GENERATION_VALUE_NAME_CONF, Type.STRING)
+                .documentation(SCHEMA_GENERATION_VALUE_NAME_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .group(GROUP_SCHEMA_GENERATION)
+                .defaultValue("com.github.jcustenborder.kafka.connect.model.Value")
+                .recommender(schemaRecommender)
+                .build()
+        )
+
+        .define(
+            ConfigKeyBuilder.of(PARSER_TIMESTAMP_TIMEZONE_CONF, Type.STRING)
+                .documentation(PARSER_TIMESTAMP_TIMEZONE_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .group(GROUP_TIMESTAMP)
+                .defaultValue(PARSER_TIMESTAMP_TIMEZONE_DEFAULT)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(PARSER_TIMESTAMP_DATE_FORMATS_CONF, Type.LIST)
+                .documentation(PARSER_TIMESTAMP_DATE_FORMATS_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .group(GROUP_TIMESTAMP)
+                .defaultValue(PARSER_TIMESTAMP_DATE_FORMATS_DEFAULT)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(TIMESTAMP_MODE_CONF, Type.STRING)
+                .documentation(TIMESTAMP_MODE_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .group(GROUP_TIMESTAMP)
+                .defaultValue(TimestampMode.PROCESS_TIME.toString())
+                .validator(ValidEnum.of(TimestampMode.class))
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(TIMESTAMP_FIELD_CONF, Type.STRING)
+                .documentation(TIMESTAMP_FIELD_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .group(GROUP_TIMESTAMP)
+                .defaultValue("")
+                .recommender(new ConfigDef.Recommender() {
+                  @Override
+                  public List<Object> validValues(String key, Map<String, Object> settings) {
+                    return ImmutableList.of();
+                  }
+
+                  @Override
+                  public boolean visible(String key, Map<String, Object> settings) {
+                    String timestampMode = (String) settings.get(TIMESTAMP_MODE_CONF);
+                    return TimestampMode.FIELD.toString().equals(timestampMode);
+                  }
+                })
+                .build()
+        );
   }
 
   Schema readSchema(final String key) {

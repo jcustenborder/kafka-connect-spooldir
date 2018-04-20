@@ -15,6 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
 import com.github.jcustenborder.kafka.connect.utils.config.ConfigUtils;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidEnum;
 import com.google.common.base.Joiner;
@@ -77,7 +78,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   static final String CSV_CHARSET_DEFAULT = Charset.defaultCharset().name();
 
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
-  static final String CSV_GROUP = "csv";
+  static final String CSV_GROUP = "CSV Parsing";
   static final String CSV_DISPLAY_NAME = "CSV Settings";
   private static final String CSV_QUOTE_CHAR_DOC = "The character that is used to quote a field. This typically happens when the " + CSV_SEPARATOR_CHAR_CONF + " character is within the data.";
   public final int skipLines;
@@ -115,22 +116,126 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   }
 
   static final ConfigDef conf() {
-    int csvPosition = 0;
 
     return SpoolDirSourceConnectorConfig.config()
-        .define(CSV_SKIP_LINES_CONF, ConfigDef.Type.INT, CSV_SKIP_LINES_DEFAULT, ConfigDef.Importance.LOW, CSV_SKIP_LINES_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_SEPARATOR_CHAR_CONF, ConfigDef.Type.INT, CSV_SEPARATOR_CHAR_DEFAULT, ConfigDef.Importance.LOW, CSV_SEPARATOR_CHAR_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_QUOTE_CHAR_CONF, ConfigDef.Type.INT, CSV_QUOTE_CHAR_DEFAULT, ConfigDef.Importance.LOW, CSV_QUOTE_CHAR_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_ESCAPE_CHAR_CONF, ConfigDef.Type.INT, CSV_ESCAPE_CHAR_DEFAULT, ConfigDef.Importance.LOW, CSV_ESCAPE_CHAR_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_STRICT_QUOTES_CONF, ConfigDef.Type.BOOLEAN, CSV_STRICT_QUOTES_DEFAULT, ConfigDef.Importance.LOW, CSV_STRICT_QUOTES_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_IGNORE_LEADING_WHITESPACE_CONF, ConfigDef.Type.BOOLEAN, CSV_IGNORE_LEADING_WHITESPACE_DEFAULT, ConfigDef.Importance.LOW, CSV_IGNORE_LEADING_WHITESPACE_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_IGNORE_QUOTATIONS_CONF, ConfigDef.Type.BOOLEAN, CSV_IGNORE_QUOTATIONS_DEFAULT, ConfigDef.Importance.LOW, CSV_IGNORE_QUOTATIONS_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_KEEP_CARRIAGE_RETURN_CONF, ConfigDef.Type.BOOLEAN, CSV_KEEP_CARRIAGE_RETURN_DEFAULT, ConfigDef.Importance.LOW, CSV_KEEP_CARRIAGE_RETURN_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_VERIFY_READER_CONF, ConfigDef.Type.BOOLEAN, CSV_VERIFY_READER_DEFAULT, ConfigDef.Importance.LOW, CSV_VERIFY_READER_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_NULL_FIELD_INDICATOR_CONF, ConfigDef.Type.STRING, CSV_NULL_FIELD_INDICATOR_DEFAULT, ValidEnum.of(CSVReaderNullFieldIndicator.class), ConfigDef.Importance.LOW, CSV_NULL_FIELD_INDICATOR_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_FIRST_ROW_AS_HEADER_CONF, ConfigDef.Type.BOOLEAN, CSV_FIRST_ROW_AS_HEADER_DEFAULT, ConfigDef.Importance.MEDIUM, CSV_FIRST_ROW_AS_HEADER_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_CHARSET_CONF, ConfigDef.Type.STRING, CSV_CHARSET_DEFAULT, CharsetValidator.of(), ConfigDef.Importance.LOW, CSV_CHARSET_DOC, CSV_GROUP, csvPosition++, ConfigDef.Width.LONG, CSV_DISPLAY_NAME)
-        .define(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, ConfigDef.Type.BOOLEAN, false, ConfigDef.Importance.LOW, CSV_CASE_SENSITIVE_FIELD_NAMES_DOC);
+        .define(
+            ConfigKeyBuilder.of(CSV_SKIP_LINES_CONF, ConfigDef.Type.INT)
+                .defaultValue(CSV_SKIP_LINES_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_SKIP_LINES_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .displayName(CSV_DISPLAY_NAME)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_SEPARATOR_CHAR_CONF, ConfigDef.Type.INT)
+                .defaultValue(CSV_SEPARATOR_CHAR_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_SEPARATOR_CHAR_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_QUOTE_CHAR_CONF, ConfigDef.Type.INT)
+                .defaultValue(CSV_QUOTE_CHAR_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_QUOTE_CHAR_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_ESCAPE_CHAR_CONF, ConfigDef.Type.INT)
+                .defaultValue(CSV_ESCAPE_CHAR_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_ESCAPE_CHAR_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_STRICT_QUOTES_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(CSV_STRICT_QUOTES_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_STRICT_QUOTES_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_IGNORE_LEADING_WHITESPACE_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(CSV_IGNORE_LEADING_WHITESPACE_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_IGNORE_LEADING_WHITESPACE_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_IGNORE_QUOTATIONS_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(CSV_IGNORE_QUOTATIONS_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_IGNORE_QUOTATIONS_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_KEEP_CARRIAGE_RETURN_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(CSV_KEEP_CARRIAGE_RETURN_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_KEEP_CARRIAGE_RETURN_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_VERIFY_READER_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(CSV_VERIFY_READER_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_VERIFY_READER_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_NULL_FIELD_INDICATOR_CONF, ConfigDef.Type.STRING)
+                .defaultValue(CSV_NULL_FIELD_INDICATOR_DEFAULT)
+                .validator(ValidEnum.of(CSVReaderNullFieldIndicator.class))
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_NULL_FIELD_INDICATOR_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_FIRST_ROW_AS_HEADER_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(CSV_FIRST_ROW_AS_HEADER_DEFAULT)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .documentation(CSV_FIRST_ROW_AS_HEADER_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_CHARSET_CONF, ConfigDef.Type.STRING)
+                .defaultValue(CSV_CHARSET_DEFAULT)
+                .validator(CharsetValidator.of())
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_CHARSET_DOC)
+                .group(CSV_GROUP)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_CASE_SENSITIVE_FIELD_NAMES_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(false)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_CASE_SENSITIVE_FIELD_NAMES_DOC)
+                .build()
+        );
   }
 
   final char getChar(String key) {
