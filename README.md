@@ -20,7 +20,7 @@ field schemas are used to parse the data in each row. This allows the user to st
 
 ```bash
 mvn clean package
-export CLASSPATH="$(find target/kafka-connect-target/usr/share/java -type f -name '*.jar' | tr '\n' ':')"
+export CLASSPATH="$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\n' ':')"
 kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id
 ```
 
@@ -28,7 +28,7 @@ kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator 
 
 ```bash
 mvn clean package
-export CLASSPATH="$(find target/kafka-connect-target/usr/share/java -type f -name '*.jar' | tr '\n' ':')"
+export CLASSPATH="$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\n' ':')"
 kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t json -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data -c config/JsonExample.properties -i id
 ```
 
