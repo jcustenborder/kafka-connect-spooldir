@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.Struct;
@@ -233,6 +234,14 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     return result;
   }
 
+  static final Map<String, String> SUPPORTED_COMPRESSION_TYPES = ImmutableMap.of(
+      "bz2", CompressorStreamFactory.BZIP2,
+      "gz", CompressorStreamFactory.GZIP,
+      "snappy", CompressorStreamFactory.SNAPPY_RAW,
+      "lz4", CompressorStreamFactory.LZ4_BLOCK,
+      "z", CompressorStreamFactory.Z
+  );
+
   public List<SourceRecord> read() {
     try {
       if (!hasRecords) {
@@ -261,7 +270,19 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
             Number number = (Number) offset.get("offset");
             lastOffset = number.longValue();
           }
-          this.inputStream = new FileInputStream(this.inputFile);
+
+          final String extension = Files.getFileExtension(inputFile.getName());
+          log.trace("read() - fileName = '{}' extension = '{}'", inputFile, extension);
+          final InputStream inputStream = new FileInputStream(this.inputFile);
+
+          if (SUPPORTED_COMPRESSION_TYPES.containsKey(extension)) {
+            final String compressor = SUPPORTED_COMPRESSION_TYPES.get(extension);
+            log.info("Decompressing {} as {}", inputFile, compressor);
+            final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory();
+            this.inputStream = compressorStreamFactory.createCompressorInputStream(compressor, inputStream);
+          } else {
+            this.inputStream = inputStream;
+          }
           configure(this.inputStream, this.metadata, lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
