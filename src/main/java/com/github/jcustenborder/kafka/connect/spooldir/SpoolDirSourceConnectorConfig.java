@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 
 
 @SuppressWarnings("WeakerAccess")
-abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
+public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public static final String TIMESTAMP_FIELD_CONF = "timestamp.field";
   public static final String TIMESTAMP_MODE_CONF = "timestamp.mode";
   //DirectoryMonitorConfig

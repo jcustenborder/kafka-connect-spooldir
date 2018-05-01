@@ -64,10 +64,12 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
 
   static final String CSV_SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int CSV_SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
-  static final String CSV_SEPARATOR_CHAR_DOC = "The character that seperates each field. Typically in a CSV this is a , character. A TSV would use \\t.";
+  static final String CSV_SEPARATOR_CHAR_DOC = "The character that separates each field in the form " +
+      "of an integer. Typically in a CSV this is a ,(44) character. A TSV would use a tab(9) character.";
   static final int CSV_SEPARATOR_CHAR_DEFAULT = (int) CSVParser.DEFAULT_SEPARATOR;
   static final int CSV_QUOTE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_QUOTE_CHARACTER;
-  static final String CSV_ESCAPE_CHAR_DOC = "Escape character.";
+  static final String CSV_ESCAPE_CHAR_DOC = "The character as an integer to use when a special " +
+      "character is encountered. The default escape character is typically a \\(92)";
   static final int CSV_ESCAPE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_ESCAPE_CHARACTER;
   static final String CSV_STRICT_QUOTES_DOC = "Sets the strict quotes setting - if true, characters outside the quotes are ignored.";
   static final boolean CSV_STRICT_QUOTES_DEFAULT = CSVParser.DEFAULT_STRICT_QUOTES;

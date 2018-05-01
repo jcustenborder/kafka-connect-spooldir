@@ -57,6 +57,11 @@
             <artifactId>commons-compress</artifactId>
             <version>1.16.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.jcustenborder.parsers</groupId>
+            <artifactId>extended-log-format</artifactId>
+            <version>[0.0.1.2, 0.0.1.1000)</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

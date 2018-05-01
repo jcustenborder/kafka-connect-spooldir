@@ -51,8 +51,8 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTask.class);
   protected Parser parser;
   protected Map<String, ?> sourcePartition;
-  CONF config;
-  Stopwatch processingTime = Stopwatch.createStarted();
+  protected CONF config;
+  private Stopwatch processingTime = Stopwatch.createStarted();
   private File inputFile;
   private long inputFileModifiedTime;
   private InputStream inputStream;
