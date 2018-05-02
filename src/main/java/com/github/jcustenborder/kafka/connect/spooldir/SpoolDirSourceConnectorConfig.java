@@ -75,6 +75,16 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public static final String SCHEMA_GENERATION_VALUE_NAME_CONF = "schema.generation.value.name";
   public static final String SCHEMA_GENERATION_ENABLED_CONF = "schema.generation.enabled";
   public static final String METADATA_SCHEMA_NAME = "com.github.jcustenborder.kafka.connect.spooldir.Metadata";
+  public static final String CLEANUP_POLICY_CONF = "cleanup.policy";
+  public static final String CLEANUP_POLICY_DOC = "Determines how the connector should cleanup the " +
+      "files that have been successfully processed. NONE leaves the files in place which could " +
+      "cause them to be reprocessed if the connector is restarted. DELETE removes the file from the " +
+      "filesystem. MOVE will move the file to a finished directory.";
+  public static final String GROUP_FILESYSTEM = "File System";
+  public static final String GROUP_SCHEMA_GENERATION = "Schema Generation";
+  public static final String GROUP_SCHEMA = "Schema";
+  public static final String GROUP_GENERAL = "General";
+  public static final String GROUP_TIMESTAMP = "Timestamps";
   static final String TIMESTAMP_FIELD_DOC = "The field in the value schema that will contain the parsed timestamp for the record. " +
       "This field cannot be marked as optional and must be a " +
       "[Timestamp](https://kafka.apache.org/0102/javadoc/org/apache/kafka/connect/data/Schema.html)";
@@ -137,11 +147,18 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public final String schemaGenerationValueName;
   public boolean hasKeyMetadataField;
   public boolean hasvalueMetadataField;
-
+  public CleanupPolicy cleanupPolicy;
   public SpoolDirSourceConnectorConfig(final boolean isTask, ConfigDef configDef, Map<String, ?> settings) {
     super(configDef, settings);
     this.inputPath = ConfigUtils.getAbsoluteFile(this, INPUT_PATH_CONFIG);
-    this.finishedPath = ConfigUtils.getAbsoluteFile(this, FINISHED_PATH_CONFIG);
+    this.cleanupPolicy = ConfigUtils.getEnum(CleanupPolicy.class, this, CLEANUP_POLICY_CONF);
+
+    if (CleanupPolicy.MOVE == this.cleanupPolicy) {
+      this.finishedPath = ConfigUtils.getAbsoluteFile(this, FINISHED_PATH_CONFIG);
+    } else {
+      this.finishedPath = null;
+    }
+
     this.errorPath = ConfigUtils.getAbsoluteFile(this, ERROR_PATH_CONFIG);
     this.haltOnError = this.getBoolean(HALT_ON_ERROR_CONF);
     this.minimumFileAgeMS = this.getLong(FILE_MINIMUM_AGE_MS_CONF);
@@ -271,9 +288,6 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     this.inputFilenameFilter = new PatternFilenameFilter(inputPattern);
   }
 
-  public abstract boolean schemasRequired();
-
-
   private static final Field findMetadataField(Schema schema) {
     Field result = null;
     for (Field field : schema.fields()) {
@@ -286,12 +300,6 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     }
     return result;
   }
-
-  public static final String GROUP_FILESYSTEM = "File System";
-  public static final String GROUP_SCHEMA_GENERATION = "Schema Generation";
-  public static final String GROUP_SCHEMA = "Schema";
-  public static final String GROUP_GENERAL = "General";
-  public static final String GROUP_TIMESTAMP = "Timestamps";
 
   public static ConfigDef config() {
 
@@ -325,6 +333,23 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
       }
     };
 
+    ConfigDef.Recommender finishedPath = new ConfigDef.Recommender() {
+      @Override
+      public List<Object> validValues(String s, Map<String, Object> map) {
+        return null;
+      }
+
+      @Override
+      public boolean visible(String s, Map<String, Object> map) {
+        if (!FINISHED_PATH_CONFIG.equals(s)) {
+          return true;
+        }
+
+        final String cleanupPolicy = (String) map.get(CLEANUP_POLICY_CONF);
+        return CleanupPolicy.MOVE.toString().equals(cleanupPolicy);
+      }
+    };
+
 
     return new ConfigDef()
 
@@ -351,7 +376,15 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
                 .group(GROUP_GENERAL)
                 .build()
         )
-
+        .define(
+            ConfigKeyBuilder.of(CLEANUP_POLICY_CONF, ConfigDef.Type.STRING)
+                .documentation(CLEANUP_POLICY_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .validator(ValidEnum.of(CleanupPolicy.class))
+                .defaultValue(CleanupPolicy.MOVE.toString())
+                .group(GROUP_FILESYSTEM)
+                .build()
+        )
         // Filesystem
         .define(
             ConfigKeyBuilder.of(INPUT_PATH_CONFIG, ConfigDef.Type.STRING)
@@ -364,7 +397,8 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
             ConfigKeyBuilder.of(FINISHED_PATH_CONFIG, ConfigDef.Type.STRING)
                 .documentation(FINISHED_PATH_DOC)
                 .importance(ConfigDef.Importance.HIGH)
-                .validator(ValidDirectoryWritable.of())
+                .defaultValue("")
+                .recommender(finishedPath)
                 .group(GROUP_FILESYSTEM)
                 .build()
         ).define(
@@ -503,6 +537,8 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
         );
   }
 
+  public abstract boolean schemasRequired();
+
   Schema readSchema(final String key) {
     String schema = this.getString(key);
     Schema result;
@@ -524,5 +560,11 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     FIELD,
     FILE_TIME,
     PROCESS_TIME
+  }
+
+  public enum CleanupPolicy {
+    NONE,
+    DELETE,
+    MOVE
   }
 }
