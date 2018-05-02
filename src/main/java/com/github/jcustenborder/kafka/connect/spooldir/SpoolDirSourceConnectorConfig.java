@@ -1,12 +1,12 @@
 /**
  * Copyright © 2016 Jeremy Custenborder (jcustenborder@gmail.com)
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 
 
 @SuppressWarnings("WeakerAccess")
-abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
+public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public static final String TIMESTAMP_FIELD_CONF = "timestamp.field";
   public static final String TIMESTAMP_MODE_CONF = "timestamp.mode";
   //DirectoryMonitorConfig
@@ -174,13 +174,13 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     if (!this.schemaGenerationEnabled) {
       Preconditions.checkNotNull(
           this.keySchema,
-          "'%s' must be set if '%s' = true.",
+          "'%s' must be set if '%s' = false.",
           KEY_SCHEMA_CONF,
           SCHEMA_GENERATION_ENABLED_CONF
       );
       Preconditions.checkNotNull(
           this.valueSchema,
-          "'%s' must be set if '%s' = true.",
+          "'%s' must be set if '%s' = false.",
           VALUE_SCHEMA_CONF,
           SCHEMA_GENERATION_ENABLED_CONF
       );
@@ -260,7 +260,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
       this.timestampField = null;
     }
 
-    if (isTask && null == this.valueSchema) {
+    if (schemasRequired() && (isTask && null == this.valueSchema)) {
       throw new DataException(
           String.format("'%s' must be set to a valid schema.", VALUE_SCHEMA_CONF)
       );
@@ -270,6 +270,9 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     final Pattern inputPattern = Pattern.compile(inputPatternText);
     this.inputFilenameFilter = new PatternFilenameFilter(inputPattern);
   }
+
+  public abstract boolean schemasRequired();
+
 
   private static final Field findMetadataField(Schema schema) {
     Field result = null;
@@ -343,7 +346,7 @@ abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
             ConfigKeyBuilder.of(EMPTY_POLL_WAIT_MS_CONF, Type.LONG)
                 .documentation(EMPTY_POLL_WAIT_MS_DOC)
                 .importance(ConfigDef.Importance.LOW)
-                .defaultValue(1000L)
+                .defaultValue(250L)
                 .validator(ConfigDef.Range.between(1L, Long.MAX_VALUE))
                 .group(GROUP_GENERAL)
                 .build()

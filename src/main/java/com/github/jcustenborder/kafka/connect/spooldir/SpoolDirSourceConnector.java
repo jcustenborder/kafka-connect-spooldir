@@ -56,7 +56,7 @@ public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnect
     this.config = config(input);
     final Map<String, String> settings = new LinkedHashMap<>(input);
 
-    if (null == this.config.valueSchema || null == this.config.keySchema) {
+    if (this.config.schemasRequired() && (null == this.config.valueSchema || null == this.config.keySchema)) {
       log.info("Key or Value schema was not defined. Running schema generator.");
       SchemaGenerator<CONF> generator = generator(settings);
 

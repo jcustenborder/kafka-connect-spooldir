@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jcustenborder.kafka.connect.spooldir;
+package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
-import org.apache.kafka.common.config.ConfigDef;
+import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+public class SpoolDirELFSourceTaskTest {
 
-class SpoolDirJsonSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
-  public SpoolDirJsonSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
-    super(isTask, config(), settings);
+  @Test
+  public void foo() {
+
+
+
   }
 
-  @Override
-  public boolean schemasRequired() {
-    return true;
-  }
 
-  public static ConfigDef config() {
-    return SpoolDirSourceConnectorConfig.config();
-  }
 
 }

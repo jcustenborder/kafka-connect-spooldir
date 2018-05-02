@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jcustenborder.kafka.connect.spooldir;
+package com.github.jcustenborder.kafka.connect.spooldir.elf.converters;
 
-import org.apache.kafka.common.config.ConfigDef;
+import org.apache.kafka.connect.data.Field;
 
-import java.util.Map;
-
-class SpoolDirJsonSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
-  public SpoolDirJsonSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
-    super(isTask, config(), settings);
-  }
-
+public class PrimitiveLogFieldConverter extends LogFieldConverter {
   @Override
-  public boolean schemasRequired() {
-    return true;
+  protected Object convert(Object input) {
+    return input;
   }
 
-  public static ConfigDef config() {
-    return SpoolDirSourceConnectorConfig.config();
+  public PrimitiveLogFieldConverter(String logFieldName, Field field) {
+    super(logFieldName, field);
   }
-
 }

@@ -13,24 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jcustenborder.kafka.connect.spooldir;
+package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
+import com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSourceConnectorConfig;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
-class SpoolDirJsonSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
-  public SpoolDirJsonSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
+class SpoolDirELFSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
+  public SpoolDirELFSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
     super(isTask, config(), settings);
   }
 
+  public static final String KEY_FIELDS_CONFIG = "key.fields";
+  public static final String KEY_FIELDS_DOC = "key.fields";
+
+
   @Override
   public boolean schemasRequired() {
-    return true;
+    return false;
   }
 
   public static ConfigDef config() {
     return SpoolDirSourceConnectorConfig.config();
+//        .define(
+//            ConfigKeyBuilder.of(KEY_FIELDS_CONFIG, ConfigDef.Type.LIST)
+//                .documentation(KEY_FIELDS_DOC)
+//                .importance(ConfigDef.Importance.HIGH)
+//                .build()
+//        );
   }
 
 }
