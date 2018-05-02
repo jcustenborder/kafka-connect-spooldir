@@ -336,7 +336,7 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     ConfigDef.Recommender finishedPath = new ConfigDef.Recommender() {
       @Override
       public List<Object> validValues(String s, Map<String, Object> map) {
-        return null;
+        return ImmutableList.of();
       }
 
       @Override
