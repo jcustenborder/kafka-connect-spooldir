@@ -132,8 +132,11 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     this.config = config(settings);
 
     checkDirectory(SpoolDirSourceConnectorConfig.INPUT_PATH_CONFIG, this.config.inputPath);
-    checkDirectory(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.config.finishedPath);
     checkDirectory(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.config.errorPath);
+
+    if (SpoolDirSourceConnectorConfig.CleanupPolicy.MOVE == this.config.cleanupPolicy) {
+      checkDirectory(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.config.finishedPath);
+    }
 
     this.parser = new Parser();
     Map<Schema, TypeParser> dateTypeParsers = ImmutableMap.of(
@@ -288,6 +291,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       log.info("Closing {}", this.inputFile);
       this.inputStream.close();
       this.inputStream = null;
+      log.info("Removing file {}", this.inputFile);
       this.inputFile.delete();
       File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
       if (processingFile.exists()) {
