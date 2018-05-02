@@ -201,45 +201,6 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     }
   }
 
-
-//  File findNextInputFile() {
-//    File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
-//    if (null == input || input.length == 0) {
-//      log.debug("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
-//      return null;
-//    }
-//    List<File> files = new ArrayList<>(input.length);
-//    for (File f : input) {
-//      File processingFile = InputFileDequeue.processingFile(this.config, f);
-//      log.trace("Checking for processing file: {}", processingFile);
-//
-//      if (processingFile.exists()) {
-//        log.debug("Skipping {} because processing file exists.", f);
-//        continue;
-//      }
-//      files.add(f);
-//    }
-//
-//    File result = null;
-//
-//    for (File file : files) {
-//      long fileAgeMS = System.currentTimeMillis() - file.lastModified();
-//
-//      if (fileAgeMS < 0L) {
-//        log.warn("File {} has a date in the future.", file);
-//      }
-//
-//      if (this.config.minimumFileAgeMS > 0L && fileAgeMS < this.config.minimumFileAgeMS) {
-//        log.debug("Skipping {} because it does not meet the minimum age.", file);
-//        continue;
-//      }
-//      result = file;
-//      break;
-//    }
-//
-//    return result;
-//  }
-
   static final Map<String, String> SUPPORTED_COMPRESSION_TYPES = ImmutableMap.of(
       "bz2", CompressorStreamFactory.BZIP2,
       "gz", CompressorStreamFactory.GZIP,
@@ -251,7 +212,14 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   public List<SourceRecord> read() {
     try {
       if (!hasRecords) {
-        closeAndMoveToFinished(this.config.finishedPath, false);
+        switch (this.config.cleanupPolicy) {
+          case MOVE:
+            closeAndMoveToFinished(this.config.finishedPath, false);
+            break;
+          case DELETE:
+            closeAndDelete();
+            break;
+        }
 
         File nextFile = this.inputFileDequeue.poll();
         if (null == nextFile) {
@@ -312,6 +280,21 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       } else {
         return new ArrayList<>();
       }
+    }
+  }
+
+  private void closeAndDelete() throws IOException {
+    if (null != inputStream) {
+      log.info("Closing {}", this.inputFile);
+      this.inputStream.close();
+      this.inputStream = null;
+      this.inputFile.delete();
+      File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
+      if (processingFile.exists()) {
+        log.info("Removing processing file {}", processingFile);
+        processingFile.delete();
+      }
+
     }
   }
 
