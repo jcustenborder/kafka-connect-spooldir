@@ -16,7 +16,6 @@
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
 import com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSourceConnectorConfig;
-import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
@@ -29,6 +28,11 @@ class SpoolDirELFSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public static final String KEY_FIELDS_CONFIG = "key.fields";
   public static final String KEY_FIELDS_DOC = "key.fields";
 
+
+  @Override
+  public boolean schemasRequired() {
+    return false;
+  }
 
   public static ConfigDef config() {
     return SpoolDirSourceConnectorConfig.config();

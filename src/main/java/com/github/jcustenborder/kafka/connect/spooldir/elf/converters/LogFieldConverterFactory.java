@@ -1,3 +1,18 @@
+/**
+ * Copyright © 2016 Jeremy Custenborder (jcustenborder@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.jcustenborder.kafka.connect.spooldir.elf.converters;
 
 import org.apache.kafka.connect.data.Date;
@@ -81,6 +96,14 @@ public class LogFieldConverterFactory {
       converter = new PrimitiveLogFieldConverter(logFieldName, field);
     } else if (String.class.equals(logClass)) {
       fieldSchema = SchemaBuilder.string()
+          .optional()
+          .parameter(LOGFIELD_PARAM, logFieldName)
+          .build();
+      builder.field(schemaFieldName, fieldSchema);
+      field = builder.field(schemaFieldName);
+      converter = new PrimitiveLogFieldConverter(logFieldName, field);
+    } else if (Double.class.equals(logClass)) {
+      fieldSchema = SchemaBuilder.float64()
           .optional()
           .parameter(LOGFIELD_PARAM, logFieldName)
           .build();

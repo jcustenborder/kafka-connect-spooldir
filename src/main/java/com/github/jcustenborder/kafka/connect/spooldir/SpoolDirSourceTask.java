@@ -1,12 +1,12 @@
 /**
  * Copyright © 2016 Jeremy Custenborder (jcustenborder@gmail.com)
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -125,6 +125,8 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     return VersionUtil.version(this.getClass());
   }
 
+  InputFileDequeue inputFileDequeue;
+
   @Override
   public void start(Map<String, String> settings) {
     this.config = config(settings);
@@ -143,6 +145,8 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     for (Map.Entry<Schema, TypeParser> kvp : dateTypeParsers.entrySet()) {
       this.parser.registerTypeParser(kvp.getKey(), kvp.getValue());
     }
+
+    this.inputFileDequeue = new InputFileDequeue(this.config);
   }
 
   @Override
@@ -150,16 +154,22 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
   }
 
+  int emptyCount = 0;
+
   @Override
   public List<SourceRecord> poll() throws InterruptedException {
     log.trace("poll()");
     List<SourceRecord> results = read();
 
     if (results.isEmpty()) {
-      log.trace("read() returned empty list. Sleeping {} ms.", this.config.emptyPollWaitMs);
-      Thread.sleep(this.config.emptyPollWaitMs);
+      emptyCount++;
+      if (emptyCount > 1) {
+        log.trace("read() returned empty list. Sleeping {} ms.", this.config.emptyPollWaitMs);
+        Thread.sleep(this.config.emptyPollWaitMs);
+      }
+      return results;
     }
-
+    emptyCount = 0;
     log.trace("read() returning {} result(s)", results.size());
 
     return results;
@@ -182,7 +192,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
       Files.move(this.inputFile, finishedFile);
 
-      File processingFile = processingFile(this.inputFile);
+      File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
       if (processingFile.exists()) {
         log.info("Removing processing file {}", processingFile);
         processingFile.delete();
@@ -191,48 +201,44 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     }
   }
 
-  File processingFile(File input) {
-    String fileName = input.getName() + this.config.processingFileExtension;
-    return new File(input.getParentFile(), fileName);
-  }
 
-  File findNextInputFile() {
-    File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
-    if (null == input || input.length == 0) {
-      log.debug("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
-      return null;
-    }
-    List<File> files = new ArrayList<>(input.length);
-    for (File f : input) {
-      File processingFile = processingFile(f);
-      log.trace("Checking for processing file: {}", processingFile);
-
-      if (processingFile.exists()) {
-        log.debug("Skipping {} because processing file exists.", f);
-        continue;
-      }
-      files.add(f);
-    }
-
-    File result = null;
-
-    for (File file : files) {
-      long fileAgeMS = System.currentTimeMillis() - file.lastModified();
-
-      if (fileAgeMS < 0L) {
-        log.warn("File {} has a date in the future.", file);
-      }
-
-      if (this.config.minimumFileAgeMS > 0L && fileAgeMS < this.config.minimumFileAgeMS) {
-        log.debug("Skipping {} because it does not meet the minimum age.", file);
-        continue;
-      }
-      result = file;
-      break;
-    }
-
-    return result;
-  }
+//  File findNextInputFile() {
+//    File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
+//    if (null == input || input.length == 0) {
+//      log.debug("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
+//      return null;
+//    }
+//    List<File> files = new ArrayList<>(input.length);
+//    for (File f : input) {
+//      File processingFile = InputFileDequeue.processingFile(this.config, f);
+//      log.trace("Checking for processing file: {}", processingFile);
+//
+//      if (processingFile.exists()) {
+//        log.debug("Skipping {} because processing file exists.", f);
+//        continue;
+//      }
+//      files.add(f);
+//    }
+//
+//    File result = null;
+//
+//    for (File file : files) {
+//      long fileAgeMS = System.currentTimeMillis() - file.lastModified();
+//
+//      if (fileAgeMS < 0L) {
+//        log.warn("File {} has a date in the future.", file);
+//      }
+//
+//      if (this.config.minimumFileAgeMS > 0L && fileAgeMS < this.config.minimumFileAgeMS) {
+//        log.debug("Skipping {} because it does not meet the minimum age.", file);
+//        continue;
+//      }
+//      result = file;
+//      break;
+//    }
+//
+//    return result;
+//  }
 
   static final Map<String, String> SUPPORTED_COMPRESSION_TYPES = ImmutableMap.of(
       "bz2", CompressorStreamFactory.BZIP2,
@@ -247,7 +253,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       if (!hasRecords) {
         closeAndMoveToFinished(this.config.finishedPath, false);
 
-        File nextFile = findNextInputFile();
+        File nextFile = this.inputFileDequeue.poll();
         if (null == nextFile) {
           return new ArrayList<>();
         }
@@ -255,7 +261,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
         this.metadata = ImmutableMap.of();
         this.inputFile = nextFile;
         this.inputFileModifiedTime = this.inputFile.lastModified();
-        File processingFile = processingFile(this.inputFile);
+        File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
         Files.touch(processingFile);
 
         try {
@@ -351,9 +357,9 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
         sourceOffset,
         this.config.topic,
         null,
-        this.config.keySchema,
+        null != keyStruct ? keyStruct.schema() : null,
         keyStruct,
-        this.config.valueSchema,
+        valueStruct.schema(),
         valueStruct,
         timestamp
     );

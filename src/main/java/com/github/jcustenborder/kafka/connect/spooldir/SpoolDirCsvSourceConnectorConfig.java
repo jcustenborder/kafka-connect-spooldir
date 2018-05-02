@@ -290,6 +290,11 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
         .withFieldAsNull(nullFieldIndicator);
   }
 
+  @Override
+  public boolean schemasRequired() {
+    return true;
+  }
+
   static class CharsetValidator implements ConfigDef.Validator {
     static CharsetValidator of() {
       return new CharsetValidator();

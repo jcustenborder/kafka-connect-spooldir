@@ -24,6 +24,11 @@ class SpoolDirJsonSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     super(isTask, config(), settings);
   }
 
+  @Override
+  public boolean schemasRequired() {
+    return true;
+  }
+
   public static ConfigDef config() {
     return SpoolDirSourceConnectorConfig.config();
   }
