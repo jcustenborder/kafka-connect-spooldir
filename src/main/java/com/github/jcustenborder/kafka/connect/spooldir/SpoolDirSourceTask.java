@@ -178,6 +178,14 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     return results;
   }
 
+  private void recordProcessingTime() {
+    log.info(
+        "Finished processing {} record(s) in {} second(s).",
+        this.recordCount,
+        processingTime.elapsed(TimeUnit.SECONDS)
+    );
+  }
+
   private void closeAndMoveToFinished(File outputDirectory, boolean errored) throws IOException {
     if (null != inputStream) {
       log.info("Closing {}", this.inputFile);
@@ -190,7 +198,12 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       if (errored) {
         log.error("Error during processing, moving {} to {}.", this.inputFile, outputDirectory);
       } else {
-        log.info("Finished processing {} in {} second(s). Moving to {}.", this.inputFile, processingTime.elapsed(TimeUnit.SECONDS), outputDirectory);
+        recordProcessingTime();
+        log.info(
+            "Moving to {} to {}.",
+            this.inputFile,
+            outputDirectory
+        );
       }
 
       Files.move(this.inputFile, finishedFile);
@@ -215,6 +228,8 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   public List<SourceRecord> read() {
     try {
       if (!hasRecords) {
+
+
         switch (this.config.cleanupPolicy) {
           case MOVE:
             closeAndMoveToFinished(this.config.finishedPath, false);
@@ -260,6 +275,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
           } else {
             this.inputStream = inputStream;
           }
+          this.recordCount = 0;
           configure(this.inputStream, this.metadata, lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
@@ -291,6 +307,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
       log.info("Closing {}", this.inputFile);
       this.inputStream.close();
       this.inputStream = null;
+      recordProcessingTime();
       log.info("Removing file {}", this.inputFile);
       this.inputFile.delete();
       File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
@@ -301,6 +318,8 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
     }
   }
+
+  long recordCount;
 
   protected void addRecord(List<SourceRecord> records, Struct keyStruct, Struct valueStruct) {
     Map<String, ?> sourceOffset = ImmutableMap.of(
@@ -350,6 +369,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
         valueStruct,
         timestamp
     );
+    recordCount++;
     records.add(sourceRecord);
   }
 }
