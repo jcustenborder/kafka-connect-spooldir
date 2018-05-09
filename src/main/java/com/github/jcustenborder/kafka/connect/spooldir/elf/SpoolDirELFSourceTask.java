@@ -47,7 +47,7 @@ public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceC
   @Override
   public void start(Map<String, String> settings) {
     super.start(settings);
-    this.parserBuilder = ElfParserBuilder.of();
+    this.parserBuilder = ElfParserBuilder.of().separator(this.config.separatorChar);
   }
 
 
@@ -85,7 +85,7 @@ public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceC
 
     LogEntry entry;
     try {
-      while (null != (entry = this.parser.next()) && records.size() < this.config.batchSize) {
+      while (null != (entry = next()) && records.size() < this.config.batchSize) {
         Pair<Struct, Struct> converted = conversion.convert(entry);
         addRecord(records, converted.getKey(), converted.getValue());
       }
