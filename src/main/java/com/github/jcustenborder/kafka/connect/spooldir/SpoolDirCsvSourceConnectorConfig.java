@@ -37,6 +37,8 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   //CSVRecordProcessorConfig
   public static final String CSV_SKIP_LINES_CONF = "csv.skip.lines";
   static final String CSV_SKIP_LINES_DISPLAY = "Skip lins";
+  public static final String CSV_COMMENT_CHAR_CONF = "csv.comment.char";
+  static final String CSV_COMMENT_CHAR_DISPLAY = "Comment Character";
   public static final String CSV_SEPARATOR_CHAR_CONF = "csv.separator.char";
   static final String CSV_SEPARATOR_CHAR_DISPLAY = "Separator Character";
   public static final String CSV_QUOTE_CHAR_CONF = "csv.quote.char";
@@ -62,6 +64,8 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public static final String CSV_CASE_SENSITIVE_FIELD_NAMES_CONF = "csv.case.sensitive.field.names";
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DISPLAY = "Case sensitive field names.";
 
+  static final int CSV_COMMENT_CHAR_DEFAULT = 35; // #
+  static final String CSV_COMMENT_CHAR_DOC = "The character that comments rows.";
   static final String CSV_SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int CSV_SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
   static final String CSV_SEPARATOR_CHAR_DOC = "The character that separates each field in the form " +
@@ -96,6 +100,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   static final String CSV_GROUP = "CSV Parsing";
   private static final String CSV_QUOTE_CHAR_DOC = "The character that is used to quote a field. This typically happens when the " + CSV_SEPARATOR_CHAR_CONF + " character is within the data.";
   public final int skipLines;
+  public final char commentChar;
   public final char separatorChar;
   public final char quoteChar;
   public final char escapeChar;
@@ -112,6 +117,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public SpoolDirCsvSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
     super(isTask, conf(), settings);
     this.skipLines = this.getInt(SpoolDirCsvSourceConnectorConfig.CSV_SKIP_LINES_CONF);
+    this.commentChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_COMMENT_CHAR_CONF);
     this.separatorChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_SEPARATOR_CHAR_CONF);
     this.quoteChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_QUOTE_CHAR_CONF);
     this.escapeChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_ESCAPE_CHAR_CONF);
@@ -143,14 +149,24 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .build()
         )
         .define(
-            ConfigKeyBuilder.of(CSV_SEPARATOR_CHAR_CONF, ConfigDef.Type.INT)
-                .defaultValue(CSV_SEPARATOR_CHAR_DEFAULT)
+            ConfigKeyBuilder.of(CSV_COMMENT_CHAR_CONF, ConfigDef.Type.INT)
+                .defaultValue(CSV_COMMENT_CHAR_DEFAULT)
                 .importance(ConfigDef.Importance.LOW)
-                .documentation(CSV_SEPARATOR_CHAR_DOC)
+                .documentation(CSV_COMMENT_CHAR_DOC)
                 .group(CSV_GROUP)
                 .width(ConfigDef.Width.LONG)
-                .displayName(CSV_SEPARATOR_CHAR_DISPLAY)
+                .displayName(CSV_COMMENT_CHAR_DISPLAY)
                 .build()
+        )
+        .define(
+                ConfigKeyBuilder.of(CSV_SEPARATOR_CHAR_CONF, ConfigDef.Type.INT)
+                    .defaultValue(CSV_SEPARATOR_CHAR_DEFAULT)
+                    .importance(ConfigDef.Importance.LOW)
+                    .documentation(CSV_SEPARATOR_CHAR_DOC)
+                    .group(CSV_GROUP)
+                    .width(ConfigDef.Width.LONG)
+                    .displayName(CSV_SEPARATOR_CHAR_DISPLAY)
+                    .build()
         )
         .define(
             ConfigKeyBuilder.of(CSV_QUOTE_CHAR_CONF, ConfigDef.Type.INT)

@@ -100,6 +100,12 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
       if (row == null) {
         break;
       }
+
+      if (row[0].charAt(0) == this.config.commentChar) {
+        log.trace("process() - Row on line {} has been skipped", recordOffset());
+        continue;
+      }
+
       log.trace("process() - Row on line {} has {} field(s)", recordOffset(), row.length);
 
       Struct keyStruct = new Struct(this.config.keySchema);
