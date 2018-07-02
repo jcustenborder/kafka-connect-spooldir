@@ -61,9 +61,9 @@ public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceC
     this.parser = this.parserBuilder.build(inputStream);
     SchemaConversionBuilder builder = new SchemaConversionBuilder(this.parser, this.config);
     this.conversion = builder.build();
-
+    
     this.offset = -1;
-
+    
     if (null != lastOffset) {
       int skippedRecords = 1;
       while (null != next() && skippedRecords <= lastOffset) {
@@ -87,7 +87,7 @@ public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceC
     try {
       while (null != (entry = next()) && records.size() < this.config.batchSize) {
         Pair<Struct, Struct> converted = conversion.convert(entry);
-        addRecord(records, converted.getKey(), converted.getValue());
+        addRecord(records, /* converted.getKey() */ "", converted.getValue());
       }
     } catch (IOException ex) {
       throw new ConnectException(ex);

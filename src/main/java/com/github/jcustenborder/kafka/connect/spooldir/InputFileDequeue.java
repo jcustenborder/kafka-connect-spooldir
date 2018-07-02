@@ -39,7 +39,11 @@ public class InputFileDequeue extends ForwardingDeque<File> {
     String fileName = input.getName() + processingFileExtension;
     return new File(input.getParentFile(), fileName);
   }
-
+  
+  public static File errorFile(String errorFileExtension, File errorPath, File input) {
+    String fileName = input.getName() + errorFileExtension;
+    return new File(errorPath, fileName);
+  }
 
   Deque<File> files;
 

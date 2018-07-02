@@ -61,9 +61,11 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public static final String HALT_ON_ERROR_CONF = "halt.on.error";
   public static final String FILE_MINIMUM_AGE_MS_CONF = "file.minimum.age.ms";
   public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
+  public static final String ERROR_FILE_EXTENSION_CONF = "error.file.extension";
   //RecordProcessorConfig
   public static final String BATCH_SIZE_CONF = "batch.size";
   public static final String PROCESSING_FILE_EXTENSION_DEFAULT = ".PROCESSING";
+  public static final String ERROR_FILE_EXTENSION_DEFAULT = ".ERROR";
   public static final String TOPIC_CONF = "topic";
   public static final String KEY_SCHEMA_CONF = "key.schema";
   public static final String VALUE_SCHEMA_CONF = "value.schema";
@@ -108,6 +110,7 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   static final String HALT_ON_ERROR_DOC = "Should the task halt when it encounters an error or continue to the next file.";
   static final String FILE_MINIMUM_AGE_MS_DOC = "The amount of time in milliseconds after the file was last written to before the file can be processed.";
   static final String PROCESSING_FILE_EXTENSION_DOC = "Before a file is processed, it is renamed to indicate that it is currently being processed. This setting is appended to the end of the file.";
+  static final String ERROR_FILE_EXTENSION_DOC = "Extra extension for the error file.";
   static final String PARSER_TIMESTAMP_DATE_FORMATS_DOC = "The date formats that are expected in the file. This is a list " +
       "of strings that will be used to parse the date fields in order. The most accurate date format should be the first " +
       "in the list. Take a look at the Java documentation for more info. " +
@@ -138,6 +141,7 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
   public final TimeZone parserTimestampTimezone;
   public final long emptyPollWaitMs;
   public final String processingFileExtension;
+  public final String errorFileExtension;
   public final TimestampMode timestampMode;
   public final String timestampField;
   public final List<String> keyFields;
@@ -166,6 +170,7 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
     this.topic = this.getString(TOPIC_CONF);
     this.emptyPollWaitMs = this.getLong(EMPTY_POLL_WAIT_MS_CONF);
     this.processingFileExtension = this.getString(PROCESSING_FILE_EXTENSION_CONF);
+    this.errorFileExtension = this.getString(ERROR_FILE_EXTENSION_CONF);
     this.keyFields = this.getList(SCHEMA_GENERATION_KEY_FIELDS_CONF);
     this.schemaGenerationEnabled = this.getBoolean(SCHEMA_GENERATION_ENABLED_CONF);
     this.schemaGenerationKeyName = this.getString(SCHEMA_GENERATION_KEY_NAME_CONF);
@@ -436,6 +441,15 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractConfig {
                 .validator(ValidDirectoryWritable.of())
                 .group(GROUP_FILESYSTEM)
                 .defaultValue(PROCESSING_FILE_EXTENSION_DEFAULT)
+                .validator(ValidPattern.of("^.*\\..+$"))
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(ERROR_FILE_EXTENSION_CONF, Type.STRING)
+                .documentation(ERROR_FILE_EXTENSION_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .validator(ValidDirectoryWritable.of())
+                .group(GROUP_FILESYSTEM)
+                .defaultValue(ERROR_FILE_EXTENSION_DEFAULT)
                 .validator(ValidPattern.of("^.*\\..+$"))
                 .build()
         )

@@ -93,7 +93,9 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
   @Override
   public List<SourceRecord> process() throws IOException {
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
-
+    
+    List<Long> badRows = new ArrayList<>();
+    
     while (records.size() < this.config.batchSize) {
       String[] row = this.csvReader.readNext();
 
@@ -101,51 +103,63 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
         break;
       }
 
-      if (row[0].charAt(0) == this.config.commentChar) {
-        log.trace("process() - Row on line {} has been skipped", recordOffset());
+      if (row.length > 0 && row[0] != null && row[0].length() > 0 && row[0].charAt(0) == this.config.commentChar) {
+        log.info("Row on line {} has been skipped", recordOffset());
         continue;
       }
 
       log.trace("process() - Row on line {} has {} field(s)", recordOffset(), row.length);
 
-      Struct keyStruct = new Struct(this.config.keySchema);
+      //Struct keyStruct = new Struct(this.config.keySchema);
+      String key = "";
       Struct valueStruct = new Struct(this.config.valueSchema);
-
-      for (int i = 0; i < this.fieldNames.length; i++) {
-        String fieldName = this.fieldNames[i];
-        log.trace("process() - Processing field {}", fieldName);
-        String input = row[i];
-        log.trace("process() - input = '{}'", input);
-        Object fieldValue = null;
-
-        try {
-          Field field = this.config.valueSchema.field(fieldName);
-          if (null != field) {
-            fieldValue = this.parser.parseString(field.schema(), input);
-            log.trace("process() - output = '{}'", fieldValue);
-            valueStruct.put(field, fieldValue);
-          } else {
-            log.trace("process() - Field {} is not defined in the schema.", fieldName);
+      try {
+        for (int i = 0; i < this.fieldNames.length; i++) {
+          String fieldName = this.fieldNames[i];
+          log.trace("process() - Processing field {}", fieldName);
+          String input = row[i];
+          log.trace("process() - input = '{}'", input);
+          Object fieldValue = null;
+  
+          try {
+            Field field = this.config.valueSchema.field(fieldName);
+            if (null != field) {
+              fieldValue = this.parser.parseString(field.schema(), input);
+              log.trace("process() - output = '{}'", fieldValue);
+              valueStruct.put(field, fieldValue);
+            } else {
+              log.trace("process() - Field {} is not defined in the schema.", fieldName);
+            }
+          } catch (Exception ex) {
+            String message = String.format("Exception thrown while parsing data for '%s'. linenumber=%s", fieldName, this.recordOffset());
+            throw new DataException(message, ex);
           }
-        } catch (Exception ex) {
-          String message = String.format("Exception thrown while parsing data for '%s'. linenumber=%s", fieldName, this.recordOffset());
-          throw new DataException(message, ex);
+  
+          Field keyField = this.config.keySchema.field(fieldName);
+          if (null != keyField) {
+            log.trace("process() - Setting key field '{}' to '{}'", keyField.name(), fieldValue);
+            //keyStruct.put(keyField, fieldValue);
+            key = input;
+          }
         }
-
-        Field keyField = this.config.keySchema.field(fieldName);
-        if (null != keyField) {
-          log.trace("process() - Setting key field '{}' to '{}'", keyField.name(), fieldValue);
-          keyStruct.put(keyField, fieldValue);
-        }
+      } catch (Exception ex) {
+        //Workaround for bad rows
+        log.info("Row on line {} is bad, it has been skipped", recordOffset());
+        badRows.add(recordOffset());
+        continue;
       }
 
       if (log.isInfoEnabled() && this.csvReader.getLinesRead() % ((long) this.config.batchSize * 20) == 0) {
         log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.fileMetadata);
       }
-
-      addRecord(records, keyStruct, valueStruct);
+      
+      addRecord(records, /*keyStruct*/ key, valueStruct);
 
     }
+    
+    //Workaround for bad rows
+    printErrorFile(badRows, this.config.charset);
+    
     return records;
   }
 }

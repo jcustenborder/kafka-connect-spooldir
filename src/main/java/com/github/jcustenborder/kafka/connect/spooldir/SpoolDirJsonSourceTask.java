@@ -82,9 +82,11 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
 
     while (this.iterator.hasNext() && records.size() < this.config.batchSize) {
       JsonNode node = next();
-
+      
+      //Struct keyStruct = new Struct(this.config.keySchema);
+      String key = "";
       Struct valueStruct = new Struct(this.config.valueSchema);
-      Struct keyStruct = new Struct(this.config.keySchema);
+      
       log.trace("process() - input = {}", node);
       for (Field field : this.config.valueSchema.fields()) {
         JsonNode fieldNode = node.get(field.name());
@@ -98,7 +100,8 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
           Field keyField = this.config.keySchema.field(field.name());
           if (null != keyField) {
             log.trace("process() - Setting key field '{}' to '{}'", keyField.name(), fieldValue);
-            keyStruct.put(keyField, fieldValue);
+            //keyStruct.put(keyField, fieldValue);
+            key = fieldNode.textValue();
           }
         } catch (Exception ex) {
           String message = String.format("Exception thrown while parsing data for '%s'. linenumber=%s", field.name(), this.recordOffset());
@@ -106,7 +109,7 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
         }
       }
 
-      addRecord(records, keyStruct, valueStruct);
+      addRecord(records, /* keyStruct */ key, valueStruct);
     }
 
     return records;

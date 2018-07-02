@@ -28,6 +28,7 @@ import com.google.common.io.Files;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.data.Time;
 import org.apache.kafka.connect.data.Timestamp;
@@ -37,15 +38,22 @@ import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.nio.charset.Charset;
 
 public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorConfig> extends SourceTask {
   static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTask.class);
@@ -321,14 +329,22 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
   long recordCount;
 
-  protected void addRecord(List<SourceRecord> records, Struct keyStruct, Struct valueStruct) {
+  protected void addRecord(List<SourceRecord> records, Object key, Struct valueStruct) {
     Map<String, ?> sourceOffset = ImmutableMap.of(
         "offset",
         recordOffset()
     );
     log.trace("addRecord() - {}", sourceOffset);
-    if (this.config.hasKeyMetadataField && null != keyStruct) {
-      keyStruct.put(this.config.keyMetadataField, this.metadata);
+    
+    if (key instanceof Struct) {
+      log.trace("Key type is Struct");
+      if (this.config.hasKeyMetadataField && null != key) {
+        Struct.class.cast(key).put(this.config.keyMetadataField, this.metadata);
+      }
+    } else if (key instanceof String) {
+      log.trace("Key type is String");
+    } else {
+      throw new UnsupportedOperationException("Unsupported key type.");
     }
 
     if (this.config.hasvalueMetadataField && null != valueStruct) {
@@ -357,19 +373,50 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
 
 
     //TODO: Comeback and add timestamp support.
-
     SourceRecord sourceRecord = new SourceRecord(
         this.sourcePartition,
         sourceOffset,
         this.config.topic,
         null,
-        null != keyStruct ? keyStruct.schema() : null,
-        keyStruct,
+        key instanceof String ? SchemaBuilder.STRING_SCHEMA : (null != key ? Struct.class.cast(key).schema() : null),
+        //SchemaBuilder.STRING_SCHEMA, /* null != key ? key.schema() : null, */
+        key,
         valueStruct.schema(),
         valueStruct,
         timestamp
     );
     recordCount++;
     records.add(sourceRecord);
+  }
+  
+  protected void printErrorFile(List<Long> badRows, Charset charset) throws IOException {
+    if (!badRows.isEmpty()) {
+      if (charset == null) {
+        charset = Charset.forName("UTF-8");
+      }
+      File errorFile = InputFileDequeue.errorFile(this.config.errorFileExtension, this.config.errorPath,  this.inputFile);
+      BufferedWriter errFileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(errorFile), charset));
+      BufferedReader inFileReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.inputFile), charset));
+      String line;
+      long inFileRowNum = 0;
+      ListIterator<Long> listIter = badRows.listIterator();
+      long badRowNum = listIter.next(); 
+      do {
+        line = inFileReader.readLine();
+        inFileRowNum++;
+        if (inFileRowNum == badRowNum) {
+          log.info("Row on line {} is bad. Writing to file {}", badRowNum, errorFile);
+          errFileWriter.append(line + '\n');
+          if (listIter.hasNext()) {
+            badRowNum = listIter.next();
+          } else {
+            break;
+          }
+        }
+      } while (line != null);
+
+      errFileWriter.close();
+      inFileReader.close();
+    }
   }
 }
