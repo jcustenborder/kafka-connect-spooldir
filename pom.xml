@@ -85,7 +85,6 @@
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
-                <version>0.9.0</version>
                 <configuration>
                     <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
                     <documentationUrl>https://jcustenborder.github.io/kafka-connect-documentation/</documentationUrl>
