@@ -15,7 +15,6 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import com.google.common.collect.Maps;
@@ -81,14 +80,14 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
     String valueSchemaConfig = ObjectMapperFactory.INSTANCE.writeValueAsString(testCase.valueSchema);
 
     Map<String, String> settings = Maps.newLinkedHashMap();
-    settings.put(SpoolDirSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
-    settings.put(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
-    settings.put(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
-    settings.put(SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
-    settings.put(SpoolDirSourceConnectorConfig.TOPIC_CONF, "testing");
+    settings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
+    settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "testing");
     settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
     settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
-    settings.put(SpoolDirSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");
+    settings.put(AbstractSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");
     settings(settings);
     if (null != testCase.settings && !testCase.settings.isEmpty()) {
       settings.putAll(testCase.settings);
@@ -115,7 +114,7 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
 
     final File inputFile = new File(this.inputPath, inputFileName);
     log.trace("poll(String, TestCase) - inputFile = {}", inputFile);
-    final File processingFile = InputFileDequeue.processingFile(SpoolDirSourceConnectorConfig.PROCESSING_FILE_EXTENSION_DEFAULT, inputFile);
+    final File processingFile = InputFileDequeue.processingFile(AbstractSourceConnectorConfig.PROCESSING_FILE_EXTENSION_DEFAULT, inputFile);
     try (InputStream inputStream = this.getClass().getResourceAsStream(dataFile)) {
       try (OutputStream outputStream = new FileOutputStream(inputFile)) {
         ByteStreams.copy(inputStream, outputStream);
