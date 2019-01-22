@@ -100,9 +100,4 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
     records.add(sourceRecord);
   }
 
-//  @Override
-//  protected void addRecord(List<SourceRecord> records, Struct keyStruct, Struct valueStruct) {
-//
-//    super.addRecord(records, keyStruct, valueStruct);
-//  }
 }

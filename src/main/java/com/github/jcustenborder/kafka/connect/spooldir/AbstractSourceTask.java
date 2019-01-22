@@ -319,8 +319,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         sourceOffset,
         this.config.topic,
         null,
-        key.schema(),
-        key.value(),
+        null != key ? key.schema() : null,
+        null != key ? key.value() : null,
         value.schema(),
         value.value(),
         timestamp

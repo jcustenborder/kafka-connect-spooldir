@@ -47,7 +47,7 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
+public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTaskTest.class);
 
   protected File tempDirectory;
