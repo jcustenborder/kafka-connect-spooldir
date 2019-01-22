@@ -41,6 +41,7 @@ import static com.github.jcustenborder.kafka.connect.utils.AssertConnectRecord.a
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
@@ -138,13 +139,13 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
     }
 
     records = this.task.poll();
-    assertTrue(records.isEmpty(), "records should be null after first poll.");
+    assertNull(records, "records should be null after first poll.");
     records = this.task.poll();
-    assertTrue(records.isEmpty(), "records should be null after first poll.");
+    assertNull(records, "records should be null after first poll.");
     assertFalse(inputFile.exists(), String.format("inputFile %s should not exist.", inputFile));
     assertFalse(processingFile.exists(), String.format("processingFile %s should not exist.", processingFile));
 
-    assertTrue(records.isEmpty(), "records should be empty.");
+    assertNull(records, "records should be null after first poll.");
 
     final File finishedFile = new File(this.finishedPath, inputFileName);
     assertTrue(finishedFile.exists(), String.format("finishedFile %s should exist.", finishedFile));
