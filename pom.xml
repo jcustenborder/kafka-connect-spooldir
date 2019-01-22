@@ -85,38 +85,22 @@
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
-                <version>0.9.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>kafka-connect</goal>
-                        </goals>
-                        <configuration>
-                            <ownerUsername>jcustenborder</ownerUsername>
-                            <confluentControlCenterIntegration>true
-                            </confluentControlCenterIntegration>
-                            <documentationUrl>
-                                https://jcustenborder.github.io/kafka-connect-documentation/
-                            </documentationUrl>
-                            <ownerName>Jeremy Custenborder</ownerName>
-                            <dockerNamespace>jcustenborder</dockerNamespace>
-                            <dockerName>kafka-connect-docker</dockerName>
-                            <pluginTypes>
-                                <pluginType>source</pluginType>
-                            </pluginTypes>
-                            <tags>
-                                <tag>File</tag>
-                                <tag>Flume</tag>
-                                <tag>csv</tag>
-                                <tag>json</tag>
-                            </tags>
-                            <title>Kafka Connect Spooldir</title>
-                            <supportUrl>${pom.issueManagement.url}</supportUrl>
-                            <supportSummary>Support provided through community involvement.
-                            </supportSummary>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
+                    <documentationUrl>https://jcustenborder.github.io/kafka-connect-documentation/</documentationUrl>
+                    <componentTypes>
+                        <componentType>source</componentType>
+                    </componentTypes>
+                    <tags>
+                        <tag>File</tag>
+                        <tag>Flume</tag>
+                        <tag>csv</tag>
+                        <tag>json</tag>
+                    </tags>
+                    <title>Kafka Connect Spooldir</title>
+                    <supportUrl>${pom.issueManagement.url}</supportUrl>
+                    <supportSummary>Support provided through community involvement.</supportSummary>
+                </configuration>
             </plugin>
         </plugins>
     </build>

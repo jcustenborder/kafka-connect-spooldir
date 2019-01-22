@@ -315,7 +315,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
     );
 
     return new SourceRecord(
-        ImmutableMap.of(),
+        this.sourcePartition,
         sourceOffset,
         this.config.topic,
         null,
