@@ -149,7 +149,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         log.trace("read() returned empty list. Sleeping {} ms.", this.config.emptyPollWaitMs);
         Thread.sleep(this.config.emptyPollWaitMs);
       }
-      return results;
+      return null;
     }
     emptyCount = 0;
     log.trace("read() returning {} result(s)", results.size());
