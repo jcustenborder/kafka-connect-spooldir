@@ -20,6 +20,7 @@ import com.github.jcustenborder.parsers.elf.ElfParser;
 import com.github.jcustenborder.parsers.elf.ElfParserBuilder;
 import com.github.jcustenborder.parsers.elf.LogEntry;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -87,7 +88,14 @@ public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceC
     try {
       while (null != (entry = next()) && records.size() < this.config.batchSize) {
         Pair<Struct, Struct> converted = conversion.convert(entry);
-        addRecord(records, converted.getKey(), converted.getValue());
+        final Struct keyStruct = converted.getKey();
+        final Struct valueStruct = converted.getValue();
+
+        addRecord(
+            records,
+            new SchemaAndValue(keyStruct.schema(), keyStruct),
+            new SchemaAndValue(valueStruct.schema(), valueStruct)
+        );
       }
     } catch (IOException ex) {
       throw new ConnectException(ex);

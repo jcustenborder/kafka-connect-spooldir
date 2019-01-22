@@ -29,9 +29,9 @@ import java.util.List;
 
 public class InputFileDequeue extends ForwardingDeque<File> {
   private static final Logger log = LoggerFactory.getLogger(InputFileDequeue.class);
-  private final SpoolDirSourceConnectorConfig config;
+  private final AbstractSourceConnectorConfig config;
 
-  public InputFileDequeue(SpoolDirSourceConnectorConfig config) {
+  public InputFileDequeue(AbstractSourceConnectorConfig config) {
     this.config = config;
   }
 
@@ -52,7 +52,7 @@ public class InputFileDequeue extends ForwardingDeque<File> {
     log.info("Searching for file in {}", this.config.inputPath);
     File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
     if (null == input || input.length == 0) {
-      log.info("No files matching {} were found in {}", SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
+      log.info("No files matching {} were found in {}", AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
       return new ArrayDeque<>();
     }
     Arrays.sort(input, Comparator.comparing(File::getName));

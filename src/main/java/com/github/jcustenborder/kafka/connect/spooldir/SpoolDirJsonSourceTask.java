@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import org.apache.kafka.connect.data.Field;
+import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.DataException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -106,7 +107,11 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
         }
       }
 
-      addRecord(records, keyStruct, valueStruct);
+      addRecord(
+          records,
+          new SchemaAndValue(keyStruct.schema(), keyStruct),
+          new SchemaAndValue(valueStruct.schema(), valueStruct)
+      );
     }
 
     return records;

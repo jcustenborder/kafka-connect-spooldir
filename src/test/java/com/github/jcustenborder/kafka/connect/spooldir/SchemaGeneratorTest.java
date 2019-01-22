@@ -40,10 +40,10 @@ public class SchemaGeneratorTest {
     this.errorPath.mkdirs();
 
     this.settings = new LinkedHashMap<>();
-    this.settings.put(SpoolDirSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
-    this.settings.put(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
-    this.settings.put(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
-    this.settings.put(SpoolDirSourceConnectorConfig.TOPIC_CONF, "dummy");
+    this.settings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
+    this.settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
+    this.settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
+    this.settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "dummy");
   }
 
 }

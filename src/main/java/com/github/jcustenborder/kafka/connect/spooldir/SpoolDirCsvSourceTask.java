@@ -20,6 +20,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.apache.kafka.connect.data.Field;
+import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.DataException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -137,7 +138,12 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
         log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.fileMetadata);
       }
 
-      addRecord(records, keyStruct, valueStruct);
+      addRecord(
+          records,
+          new SchemaAndValue(keyStruct.schema(), keyStruct),
+          new SchemaAndValue(valueStruct.schema(), valueStruct)
+      );
+
 
     }
     return records;

@@ -36,7 +36,7 @@ public class SpoolDirCsvSourceConnectorTest extends SpoolDirSourceConnectorTest<
 
   @Test
   public void startWithoutSchema() throws IOException {
-    this.settings.put(SpoolDirCsvSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.csv$");
+    this.settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.csv$");
 
     String[] inputFiles = new String[]{
         "csv/FieldsMatch.data",
@@ -59,7 +59,7 @@ public class SpoolDirCsvSourceConnectorTest extends SpoolDirSourceConnectorTest<
 
   @Test()
   public void startWithoutSchemaMismatch() throws IOException {
-    this.settings.put(SpoolDirCsvSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.csv$");
+    this.settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.csv$");
 
 
     String[] inputFiles = new String[]{

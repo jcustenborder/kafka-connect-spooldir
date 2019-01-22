@@ -15,7 +15,6 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import com.google.common.collect.Maps;
@@ -42,12 +41,13 @@ import static com.github.jcustenborder.kafka.connect.utils.AssertConnectRecord.a
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
+public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTaskTest.class);
 
   protected File tempDirectory;
@@ -81,14 +81,14 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
     String valueSchemaConfig = ObjectMapperFactory.INSTANCE.writeValueAsString(testCase.valueSchema);
 
     Map<String, String> settings = Maps.newLinkedHashMap();
-    settings.put(SpoolDirSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
-    settings.put(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
-    settings.put(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
-    settings.put(SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
-    settings.put(SpoolDirSourceConnectorConfig.TOPIC_CONF, "testing");
+    settings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
+    settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "testing");
     settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
     settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
-    settings.put(SpoolDirSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");
+    settings.put(AbstractSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");
     settings(settings);
     if (null != testCase.settings && !testCase.settings.isEmpty()) {
       settings.putAll(testCase.settings);
@@ -115,7 +115,7 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
 
     final File inputFile = new File(this.inputPath, inputFileName);
     log.trace("poll(String, TestCase) - inputFile = {}", inputFile);
-    final File processingFile = InputFileDequeue.processingFile(SpoolDirSourceConnectorConfig.PROCESSING_FILE_EXTENSION_DEFAULT, inputFile);
+    final File processingFile = InputFileDequeue.processingFile(AbstractSourceConnectorConfig.PROCESSING_FILE_EXTENSION_DEFAULT, inputFile);
     try (InputStream inputStream = this.getClass().getResourceAsStream(dataFile)) {
       try (OutputStream outputStream = new FileOutputStream(inputFile)) {
         ByteStreams.copy(inputStream, outputStream);
@@ -139,13 +139,13 @@ public abstract class SpoolDirSourceTaskTest<T extends SpoolDirSourceTask> {
     }
 
     records = this.task.poll();
-    assertTrue(records.isEmpty(), "records should be null after first poll.");
+    assertNull(records, "records should be null after first poll.");
     records = this.task.poll();
-    assertTrue(records.isEmpty(), "records should be null after first poll.");
+    assertNull(records, "records should be null after first poll.");
     assertFalse(inputFile.exists(), String.format("inputFile %s should not exist.", inputFile));
     assertFalse(processingFile.exists(), String.format("processingFile %s should not exist.", processingFile));
 
-    assertTrue(records.isEmpty(), "records should be empty.");
+    assertNull(records, "records should be null after first poll.");
 
     final File finishedFile = new File(this.finishedPath, inputFileName);
     assertTrue(finishedFile.exists(), String.format("finishedFile %s should exist.", finishedFile));

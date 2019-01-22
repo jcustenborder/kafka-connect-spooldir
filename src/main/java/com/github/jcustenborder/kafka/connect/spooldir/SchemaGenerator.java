@@ -58,13 +58,13 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
 
   static {
     Map<String, Object> defaultSettings = new LinkedHashMap<>();
-    defaultSettings.put(SpoolDirSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, ".*");
-    defaultSettings.put(SpoolDirSourceConnectorConfig.INPUT_PATH_CONFIG, "/tmp/input");
-    defaultSettings.put(SpoolDirSourceConnectorConfig.FINISHED_PATH_CONFIG, "/tmp/finish");
-    defaultSettings.put(SpoolDirSourceConnectorConfig.ERROR_PATH_CONFIG, "/tmp/error");
+    defaultSettings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, ".*");
+    defaultSettings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, "/tmp/input");
+    defaultSettings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, "/tmp/finish");
+    defaultSettings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, "/tmp/error");
     defaultSettings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, DUMMY_SCHEMA);
     defaultSettings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, DUMMY_SCHEMA);
-    defaultSettings.put(SpoolDirSourceConnectorConfig.TOPIC_CONF, "dummy");
+    defaultSettings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "dummy");
     defaultSettings.put(SpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
 
     DEFAULTS = ImmutableMap.copyOf(defaultSettings);

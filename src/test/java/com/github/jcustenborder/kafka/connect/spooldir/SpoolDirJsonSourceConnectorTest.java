@@ -35,7 +35,7 @@ public class SpoolDirJsonSourceConnectorTest extends SpoolDirSourceConnectorTest
 
   @Test
   public void startWithoutSchema() throws IOException {
-    settings.put(SpoolDirJsonSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.json$");
+    settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.json$");
 
     String[] inputFiles = new String[]{
         "json/FieldsMatch.data",
@@ -58,7 +58,7 @@ public class SpoolDirJsonSourceConnectorTest extends SpoolDirSourceConnectorTest
 
   @Test()
   public void startWithoutSchemaMismatch() throws IOException {
-    this.settings.put(SpoolDirJsonSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.json$");
+    this.settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.*\\.json$");
 
 
     String[] inputFiles = new String[]{
