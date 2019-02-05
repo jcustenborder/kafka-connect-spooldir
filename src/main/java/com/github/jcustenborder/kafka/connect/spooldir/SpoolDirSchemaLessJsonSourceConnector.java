@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Title("Schema Less Json Source Connector")
-@Description("This connector is used to `stream <https://en.wikipedia.org/wiki/JSON_Streaming>` JSON files from a directory " +
+@Description("This connector is used to `stream <https://en.wikipedia.org/wiki/JSON_Streaming>_` JSON files from a directory " +
     "while converting the data based on the schema supplied in the configuration.")
 @DocumentationImportant("This connector does not try to convert the json records to a schema. " +
     "The recommended converter to use is the StringConverter. " +
