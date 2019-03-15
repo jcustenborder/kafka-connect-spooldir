@@ -16,9 +16,9 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.google.common.base.Joiner;
-import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.ICSVParser;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.Struct;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceConnectorConfig> {
   String[] fieldNames;
-  private CSVParser csvParser;
+  private ICSVParser csvParser;
   private CSVReader csvReader;
   private InputStreamReader streamReader;
   private Map<String, String> fileMetadata;
@@ -48,7 +48,7 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
   @Override
   protected void configure(InputStream inputStream, Map<String, String> metadata, final Long lastOffset) throws IOException {
     log.trace("configure() - creating csvParser");
-    this.csvParser = this.config.createCSVParserBuilder().build();
+    this.csvParser = this.config.createCSVParserBuilder();
     this.streamReader = new InputStreamReader(inputStream, this.config.charset);
     CSVReaderBuilder csvReaderBuilder = this.config.createCSVReaderBuilder(this.streamReader, csvParser);
     this.csvReader = csvReaderBuilder.build();
