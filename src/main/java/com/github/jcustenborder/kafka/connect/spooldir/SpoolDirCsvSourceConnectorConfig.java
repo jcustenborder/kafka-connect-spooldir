@@ -24,6 +24,8 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.ICSVParser;
+import com.opencsv.RFC4180ParserBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.errors.DataException;
@@ -36,36 +38,43 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
 
   //CSVRecordProcessorConfig
   public static final String CSV_SKIP_LINES_CONF = "csv.skip.lines";
-  static final String CSV_SKIP_LINES_DISPLAY = "Skip lins";
   public static final String CSV_SEPARATOR_CHAR_CONF = "csv.separator.char";
-  static final String CSV_SEPARATOR_CHAR_DISPLAY = "Separator Character";
   public static final String CSV_QUOTE_CHAR_CONF = "csv.quote.char";
-  static final String CSV_QUOTE_CHAR_DISPLAY = "Quote Character";
   public static final String CSV_ESCAPE_CHAR_CONF = "csv.escape.char";
-  static final String CSV_ESCAPE_CHAR_DISPLAY = "Escape Character";
   public static final String CSV_STRICT_QUOTES_CONF = "csv.strict.quotes";
-  static final String CSV_STRICT_QUOTES_DISPLAY = "Strict Quotes";
   public static final String CSV_IGNORE_LEADING_WHITESPACE_CONF = "csv.ignore.leading.whitespace";
-  static final String CSV_IGNORE_LEADING_WHITESPACE_DISPLAY = "Ignore leading whitespace";
   public static final String CSV_IGNORE_QUOTATIONS_CONF = "csv.ignore.quotations";
-  static final String CSV_IGNORE_QUOTATIONS_DISPLAY = "Ignore quotations";
   public static final String CSV_KEEP_CARRIAGE_RETURN_CONF = "csv.keep.carriage.return";
-  static final String CSV_KEEP_CARRIAGE_RETURN_DISPLAY = "Preserve Carriage Return?";
   public static final String CSV_VERIFY_READER_CONF = "csv.verify.reader";
-  static final String CSV_VERIFY_READER_DISPLAY = "Verify reader";
   public static final String CSV_NULL_FIELD_INDICATOR_CONF = "csv.null.field.indicator";
-  static final String CSV_NULL_FIELD_INDICATOR_DISPLAY = "Null field indicator";
   public static final String CSV_FIRST_ROW_AS_HEADER_CONF = "csv.first.row.as.header";
-  static final String CSV_FIRST_ROW_AS_HEADER_DISPLAY = "Treat first row as header.";
   public static final String CSV_CHARSET_CONF = "csv.file.charset";
-  static final String CSV_CHARSET_DISPLAY = "File character set.";
   public static final String CSV_CASE_SENSITIVE_FIELD_NAMES_CONF = "csv.case.sensitive.field.names";
+  public static final String CSV_USE_RFC_4180_PARSER_CONF = "csv.rfc.4180.parser.enabled";
+  static final String CSV_SKIP_LINES_DISPLAY = "Skip lins";
+  static final String CSV_SEPARATOR_CHAR_DISPLAY = "Separator Character";
+  static final String CSV_QUOTE_CHAR_DISPLAY = "Quote Character";
+  static final String CSV_ESCAPE_CHAR_DISPLAY = "Escape Character";
+  static final String CSV_STRICT_QUOTES_DISPLAY = "Strict Quotes";
+  static final String CSV_IGNORE_LEADING_WHITESPACE_DISPLAY = "Ignore leading whitespace";
+  static final String CSV_IGNORE_QUOTATIONS_DISPLAY = "Ignore quotations";
+  static final String CSV_KEEP_CARRIAGE_RETURN_DISPLAY = "Preserve Carriage Return?";
+  static final String CSV_VERIFY_READER_DISPLAY = "Verify reader";
+  static final String CSV_NULL_FIELD_INDICATOR_DISPLAY = "Null field indicator";
+  static final String CSV_FIRST_ROW_AS_HEADER_DISPLAY = "Treat first row as header.";
+  static final String CSV_CHARSET_DISPLAY = "File character set.";
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DISPLAY = "Case sensitive field names.";
+  static final String CSV_USE_RFC_4180_PARSER_DISPLAY = "Flag to determine if the RFC 4180 should be " +
+      "used instead.";
+  static final Object CSV_USE_RFC_4180_PARSER_DEFAULT = false;
+
 
   static final String CSV_SKIP_LINES_DOC = "Number of lines to skip in the beginning of the file.";
   static final int CSV_SKIP_LINES_DEFAULT = CSVReader.DEFAULT_SKIP_LINES;
   static final String CSV_SEPARATOR_CHAR_DOC = "The character that separates each field in the form " +
-      "of an integer. Typically in a CSV this is a ,(44) character. A TSV would use a tab(9) character.";
+      "of an integer. Typically in a CSV this is a ,(44) character. A TSV would use a tab(9) character. " +
+      "If `" + CSV_SEPARATOR_CHAR_CONF + "` is defined as a null(0), then the RFC 4180 parser must be " +
+      "utilized by default. This is the equivalent of `" + CSV_USE_RFC_4180_PARSER_CONF + " = true`.";
   static final int CSV_SEPARATOR_CHAR_DEFAULT = (int) CSVParser.DEFAULT_SEPARATOR;
   static final int CSV_QUOTE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_QUOTE_CHARACTER;
   static final String CSV_ESCAPE_CHAR_DOC = "The character as an integer to use when a special " +
@@ -93,8 +102,10 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   static final String CSV_CHARSET_DEFAULT = Charset.defaultCharset().name();
 
   static final String CSV_CASE_SENSITIVE_FIELD_NAMES_DOC = "Flag to determine if the field names in the header row should be treated as case sensitive.";
+  static final String CSV_USE_RFC_4180_PARSER_DOC = "Flag to determine if the RFC 4180 parser should be used instead of the default parser.";
   static final String CSV_GROUP = "CSV Parsing";
   private static final String CSV_QUOTE_CHAR_DOC = "The character that is used to quote a field. This typically happens when the " + CSV_SEPARATOR_CHAR_CONF + " character is within the data.";
+  private static final Character NULL_CHAR = (char) 0;
   public final int skipLines;
   public final char separatorChar;
   public final char quoteChar;
@@ -108,6 +119,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public final boolean firstRowAsHeader;
   public final Charset charset;
   public final boolean caseSensitiveFieldNames;
+  public final boolean useRFC4180Parser;
 
   public SpoolDirCsvSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
     super(isTask, conf(), settings);
@@ -127,6 +139,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     this.charset = Charset.forName(charsetName);
 
     this.caseSensitiveFieldNames = this.getBoolean(SpoolDirCsvSourceConnectorConfig.CSV_CASE_SENSITIVE_FIELD_NAMES_CONF);
+    this.useRFC4180Parser = this.getBoolean(CSV_USE_RFC_4180_PARSER_CONF);
   }
 
   static final ConfigDef conf() {
@@ -261,6 +274,14 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
                 .documentation(CSV_CASE_SENSITIVE_FIELD_NAMES_DOC)
                 .displayName(CSV_CASE_SENSITIVE_FIELD_NAMES_DISPLAY)
                 .build()
+        )
+        .define(
+            ConfigKeyBuilder.of(CSV_USE_RFC_4180_PARSER_CONF, ConfigDef.Type.BOOLEAN)
+                .defaultValue(CSV_USE_RFC_4180_PARSER_DEFAULT)
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CSV_USE_RFC_4180_PARSER_DOC)
+                .displayName(CSV_USE_RFC_4180_PARSER_DISPLAY)
+                .build()
         );
   }
 
@@ -269,19 +290,31 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     return (char) intValue;
   }
 
-  public CSVParserBuilder createCSVParserBuilder() {
+  public ICSVParser createCSVParserBuilder() {
+    final ICSVParser result;
 
-    return new CSVParserBuilder()
-        .withEscapeChar(this.escapeChar)
-        .withIgnoreLeadingWhiteSpace(this.ignoreLeadingWhitespace)
-        .withIgnoreQuotations(this.ignoreQuotations)
-        .withQuoteChar(this.quoteChar)
-        .withSeparator(this.separatorChar)
-        .withStrictQuotes(this.strictQuotes)
-        .withFieldAsNull(nullFieldIndicator);
+    if (NULL_CHAR.equals(this.separatorChar) || this.useRFC4180Parser) {
+      result = new RFC4180ParserBuilder()
+          .withQuoteChar(this.quoteChar)
+          .withSeparator(this.separatorChar)
+          .withFieldAsNull(this.nullFieldIndicator)
+          .build();
+    } else {
+      result = new CSVParserBuilder()
+          .withEscapeChar(this.escapeChar)
+          .withIgnoreLeadingWhiteSpace(this.ignoreLeadingWhitespace)
+          .withIgnoreQuotations(this.ignoreQuotations)
+          .withQuoteChar(this.quoteChar)
+          .withSeparator(this.separatorChar)
+          .withStrictQuotes(this.strictQuotes)
+          .withFieldAsNull(this.nullFieldIndicator)
+          .build();
+    }
+
+    return result;
   }
 
-  public CSVReaderBuilder createCSVReaderBuilder(Reader reader, CSVParser parser) {
+  public CSVReaderBuilder createCSVReaderBuilder(Reader reader, ICSVParser parser) {
     return new CSVReaderBuilder(reader)
         .withCSVParser(parser)
         .withKeepCarriageReturn(this.keepCarriageReturn)

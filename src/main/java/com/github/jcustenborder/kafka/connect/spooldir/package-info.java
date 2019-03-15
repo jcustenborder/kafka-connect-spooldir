@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Introduction("\n" +
+@Introduction(
     "This Kafka Connect connector provides the capability to watch a directory for files and " +
     "read the data as new files are written to the input directory. Each of the records in the " +
     "input file will be converted based on the user supplied schema.\n" +
@@ -23,8 +23,15 @@
     "schema types and logical types that are supported in Kafka Connect. If you couple this " +
     "with the Avro converter and Schema Registry by Confluent, you will be able to process " +
     "CSV, Json, or TSV files to strongly typed Avro data in real time.")
-    @Title("File Input")
+@Title("Spool Dir")
+@DocumentationWarning("Running these connectors with multiple tasks requires a shared volume across " +
+    "all of the Kafka Connect workers. Kafka Connect does not have a mechanism for synchronization of " +
+    "tasks. Because of this each task will select which file it will use the following " +
+    "algorithm `hash(<filename>) % totalTasks == taskNumber`. If you are not using a shared volume " +
+    "this could cause issues where files are not processed. Using more than one task could also affect " +
+    "the order that the data is written to Kafka.")
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.github.jcustenborder.kafka.connect.utils.config.DocumentationWarning;
 import com.github.jcustenborder.kafka.connect.utils.config.Introduction;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
