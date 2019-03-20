@@ -30,8 +30,12 @@
     "algorithm `hash(<filename>) % totalTasks == taskNumber`. If you are not using a shared volume " +
     "this could cause issues where files are not processed. Using more than one task could also affect " +
     "the order that the data is written to Kafka.")
+@PluginOwner("jcustenborder")
+@PluginName("kafka-connect-spooldir")
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationWarning;
 import com.github.jcustenborder.kafka.connect.utils.config.Introduction;
+import com.github.jcustenborder.kafka.connect.utils.config.PluginName;
+import com.github.jcustenborder.kafka.connect.utils.config.PluginOwner;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
