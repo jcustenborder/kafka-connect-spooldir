@@ -64,7 +64,7 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
     defaultSettings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, "/tmp/error");
     defaultSettings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, DUMMY_SCHEMA);
     defaultSettings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, DUMMY_SCHEMA);
-    defaultSettings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "dummy");
+    defaultSettings.put(AbstractSourceConnectorConfig.KAFKA_TOPIC_CONF, "dummy");
     defaultSettings.put(SpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
 
     DEFAULTS = ImmutableMap.copyOf(defaultSettings);

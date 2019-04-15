@@ -6,6 +6,6 @@
     "input.path": "/tmp",
     "error.path": "/tmp",
     "input.file.pattern":"^users\\d+\\.json$",
-    "topic":"users"
+    "kafka.topic":"users"
   }
 }

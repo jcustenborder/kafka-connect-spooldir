@@ -85,7 +85,7 @@ public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
     settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
     settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
     settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
-    settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "testing");
+    settings.put(AbstractSourceConnectorConfig.KAFKA_TOPIC_CONF, "testing");
     settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
     settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
     settings.put(AbstractSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");

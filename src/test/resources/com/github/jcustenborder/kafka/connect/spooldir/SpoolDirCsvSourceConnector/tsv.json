@@ -6,7 +6,7 @@
     "input.path": "/tmp",
     "error.path": "/tmp",
     "input.file.pattern": "^users\\d+\\.tsv",
-    "topic": "users",
+    "kafka.topic": "users",
     "csv.separator.char": 11
   }
 }

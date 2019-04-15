@@ -68,7 +68,7 @@ public abstract class SpoolDirSourceConnectorTest<T extends SpoolDirSourceConnec
     this.settings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
     this.settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
     this.settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
-    this.settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "dummy");
+    this.settings.put(AbstractSourceConnectorConfig.KAFKA_TOPIC_CONF, "dummy");
     this.settings.put(SpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
   }
 

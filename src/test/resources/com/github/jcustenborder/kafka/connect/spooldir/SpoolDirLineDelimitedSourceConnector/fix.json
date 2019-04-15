@@ -2,7 +2,7 @@
   "description" : "This example will read files in a directory line by line and parse them using kafka-connect-transform-fix to a FIX representation of the data.",
   "name" : "FIX encoded lines",
   "config" : {
-    "topic" : "fix",
+    "kafka.topic" : "fix",
     "input.path" : "/tmp",
     "input.file.pattern" : "^.+\\.fix$",
     "error.path" : "/tmp",

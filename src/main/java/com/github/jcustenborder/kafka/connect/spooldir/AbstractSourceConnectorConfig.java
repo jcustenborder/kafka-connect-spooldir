@@ -21,7 +21,10 @@ import com.github.jcustenborder.kafka.connect.utils.config.ValidEnum;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidPattern;
 import com.github.jcustenborder.kafka.connect.utils.config.recommenders.Recommenders;
 import com.github.jcustenborder.kafka.connect.utils.config.validators.filesystem.ValidDirectoryWritable;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.io.PatternFilenameFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 
@@ -40,6 +43,7 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String BATCH_SIZE_CONF = "batch.size";
   public static final String PROCESSING_FILE_EXTENSION_DEFAULT = ".PROCESSING";
   public static final String TOPIC_CONF = "topic";
+  public static final String KAFKA_TOPIC_CONF = "kafka.topic";
   public static final String EMPTY_POLL_WAIT_MS_CONF = "empty.poll.wait.ms";
   public static final String METADATA_SCHEMA_NAME = "com.github.jcustenborder.kafka.connect.spooldir.Metadata";
   public static final String CLEANUP_POLICY_CONF = "cleanup.policy";
@@ -56,7 +60,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String GROUP_TIMESTAMP = "Timestamps";
   static final String BATCH_SIZE_DOC = "The number of records that should be returned with each batch.";
   static final int BATCH_SIZE_DEFAULT = 1000;
-  static final String TOPIC_DOC = "The Kafka topic to write the data to.";
+  static final String TOPIC_DOC = "The Kafka topic to write the data to. (Deprecated in favor of 'kafka.topic')";
+  static final String KAFKA_TOPIC_DOC = "The Kafka topic to write the data to.";
   static final String INPUT_PATH_DOC = "The directory to read files that will be processed. This directory must exist and be writable by the user running Kafka Connect.";
   static final String FINISHED_PATH_DOC = "The directory to place files that have been successfully processed. This directory must exist and be writable by the user running Kafka Connect.";
   static final String ERROR_PATH_DOC = "The directory to place files in which have error(s). This directory must exist and be writable by the user running Kafka Connect.";
@@ -102,11 +107,24 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
       this.finishedPath = null;
     }
 
+    // load 'kafka.topic' before falling back to 'topic' if needed
+    String topicConfig = this.getString(KAFKA_TOPIC_CONF);
+    if (StringUtils.isBlank(topicConfig)) {
+      topicConfig = this.getString(TOPIC_CONF);
+    }
+    // one of the two topic configs has to be set
+    Preconditions.checkState(
+            !Strings.isNullOrEmpty(topicConfig),
+            "Either '%s' or '%s' must be configured.",
+            KAFKA_TOPIC_CONF,
+            TOPIC_CONF
+    );
+
+    this.topic = topicConfig;
     this.errorPath = ConfigUtils.getAbsoluteFile(this, ERROR_PATH_CONFIG);
     this.haltOnError = this.getBoolean(HALT_ON_ERROR_CONF);
     this.minimumFileAgeMS = this.getLong(FILE_MINIMUM_AGE_MS_CONF);
     this.batchSize = this.getInt(BATCH_SIZE_CONF);
-    this.topic = this.getString(TOPIC_CONF);
     this.emptyPollWaitMs = this.getLong(EMPTY_POLL_WAIT_MS_CONF);
     this.processingFileExtension = this.getString(PROCESSING_FILE_EXTENSION_CONF);
     this.timestampMode = ConfigUtils.getEnum(TimestampMode.class, this, TIMESTAMP_MODE_CONF);
@@ -122,6 +140,14 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
             ConfigKeyBuilder.of(TOPIC_CONF, ConfigDef.Type.STRING)
                 .documentation(TOPIC_DOC)
                 .group(GROUP_GENERAL)
+                .defaultValue("")
+                .importance(ConfigDef.Importance.HIGH)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(KAFKA_TOPIC_CONF, ConfigDef.Type.STRING)
+                .documentation(KAFKA_TOPIC_DOC)
+                .group(GROUP_GENERAL)
+                .defaultValue("")
                 .importance(ConfigDef.Importance.HIGH)
                 .build()
         ).define(
