@@ -126,7 +126,13 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   @Override
   public void stop() {
-
+    if (null != this.inputFile) {
+      File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
+      if (processingFile.exists()) {
+        log.info("Stopping task but processing file still exists {}. Trying to remove it", processingFile);
+        processingFile.delete();
+      }
+    }
   }
 
   @Override
