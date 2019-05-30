@@ -37,10 +37,12 @@ public class SpoolDirJsonSourceTaskTest extends SpoolDirSourceTaskTest<SpoolDirJ
   }
 
   @Override
-  protected void settings(Map<String, String> settings) {
+  protected Map<String, String> settings() {
+    Map<String, String> settings = super.settings();
     settings.put(SpoolDirCsvSourceConnectorConfig.CSV_FIRST_ROW_AS_HEADER_CONF, "true");
-    settings.put(SpoolDirCsvSourceConnectorConfig.PARSER_TIMESTAMP_DATE_FORMATS_CONF, "yyyy-MM-dd'T'HH:mm:ss'Z'");
     settings.put(SpoolDirCsvSourceConnectorConfig.CSV_NULL_FIELD_INDICATOR_CONF, "BOTH");
+    settings.put(SpoolDirCsvSourceConnectorConfig.PARSER_TIMESTAMP_DATE_FORMATS_CONF, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    return settings;
   }
 
   @TestFactory
