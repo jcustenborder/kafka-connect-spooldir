@@ -19,8 +19,6 @@ import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Files;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -29,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +40,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
   protected Map<String, ?> sourcePartition;
   protected CONF config;
   private Stopwatch processingTime = Stopwatch.createStarted();
-  private File inputFile;
+  private InputFile inputFile;
   protected long inputFileModifiedTime;
   private InputStream inputStream;
   private boolean hasRecords = false;
@@ -126,7 +123,17 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   @Override
   public void stop() {
-
+    try {
+      if (null != this.inputStream) {
+        this.inputStream.close();
+        this.inputStream = null;
+      }
+      if (null != this.cleanUpPolicy) {
+        this.cleanUpPolicy.close();
+      }
+    } catch (IOException ex) {
+      log.error("Exception thrown while closing {}", this.inputFile);
+    }
   }
 
   @Override
@@ -165,73 +172,37 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
     );
   }
 
-  private void closeAndMoveToFinished(File outputDirectory, boolean errored) throws IOException {
-    if (null != inputStream) {
-      log.info("Closing {}", this.inputFile);
-
-      this.inputStream.close();
-      this.inputStream = null;
-
-      File finishedFile = new File(outputDirectory, this.inputFile.getName());
-
-      if (errored) {
-        log.error("Error during processing, moving {} to {}.", this.inputFile, outputDirectory);
-      } else {
-        recordProcessingTime();
-        log.info(
-            "Moving to {} to {}.",
-            this.inputFile,
-            outputDirectory
-        );
-      }
-
-      Files.move(this.inputFile, finishedFile);
-
-      File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
-      if (processingFile.exists()) {
-        log.info("Removing processing file {}", processingFile);
-        processingFile.delete();
-      }
-
-    }
-  }
-
-  static final Map<String, String> SUPPORTED_COMPRESSION_TYPES = ImmutableMap.of(
-      "bz2", CompressorStreamFactory.BZIP2,
-      "gz", CompressorStreamFactory.GZIP,
-      "snappy", CompressorStreamFactory.SNAPPY_RAW,
-      "lz4", CompressorStreamFactory.LZ4_BLOCK,
-      "z", CompressorStreamFactory.Z
-  );
+  AbstractCleanUpPolicy cleanUpPolicy;
 
   public List<SourceRecord> read() {
     try {
       if (!hasRecords) {
 
-
-        switch (this.config.cleanupPolicy) {
-          case MOVE:
-            closeAndMoveToFinished(this.config.finishedPath, false);
-            break;
-          case DELETE:
-            closeAndDelete();
-            break;
+        if (null != this.inputFile) {
+          recordProcessingTime();
+          log.info("Closing {}", this.inputFile);
+          this.inputFile.close();
+          this.inputStream = null;
+          this.cleanUpPolicy.success();
         }
 
-        File nextFile = this.inputFileDequeue.poll();
+        log.trace("read() - polling for next file.");
+        InputFile nextFile = this.inputFileDequeue.poll();
+
+        log.trace("read() - nextFile = '{}'", nextFile);
         if (null == nextFile) {
+          log.trace("read() - No next file found.");
           return new ArrayList<>();
         }
 
         this.metadata = ImmutableMap.of();
         this.inputFile = nextFile;
-        this.inputFileModifiedTime = this.inputFile.lastModified();
-        File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
-        Files.touch(processingFile);
+        this.inputFileModifiedTime = this.inputFile.inputFile.lastModified();
 
         try {
+          this.inputStream = this.inputFile.openStream();
           this.sourcePartition = ImmutableMap.of(
-              "fileName", this.inputFile.getName()
+              "fileName", this.inputFile.inputFile.getName()
           );
           log.info("Opening {}", this.inputFile);
           Long lastOffset = null;
@@ -242,19 +213,9 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
             lastOffset = number.longValue();
           }
 
-          final String extension = Files.getFileExtension(inputFile.getName());
-          log.trace("read() - fileName = '{}' extension = '{}'", inputFile, extension);
-          final InputStream inputStream = new FileInputStream(this.inputFile);
-
-          if (SUPPORTED_COMPRESSION_TYPES.containsKey(extension)) {
-            final String compressor = SUPPORTED_COMPRESSION_TYPES.get(extension);
-            log.info("Decompressing {} as {}", inputFile, compressor);
-            final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory();
-            this.inputStream = compressorStreamFactory.createCompressorInputStream(compressor, inputStream);
-          } else {
-            this.inputStream = inputStream;
-          }
+          this.cleanUpPolicy = AbstractCleanUpPolicy.create(this.config, this.inputFile);
           this.recordCount = 0;
+          log.trace("read() - calling configure()");
           configure(this.inputStream, this.metadata, lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
@@ -267,34 +228,17 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       return records;
     } catch (Exception ex) {
       log.error("Exception encountered processing line {} of {}.", recordOffset(), this.inputFile, ex);
-
+      this.cleanUpPolicy.error();
       try {
-        closeAndMoveToFinished(this.config.errorPath, true);
-      } catch (IOException ex0) {
-        log.error("Exception thrown while moving {} to {}", this.inputFile, this.config.errorPath, ex0);
+        this.cleanUpPolicy.close();
+      } catch (IOException e) {
+        log.warn("Exception while while closing cleanup policy", ex);
       }
       if (this.config.haltOnError) {
         throw new ConnectException(ex);
       } else {
         return new ArrayList<>();
       }
-    }
-  }
-
-  private void closeAndDelete() throws IOException {
-    if (null != inputStream) {
-      log.info("Closing {}", this.inputFile);
-      this.inputStream.close();
-      this.inputStream = null;
-      recordProcessingTime();
-      log.info("Removing file {}", this.inputFile);
-      this.inputFile.delete();
-      File processingFile = InputFileDequeue.processingFile(this.config.processingFileExtension, this.inputFile);
-      if (processingFile.exists()) {
-        log.info("Removing processing file {}", processingFile);
-        processingFile.delete();
-      }
-
     }
   }
 
