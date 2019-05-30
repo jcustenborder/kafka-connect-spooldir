@@ -28,9 +28,11 @@ import java.util.Map;
     "while converting the data based on the schema supplied in the configuration.")
 @DocumentationTip("To get a starting point for a schema you can use the following command to generate an all String schema. This " +
     "will give you the basic structure of a schema. From there you can changes the types to match what you expect.\n" +
-    "``mvn clean package;" +
-    "export CLASSPATH=\"$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\\n' ':')\";" +
-    "kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t json -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data -c config/JsonExample.properties -i id``")
+    ".. code-block:: bash\n\n" +
+    "   mvn clean package\n" +
+    "   export CLASSPATH=\"$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\\n' ':')\"\n" +
+    "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t json -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data -c config/JsonExample.properties -i id\n" +
+    "")
 public class SpoolDirJsonSourceConnector extends SpoolDirSourceConnector<SpoolDirJsonSourceConnectorConfig> {
 
   @Override
