@@ -47,7 +47,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
         result = new Delete(inputFile.inputFile, config.errorPath, config.finishedPath);
         break;
       case NONE:
-        result = new AbstractCleanUpPolicy.None(inputFile.inputFile, config.errorPath, config.finishedPath);
+        result = new None(inputFile.inputFile, config.errorPath, config.finishedPath);
         break;
       default:
         throw new UnsupportedOperationException(
