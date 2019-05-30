@@ -123,10 +123,10 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   @Override
   public void stop() {
+    log.info("Stopping task.");
     try {
-      if (null != this.inputStream) {
-        this.inputStream.close();
-        this.inputStream = null;
+      if (null != this.inputFile) {
+        this.inputFile.close();
       }
       if (null != this.cleanUpPolicy) {
         this.cleanUpPolicy.close();
