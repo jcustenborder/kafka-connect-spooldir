@@ -88,7 +88,13 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
 
   @Override
   public long recordOffset() {
-    return this.csvReader.getLinesRead();
+    final long result;
+    if (null == this.csvReader) {
+      result = -1L;
+    } else {
+      result = this.csvReader.getLinesRead();
+    }
+    return result;
   }
 
   @Override
