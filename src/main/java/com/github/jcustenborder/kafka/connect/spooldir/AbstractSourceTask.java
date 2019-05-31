@@ -40,7 +40,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
   protected Map<String, ?> sourcePartition;
   protected CONF config;
   private final Stopwatch processingTime = Stopwatch.createUnstarted();
-  private InputFile inputFile;
+  protected InputFile inputFile;
   protected long inputFileModifiedTime;
 
   private boolean hasRecords = false;

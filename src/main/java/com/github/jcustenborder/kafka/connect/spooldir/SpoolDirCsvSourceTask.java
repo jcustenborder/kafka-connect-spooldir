@@ -24,6 +24,8 @@ import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.DataException;
 import org.apache.kafka.connect.source.SourceRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceConnectorConfig> {
+  private static final Logger log = LoggerFactory.getLogger(SpoolDirCsvSourceTask.class);
   String[] fieldNames;
   private ICSVParser csvParser;
   private CSVReader csvReader;
@@ -141,7 +144,7 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
       }
 
       if (log.isInfoEnabled() && this.csvReader.getLinesRead() % ((long) this.config.batchSize * 20) == 0) {
-        log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.fileMetadata);
+        log.info("Processed {} lines of {}", this.csvReader.getLinesRead(), this.inputFile);
       }
 
       addRecord(
