@@ -98,7 +98,8 @@
                         <tag>json</tag>
                     </tags>
                     <title>Kafka Connect Spooldir</title>
-                    <supportUrl>${pom.issueManagement.url}</supportUrl>
+                    <supportProviderName>Confluent, Inc.</supportProviderName>
+                    <supportUrl>https://docs.confluent.io/current/</supportUrl>
                     <supportSummary><![CDATA[Confluent is introducing this preview connector to
                                 gain early feedback from developers. It should only be used for
                                 evaluation and non-production testing purposes or to provide
