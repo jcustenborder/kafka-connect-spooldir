@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorConfig> extends AbstractSourceTask<CONF> {
-  static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTask.class);
+  private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTask.class);
   protected Parser parser;
 
   @Override

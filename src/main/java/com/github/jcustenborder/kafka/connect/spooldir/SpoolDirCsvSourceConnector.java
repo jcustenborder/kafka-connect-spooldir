@@ -27,10 +27,12 @@ import java.util.Map;
 @Description("The SpoolDirCsvSourceConnector will monitor the directory specified in `input.path` for files and read them as a CSV " +
     "converting each of the records to the strongly typed equivalent specified in `key.schema` and `value.schema`.")
 @DocumentationTip("To get a starting point for a schema you can use the following command to generate an all String schema. This " +
-    "will give you the basic structure of a schema. From there you can changes the types to match what you expect.\n" +
-    "``mvn clean package;" +
-    "export CLASSPATH=\"$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\\n' ':')\";" +
-    "kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id``")
+    "will give you the basic structure of a schema. From there you can changes the types to match what you expect.\n\n" +
+    ".. code-block:: bash\n\n" +
+    "   mvn clean package\n" +
+    "   export CLASSPATH=\"$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\\n' ':')\"\n" +
+    "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id\n" +
+    "")
 public class SpoolDirCsvSourceConnector extends SpoolDirSourceConnector<SpoolDirCsvSourceConnectorConfig> {
   @Override
   protected SpoolDirCsvSourceConnectorConfig config(Map<String, String> settings) {

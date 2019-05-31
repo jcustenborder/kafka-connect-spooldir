@@ -74,22 +74,25 @@ public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
 
   protected abstract T createTask();
 
-  protected abstract void settings(Map<String, String> settings);
+  protected Map<String, String> settings() {
+    Map<String, String> settings = Maps.newLinkedHashMap();
+    settings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
+    settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "testing");
+    settings.put(AbstractSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");
+    return settings;
+  }
 
   protected void poll(final String packageName, TestCase testCase) throws InterruptedException, IOException {
     String keySchemaConfig = ObjectMapperFactory.INSTANCE.writeValueAsString(testCase.keySchema);
     String valueSchemaConfig = ObjectMapperFactory.INSTANCE.writeValueAsString(testCase.valueSchema);
 
-    Map<String, String> settings = Maps.newLinkedHashMap();
-    settings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.getAbsolutePath());
-    settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
-    settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
+    Map<String, String> settings = this.settings();
     settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
-    settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "testing");
     settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
     settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
-    settings.put(AbstractSourceConnectorConfig.EMPTY_POLL_WAIT_MS_CONF, "10");
-    settings(settings);
+
     if (null != testCase.settings && !testCase.settings.isEmpty()) {
       settings.putAll(testCase.settings);
     }
