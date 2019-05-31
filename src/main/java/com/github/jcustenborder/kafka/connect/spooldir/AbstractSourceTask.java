@@ -42,7 +42,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
   private Stopwatch processingTime = Stopwatch.createStarted();
   private InputFile inputFile;
   protected long inputFileModifiedTime;
-  private InputStream inputStream;
+
   private boolean hasRecords = false;
   protected Map<String, String> metadata;
 
@@ -180,10 +180,9 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
         if (null != this.inputFile) {
           recordProcessingTime();
-          log.info("Closing {}", this.inputFile);
           this.inputFile.close();
-          this.inputStream = null;
           this.cleanUpPolicy.success();
+          this.inputFile = null;
         }
 
         log.trace("read() - polling for next file.");
@@ -200,7 +199,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         this.inputFileModifiedTime = this.inputFile.inputFile.lastModified();
 
         try {
-          this.inputStream = this.inputFile.openStream();
+          this.inputFile.openStream();
           this.sourcePartition = ImmutableMap.of(
               "fileName", this.inputFile.inputFile.getName()
           );
@@ -216,7 +215,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
           this.cleanUpPolicy = AbstractCleanUpPolicy.create(this.config, this.inputFile);
           this.recordCount = 0;
           log.trace("read() - calling configure()");
-          configure(this.inputStream, this.metadata, lastOffset);
+          configure(this.inputFile.inputStream, this.metadata, lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }

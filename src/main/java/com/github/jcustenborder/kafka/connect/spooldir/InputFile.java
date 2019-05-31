@@ -47,7 +47,7 @@ class InputFile implements Closeable {
       "z", CompressorStreamFactory.Z
   );
 
-  InputStream inputStream;
+  public InputStream inputStream;
 
   public InputStream openStream() throws IOException {
     if (null != this.inputStream) {
