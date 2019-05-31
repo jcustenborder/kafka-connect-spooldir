@@ -99,7 +99,16 @@
                     </tags>
                     <title>Kafka Connect Spooldir</title>
                     <supportUrl>${pom.issueManagement.url}</supportUrl>
-                    <supportSummary>Support provided through community involvement.</supportSummary>
+                    <supportSummary><![CDATA[Confluent is introducing this preview connector to
+                                gain early feedback from developers. It should only be used for
+                                evaluation and non-production testing purposes or to provide
+                                feedback to Confluent and is subject to the
+                                <a href="https://www.confluent.io/confluent-software-evaluation-license/">Confluent Software Evaluation License.</a>
+                                Confluent will provide support for this connector for evaluation and non-production testing purposes.
+                                 Comments, questions and suggestions related to preview features
+                                are encouraged. Confluent customers may submit questions and suggestions, and file support tickets via the
+                                <a href="https://support.confluent.io/">Confluent Support Portal.</a>]]>
+                    </supportSummary>
                 </configuration>
             </plugin>
         </plugins>
