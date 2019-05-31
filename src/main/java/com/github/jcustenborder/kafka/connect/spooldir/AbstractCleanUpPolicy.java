@@ -68,10 +68,12 @@ abstract class AbstractCleanUpPolicy implements Closeable {
   protected void moveToDirectory(File outputDirectory) {
     File outputFile = new File(outputDirectory, this.inputFile.getName());
     try {
-      log.info("Moving {} to {}", this.inputFile, outputFile);
-      Files.move(this.inputFile, outputFile);
+      if (this.inputFile.exists()) {
+        log.info("Moving {} to {}", this.inputFile, outputFile);
+        Files.move(this.inputFile, outputFile);
+      }
     } catch (IOException e) {
-      log.error("Exception thrown while trying to move {} to {}", this.inputFile, outputFile);
+      log.error("Exception thrown while trying to move {} to {}", this.inputFile, outputFile, e);
     }
   }
 
