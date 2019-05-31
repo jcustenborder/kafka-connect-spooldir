@@ -39,7 +39,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
   private static final Logger log = LoggerFactory.getLogger(AbstractSourceTask.class);
   protected Map<String, ?> sourcePartition;
   protected CONF config;
-  private Stopwatch processingTime = Stopwatch.createStarted();
+  private final Stopwatch processingTime = Stopwatch.createUnstarted();
   private InputFile inputFile;
   protected long inputFileModifiedTime;
 
