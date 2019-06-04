@@ -110,7 +110,7 @@
                             </tags>
                             <title>Kafka Connect Spooldir</title>
                             <supportProviderName>Confluent, Inc.</supportProviderName>
-                            <supportUrl>https://docs.confluent.io/current/</supportUrl>
+                            <supportUrl>https://docs.confluent.io/current/connect/kafka-connect-spooldir/</supportUrl>
                             <supportSummary><![CDATA[Confluent is introducing this preview connector to
                                         gain early feedback from developers. It should only be used for
                                         evaluation and non-production testing purposes or to provide
