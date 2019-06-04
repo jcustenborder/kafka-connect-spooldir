@@ -97,7 +97,7 @@
                         </goals>
                         <configuration>
                             <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
-                            <documentationUrl>https://jcustenborder.github.io/kafka-connect-documentation/
+                            <documentationUrl>https://docs.confluent.io/current/connect/kafka-connect-spooldir/
                             </documentationUrl>
                             <componentTypes>
                                 <componentType>source</componentType>
