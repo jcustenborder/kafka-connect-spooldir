@@ -88,33 +88,42 @@
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
-                <configuration>
-                    <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
-                    <documentationUrl>https://jcustenborder.github.io/kafka-connect-documentation/
-                    </documentationUrl>
-                    <componentTypes>
-                        <componentType>source</componentType>
-                    </componentTypes>
-                    <tags>
-                        <tag>File</tag>
-                        <tag>Flume</tag>
-                        <tag>csv</tag>
-                        <tag>json</tag>
-                    </tags>
-                    <title>Kafka Connect Spooldir</title>
-                    <supportProviderName>Confluent, Inc.</supportProviderName>
-                    <supportUrl>https://docs.confluent.io/current/</supportUrl>
-                    <supportSummary><![CDATA[Confluent is introducing this preview connector to
-                                gain early feedback from developers. It should only be used for
-                                evaluation and non-production testing purposes or to provide
-                                feedback to Confluent and is subject to the
-                                <a href="https://www.confluent.io/confluent-software-evaluation-license/">Confluent Software Evaluation License.</a>
-                                Confluent will provide support for this connector for evaluation and non-production testing purposes.
-                                 Comments, questions and suggestions related to preview features
-                                are encouraged. Confluent customers may submit questions and suggestions, and file support tickets via the
-                                <a href="https://support.confluent.io/">Confluent Support Portal.</a>]]>
-                    </supportSummary>
-                </configuration>
+                <version>0.11.2</version>
+                <executions>
+                    <execution>
+                        <id>hub</id>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
+                            <documentationUrl>https://jcustenborder.github.io/kafka-connect-documentation/
+                            </documentationUrl>
+                            <componentTypes>
+                                <componentType>source</componentType>
+                            </componentTypes>
+                            <tags>
+                                <tag>File</tag>
+                                <tag>Flume</tag>
+                                <tag>csv</tag>
+                                <tag>json</tag>
+                            </tags>
+                            <title>Kafka Connect Spooldir</title>
+                            <supportProviderName>Confluent, Inc.</supportProviderName>
+                            <supportUrl>https://docs.confluent.io/current/connect/kafka-connect-spooldir/</supportUrl>
+                            <supportSummary><![CDATA[Confluent is introducing this preview connector to
+                                        gain early feedback from developers. It should only be used for
+                                        evaluation and non-production testing purposes or to provide
+                                        feedback to Confluent and is subject to the
+                                        <a href="https://www.confluent.io/confluent-software-evaluation-license/">Confluent Software Evaluation License.</a>
+                                        Confluent will provide support for this connector for evaluation and non-production testing purposes.
+                                         Comments, questions and suggestions related to preview features
+                                        are encouraged. Confluent customers may submit questions and suggestions, and file support tickets via the
+                                        <a href="https://support.confluent.io/">Confluent Support Portal.</a>]]>
+                            </supportSummary>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
