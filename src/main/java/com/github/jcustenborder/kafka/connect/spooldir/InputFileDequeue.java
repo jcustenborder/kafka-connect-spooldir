@@ -63,8 +63,8 @@ public class InputFileDequeue extends ForwardingDeque<InputFile> {
       log.info("No files matching {} were found in {}", AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
       return new ArrayDeque<>();
     }
-
-    this.files = Arrays.stream(this.config.inputPath.listFiles(this.config.inputFilenameFilter))
+    log.trace("delegate() - Found {} potential file(s).", input.length);
+    this.files = Arrays.stream(input)
         .filter(this.filePartitionSelector)
         .filter(this.processingFileExists)
         .filter(this.fileMinimumAge)
