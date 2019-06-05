@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -124,8 +125,17 @@ public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnect
   }
 
   @Override
-  public List<Map<String, String>> taskConfigs(int i) {
-    return Arrays.asList(this.settings);
+  public List<Map<String, String>> taskConfigs(int taskCount) {
+    List<Map<String, String>> result = new ArrayList<>();
+
+    for (int i = 0; i < taskCount; i++) {
+      Map<String, String> taskConfig = new LinkedHashMap<>(this.settings);
+      taskConfig.put(AbstractSourceConnectorConfig.TASK_INDEX_CONF, Integer.toString(i));
+      taskConfig.put(AbstractSourceConnectorConfig.TASK_COUNT_CONF, Integer.toString(taskCount));
+      result.add(taskConfig);
+    }
+
+    return result;
   }
 
   @Override

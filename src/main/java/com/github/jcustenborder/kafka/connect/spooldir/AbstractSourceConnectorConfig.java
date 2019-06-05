@@ -20,12 +20,15 @@ import com.github.jcustenborder.kafka.connect.utils.config.ConfigUtils;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidEnum;
 import com.github.jcustenborder.kafka.connect.utils.config.ValidPattern;
 import com.github.jcustenborder.kafka.connect.utils.config.recommenders.Recommenders;
+import com.github.jcustenborder.kafka.connect.utils.config.validators.Validators;
 import com.github.jcustenborder.kafka.connect.utils.config.validators.filesystem.ValidDirectoryWritable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.PatternFilenameFilter;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -35,6 +38,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String INPUT_FILE_PATTERN_CONF = "input.file.pattern";
   public static final String HALT_ON_ERROR_CONF = "halt.on.error";
   public static final String FILE_MINIMUM_AGE_MS_CONF = "file.minimum.age.ms";
+  public static final String FILE_SORT_ATTRIBUTES_CONF = "files.sort.attributes";
+
   public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
   //RecordProcessorConfig
   public static final String BATCH_SIZE_CONF = "batch.size";
@@ -76,6 +81,20 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
       " in `" + SpoolDirSourceConnectorConfig.TIMESTAMP_FIELD_CONF + "`. " +
       "If set to `FILE_TIME` then " +
       "the last modified time of the file will be used. If set to `PROCESS_TIME` the time the record is read will be used.";
+  static final String FILE_SORT_ATTRIBUTES_DOC = "The attributes each file will use to determine the sort order. " +
+      "`Name` is name of the file. `Length` is the length of the file preferring larger files first. `LastModified` is " +
+      "the LastModified attribute of the file preferring older files first.";
+
+  public static final String TASK_INDEX_CONF = "task.index";
+  static final String TASK_INDEX_DOC = "Internal setting to the connector used to instruct a " +
+      "task on which files to select. The connector will override this setting.";
+  public static final String TASK_COUNT_CONF = "task.count";
+  static final String TASK_COUNT_DOC = "Internal setting to the connector used to instruct a " +
+      "task on which files to select. The connector will override this setting.";
+
+  public static final String TASK_PARTITIONER_CONF = "task.partitioner";
+  static final String TASK_PARTITIONER_DOC = "The task partitioner implementation to use to select " +
+      "which files will be processed by the task.";
 
 
   public final File inputPath;
@@ -90,6 +109,10 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public final TimestampMode timestampMode;
   public final CleanupPolicy cleanupPolicy;
   public final PatternFilenameFilter inputFilenameFilter;
+  public final List<FileAttribute> fileSortAttributes;
+  public final int taskIndex;
+  public final int taskCount;
+  public final TaskPartitioner taskPartitioner;
 
   public AbstractSourceConnectorConfig(ConfigDef definition, Map<?, ?> originals) {
     super(definition, originals);
@@ -113,6 +136,10 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     final String inputPatternText = this.getString(INPUT_FILE_PATTERN_CONF);
     final Pattern inputPattern = Pattern.compile(inputPatternText);
     this.inputFilenameFilter = new PatternFilenameFilter(inputPattern);
+    this.fileSortAttributes = ConfigUtils.getEnums(FileAttribute.class, this, FILE_SORT_ATTRIBUTES_CONF);
+    this.taskIndex = getInt(TASK_INDEX_CONF);
+    this.taskCount = getInt(TASK_COUNT_CONF);
+    this.taskPartitioner = ConfigUtils.getEnum(TaskPartitioner.class, this, TASK_PARTITIONER_CONF);
   }
 
   public static ConfigDef config() {
@@ -211,6 +238,38 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
                 .defaultValue(TimestampMode.PROCESS_TIME.toString())
                 .validator(ValidEnum.of(TimestampMode.class))
                 .build()
+        ).define(
+            ConfigKeyBuilder.of(FILE_SORT_ATTRIBUTES_CONF, ConfigDef.Type.LIST)
+                .documentation(FILE_SORT_ATTRIBUTES_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .validator(Validators.validEnum(FileAttribute.class))
+                .group(GROUP_FILESYSTEM)
+                .defaultValue(ImmutableList.of(FileAttribute.NameAsc.name()))
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(TASK_INDEX_CONF, ConfigDef.Type.INT)
+                .documentation(TASK_INDEX_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .validator(ConfigDef.Range.atLeast(0))
+                .group(GROUP_GENERAL)
+                .defaultValue(0)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(TASK_COUNT_CONF, ConfigDef.Type.INT)
+                .documentation(TASK_COUNT_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .validator(ConfigDef.Range.atLeast(1))
+                .group(GROUP_GENERAL)
+                .defaultValue(1)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(TASK_PARTITIONER_CONF, ConfigDef.Type.STRING)
+                .documentation(TASK_PARTITIONER_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .validator(Validators.validEnum(TaskPartitioner.class))
+                .defaultValue(TaskPartitioner.ByName.toString())
+                .group(GROUP_FILESYSTEM)
+                .build()
         );
   }
 
@@ -224,5 +283,18 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     NONE,
     DELETE,
     MOVE
+  }
+
+  public enum FileAttribute {
+    NameAsc,
+    NameDesc,
+    LengthAsc,
+    LengthDesc,
+    LastModifiedAsc,
+    LastModifiedDesc
+  }
+
+  public enum TaskPartitioner {
+    ByName
   }
 }
