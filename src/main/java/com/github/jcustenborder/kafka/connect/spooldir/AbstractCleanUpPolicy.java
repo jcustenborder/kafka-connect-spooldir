@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 
 abstract class AbstractCleanUpPolicy implements Closeable {
@@ -85,7 +83,9 @@ abstract class AbstractCleanUpPolicy implements Closeable {
   }
 
   protected boolean createDirectory(File directory) {
-    if (directory.exists()) return true;
+    if (directory.exists()) {
+      return true;
+    }
     if (!directory.mkdir()) {
       log.error("Cannot make directory - " + directory.getAbsolutePath());
       return false;
@@ -138,11 +138,11 @@ abstract class AbstractCleanUpPolicy implements Closeable {
     @Override
     public void success() throws IOException {
       // Setup directory named as the file created date
-      Path subDirectory = Paths.get(this.finishedPath.getAbsolutePath(), dateFormatter.format(this.inputFile.lastModified()));
-      log.info("Subdirectory: " + subDirectory.toAbsolutePath());
+      File subDirectory = new File(this.finishedPath, dateFormatter.format(this.inputFile.lastModified()));
+      log.trace("Finished path: {}", subDirectory);
 
-      if (createDirectory(subDirectory.toFile())) {
-        moveToDirectory(subDirectory.toFile());
+      if (createDirectory(subDirectory)) {
+        moveToDirectory(subDirectory);
       } else {
         moveToDirectory(this.finishedPath);
       }
