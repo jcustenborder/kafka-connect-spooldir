@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -135,9 +136,28 @@ public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
     assertFalse(records.isEmpty(), "records should not be empty");
     assertEquals(testCase.expected.size(), records.size(), "records.size() does not match.");
 
+    /*
+    The following headers will change. Lets ensure they are there but we don't care about their
+    values since they are driven by things that will change such as lastModified dates and paths.
+     */
+    List<String> headersToRemove = Arrays.asList(
+        Metadata.HEADER_LAST_MODIFIED,
+        Metadata.HEADER_PATH,
+        Metadata.HEADER_LENGTH
+    );
+
     for (int i = 0; i < testCase.expected.size(); i++) {
       SourceRecord expectedRecord = testCase.expected.get(i);
       SourceRecord actualRecord = records.get(i);
+
+      for (String headerToRemove : headersToRemove) {
+        assertNotNull(
+            actualRecord.headers().lastWithName(headerToRemove),
+            String.format("index:%s should have the header '%s'", i, headerToRemove)
+        );
+        actualRecord.headers().remove(headerToRemove);
+        expectedRecord.headers().remove(headerToRemove);
+      }
       assertSourceRecord(expectedRecord, actualRecord, String.format("index:%s", i));
     }
 

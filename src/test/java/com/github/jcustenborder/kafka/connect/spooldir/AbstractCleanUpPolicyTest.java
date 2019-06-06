@@ -14,20 +14,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractCleanUpPolicyTest<T extends AbstractCleanUpPolicy> {
 
-  File inputFile;
+  InputFile inputFile;
   File finishedPath;
   File errorPath;
   T cleanupPolicy;
 
   protected abstract T create(
-      File inputFile, File errorPath, File finishedPath
+      InputFile inputFile, File errorPath, File finishedPath
   );
 
   @BeforeEach
   public void before() throws IOException {
     this.errorPath = Files.createTempDir();
     this.finishedPath = Files.createTempDir();
-    this.inputFile = File.createTempFile("input", "file");
+    File inputFile = File.createTempFile("input", "file");
+    File processingFlag = new File(inputFile.getParent(), inputFile.getName() + ".PROCESSING");
+    this.inputFile = new InputFile(inputFile, processingFlag);
     this.cleanupPolicy = create(this.inputFile, this.errorPath, this.finishedPath);
   }
 
@@ -52,7 +54,7 @@ public abstract class AbstractCleanUpPolicyTest<T extends AbstractCleanUpPolicy>
 
   @AfterEach
   public void after() {
-    delete(this.inputFile);
+    this.inputFile.delete();
     delete(this.finishedPath);
     delete(this.errorPath);
   }

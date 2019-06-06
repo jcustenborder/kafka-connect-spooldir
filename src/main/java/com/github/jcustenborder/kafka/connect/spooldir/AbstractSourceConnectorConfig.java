@@ -46,7 +46,6 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String PROCESSING_FILE_EXTENSION_DEFAULT = ".PROCESSING";
   public static final String TOPIC_CONF = "topic";
   public static final String EMPTY_POLL_WAIT_MS_CONF = "empty.poll.wait.ms";
-  public static final String METADATA_SCHEMA_NAME = "com.github.jcustenborder.kafka.connect.spooldir.Metadata";
   public static final String CLEANUP_POLICY_CONF = "cleanup.policy";
   public static final String CLEANUP_POLICY_DOC = "Determines how the connector should cleanup the " +
       "files that have been successfully processed. NONE leaves the files in place which could " +

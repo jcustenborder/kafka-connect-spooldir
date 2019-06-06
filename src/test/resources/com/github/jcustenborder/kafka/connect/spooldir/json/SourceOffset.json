@@ -297,7 +297,38 @@
         },
         "storage" : "#6e3e36"
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -525,7 +556,38 @@
         },
         "storage" : "#73e909"
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -752,7 +814,38 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -980,7 +1073,38 @@
         },
         "storage" : "#e9c943"
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -1208,7 +1332,38 @@
         },
         "storage" : "#645119"
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -1435,7 +1590,38 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -1662,7 +1848,38 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -1889,7 +2106,38 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -2116,7 +2364,38 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SourceOffset.json"
@@ -2344,6 +2623,37 @@
         },
         "storage" : "#506128"
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SourceOffset.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833069293-0/input/SourceOffset.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4770
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833069000
+    } ]
   } ]
 }

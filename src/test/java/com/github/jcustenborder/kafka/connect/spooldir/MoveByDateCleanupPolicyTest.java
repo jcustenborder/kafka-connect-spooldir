@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MoveByDateCleanupPolicyTest extends AbstractCleanUpPolicyTest<AbstractCleanUpPolicy.MoveByDate> {
   @Override
-  protected AbstractCleanUpPolicy.MoveByDate create(File inputFile, File errorPath, File finishedPath) {
+  protected AbstractCleanUpPolicy.MoveByDate create(InputFile inputFile, File errorPath, File finishedPath) {
     return new AbstractCleanUpPolicy.MoveByDate(inputFile, errorPath, finishedPath);
   }
 

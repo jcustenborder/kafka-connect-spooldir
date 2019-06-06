@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DeleteCleanupPolicyTest extends AbstractCleanUpPolicyTest<AbstractCleanUpPolicy.Delete> {
   @Override
-  protected AbstractCleanUpPolicy.Delete create(File inputFile, File errorPath, File finishedPath) {
+  protected AbstractCleanUpPolicy.Delete create(InputFile inputFile, File errorPath, File finishedPath) {
     return new AbstractCleanUpPolicy.Delete(inputFile, errorPath, finishedPath);
   }
 

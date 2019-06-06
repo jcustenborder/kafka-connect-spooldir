@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NoneCleanupPolicyTest extends AbstractCleanUpPolicyTest<AbstractCleanUpPolicy.None> {
   @Override
-  protected AbstractCleanUpPolicy.None create(File inputFile, File errorPath, File finishedPath) {
+  protected AbstractCleanUpPolicy.None create(InputFile inputFile, File errorPath, File finishedPath) {
     return new AbstractCleanUpPolicy.None(inputFile, errorPath, finishedPath);
   }
 

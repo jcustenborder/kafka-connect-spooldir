@@ -14,7 +14,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 1,\n  \"first_name\" : \"Jack\",\n  \"last_name\" : \"Garcia\",\n  \"email\" : \"jgarcia0@shop-pro.jp\",\n  \"gender\" : \"Male\",\n  \"ip_address\" : \"196.56.44.185\",\n  \"last_login\" : \"2015-09-30T15:29:03Z\",\n  \"account_balance\" : 347.77,\n  \"country\" : \"IT\",\n  \"favorite_color\" : \"#4a2313\",\n  \"column11\" : \"asdsa\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -28,7 +58,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 2,\n  \"first_name\" : \"John\",\n  \"last_name\" : \"Kim\",\n  \"email\" : \"jkim1@miibeian.gov.cn\",\n  \"gender\" : \"Male\",\n  \"ip_address\" : \"53.19.132.185\",\n  \"last_login\" : \"2015-11-14T10:34:09Z\",\n  \"account_balance\" : 251.24,\n  \"country\" : \"CZ\",\n  \"favorite_color\" : \"#3e56cf\",\n  \"column11\" : \"asd\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -42,7 +102,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 3,\n  \"first_name\" : \"Ashley\",\n  \"last_name\" : \"Austin\",\n  \"email\" : \"aaustin2@hatena.ne.jp\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"21.164.37.9\",\n  \"account_balance\" : 819.47,\n  \"country\" : \"CN\",\n  \"column11\" : \"f\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -56,7 +146,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 4,\n  \"first_name\" : \"Jonathan\",\n  \"last_name\" : \"Mcdonald\",\n  \"email\" : \"jmcdonald3@amazon.co.uk\",\n  \"gender\" : \"Male\",\n  \"ip_address\" : \"188.172.42.140\",\n  \"last_login\" : \"2015-12-28T14:37:01Z\",\n  \"account_balance\" : 868.38,\n  \"country\" : \"ID\",\n  \"favorite_color\" : \"#1b1414\",\n  \"column11\" : \"as\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -70,7 +190,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 5,\n  \"first_name\" : \"Helen\",\n  \"last_name\" : \"Lane\",\n  \"email\" : \"hlane4@trellian.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"159.171.138.190\",\n  \"last_login\" : \"2016-06-30T18:41:18Z\",\n  \"account_balance\" : 398.97,\n  \"country\" : \"TN\",\n  \"column11\" : \"g\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -84,7 +234,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 6,\n  \"first_name\" : \"Scott\",\n  \"last_name\" : \"Lopez\",\n  \"email\" : \"slopez5@google.co.jp\",\n  \"gender\" : \"Male\",\n  \"ip_address\" : \"86.194.226.35\",\n  \"last_login\" : \"2015-08-13T02:13:51Z\",\n  \"account_balance\" : 322.99,\n  \"country\" : \"BR\",\n  \"column11\" : \"g\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -98,7 +278,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 7,\n  \"first_name\" : \"Christine\",\n  \"last_name\" : \"Franklin\",\n  \"email\" : \"cfranklin6@reuters.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"248.173.207.64\",\n  \"last_login\" : \"2015-12-22T11:29:57Z\",\n  \"account_balance\" : 301.26,\n  \"country\" : \"PH\",\n  \"favorite_color\" : \"#1d5e9d\",\n  \"column11\" : \"h\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -112,7 +322,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 8,\n  \"first_name\" : \"Helen\",\n  \"last_name\" : \"Andrews\",\n  \"email\" : \"handrews7@histats.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"83.160.63.181\",\n  \"last_login\" : \"2016-03-06T11:41:10Z\",\n  \"account_balance\" : 217.96,\n  \"country\" : \"CU\",\n  \"column11\" : \"j\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -126,7 +366,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 9,\n  \"first_name\" : \"Stephanie\",\n  \"last_name\" : \"Gordon\",\n  \"email\" : \"sgordon8@goodreads.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"193.143.42.212\",\n  \"last_login\" : \"2015-10-27T22:07:24Z\",\n  \"account_balance\" : 495.8,\n  \"country\" : \"CN\",\n  \"column11\" : \"f\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -140,7 +410,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 10,\n  \"first_name\" : \"Shirley\",\n  \"last_name\" : \"Andrews\",\n  \"email\" : \"sandrews9@flickr.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"99.113.183.206\",\n  \"last_login\" : \"2015-11-07T11:12:52Z\",\n  \"account_balance\" : 157.75,\n  \"country\" : \"BR\",\n  \"favorite_color\" : \"#fc1da9\",\n  \"column11\" : \"s\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -154,7 +454,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 11,\n  \"first_name\" : \"Joshua\",\n  \"last_name\" : \"Reid\",\n  \"email\" : \"jreida@wikia.com\",\n  \"gender\" : \"Male\",\n  \"ip_address\" : \"197.96.118.164\",\n  \"last_login\" : \"2015-08-22T13:16:18Z\",\n  \"account_balance\" : 431.8,\n  \"country\" : \"CO\",\n  \"favorite_color\" : \"#6e3e36\",\n  \"column11\" : \"dfg\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -168,7 +498,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 12,\n  \"first_name\" : \"Frances\",\n  \"last_name\" : \"Parker\",\n  \"email\" : \"fparkerb@engadget.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"226.237.57.25\",\n  \"last_login\" : \"2015-10-18T01:50:15Z\",\n  \"account_balance\" : 188.21,\n  \"country\" : \"BR\",\n  \"favorite_color\" : \"#73e909\",\n  \"column11\" : \"hg\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -182,7 +542,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 13,\n  \"first_name\" : \"Sharon\",\n  \"last_name\" : \"Lawson\",\n  \"email\" : \"slawsonc@bravesites.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"198.189.134.106\",\n  \"last_login\" : \"2016-01-14T17:51:09Z\",\n  \"account_balance\" : 206.73,\n  \"country\" : \"VN\",\n  \"column11\" : \"s\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -196,7 +586,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 14,\n  \"first_name\" : \"Elizabeth\",\n  \"last_name\" : \"Wells\",\n  \"email\" : \"ewellsd@redcross.org\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"120.108.59.206\",\n  \"last_login\" : \"2015-09-02T21:53:07Z\",\n  \"account_balance\" : 499.48,\n  \"country\" : \"CZ\",\n  \"favorite_color\" : \"#e9c943\",\n  \"column11\" : \"fgs\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -210,7 +630,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 15,\n  \"first_name\" : \"Norma\",\n  \"last_name\" : \"Wilson\",\n  \"email\" : \"nwilsone@google.com.br\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"18.246.76.220\",\n  \"last_login\" : \"2015-09-27T02:10:48Z\",\n  \"account_balance\" : -65.19,\n  \"country\" : \"SE\",\n  \"favorite_color\" : \"#645119\",\n  \"column11\" : \"sdfgs\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -224,7 +674,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 16,\n  \"first_name\" : \"Joan\",\n  \"last_name\" : \"Watkins\",\n  \"email\" : \"jwatkinsf@yolasite.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"240.27.33.114\",\n  \"last_login\" : \"2016-03-31T00:29:14Z\",\n  \"account_balance\" : 264.23,\n  \"country\" : \"PH\",\n  \"column11\" : \"sdfg\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -238,7 +718,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 17,\n  \"first_name\" : \"Gerald\",\n  \"last_name\" : \"Hamilton\",\n  \"email\" : \"ghamiltong@fc2.com\",\n  \"gender\" : \"Male\",\n  \"ip_address\" : \"182.75.62.95\",\n  \"last_login\" : \"2016-02-10T14:29:35Z\",\n  \"account_balance\" : 309.26,\n  \"country\" : \"ID\",\n  \"column11\" : \"sdfg\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -252,7 +762,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 18,\n  \"first_name\" : \"Paula\",\n  \"last_name\" : \"Taylor\",\n  \"email\" : \"ptaylorh@wikispaces.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"245.74.203.0\",\n  \"last_login\" : \"2016-05-11T03:15:10Z\",\n  \"account_balance\" : 927.45,\n  \"country\" : \"CN\",\n  \"column11\" : \"sdfg\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -266,7 +806,37 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 19,\n  \"first_name\" : \"Carolyn\",\n  \"last_name\" : \"Burns\",\n  \"email\" : \"cburnsi@marketwatch.com\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"180.243.11.10\",\n  \"last_login\" : \"2016-02-28T18:49:23Z\",\n  \"account_balance\" : 752.76,\n  \"country\" : \"NL\",\n  \"column11\" : \"dsf\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "DataHasMoreFields.schemalessjson"
@@ -280,6 +850,36 @@
       "isOptional" : false
     },
     "value" : "{\n  \"id\" : 20,\n  \"first_name\" : \"Robin\",\n  \"last_name\" : \"Bennett\",\n  \"email\" : \"rbennettj@cdc.gov\",\n  \"gender\" : \"Female\",\n  \"ip_address\" : \"169.77.92.179\",\n  \"last_login\" : \"2016-02-15T01:06:44Z\",\n  \"account_balance\" : 143.3,\n  \"country\" : \"ID\",\n  \"favorite_color\" : \"#506128\",\n  \"column11\" : \"sdfgsdf\"\n}",
-    "headers" : [ ]
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833051472-0/input/DataHasMoreFields.schemalessjson"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5153
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559833051000
+    } ]
   } ]
 }

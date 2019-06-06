@@ -31,11 +31,19 @@ import java.util.Map;
 
 class InputFile implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(InputFile.class);
-  public final File inputFile;
-  public final File processingFlag;
+  private final File inputFile;
+  private final File processingFlag;
+  private final String name;
+  private final String path;
+  private final long length;
+  private final long lastModified;
 
   InputFile(File inputFile, File processingFlag) {
     this.inputFile = inputFile;
+    this.name = this.inputFile.getName();
+    this.path = this.inputFile.getPath();
+    this.lastModified = this.inputFile.lastModified();
+    this.length = this.inputFile.length();
     this.processingFlag = processingFlag;
   }
 
@@ -96,5 +104,44 @@ class InputFile implements Closeable {
         log.warn("Could not remove processing flag {}", this.processingFlag);
       }
     }
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public long length() {
+    return this.length;
+  }
+
+  public long lastModified() {
+    return this.lastModified;
+  }
+
+  public void moveToDirectory(File outputDirectory) {
+    File outputFile = new File(outputDirectory, this.inputFile.getName());
+    try {
+      if (this.inputFile.exists()) {
+        log.info("Moving {} to {}", this.inputFile, outputFile);
+        Files.move(this.inputFile, outputFile);
+      }
+    } catch (IOException e) {
+      log.error("Exception thrown while trying to move {} to {}", this.inputFile, outputFile, e);
+    }
+  }
+
+  public void delete() {
+    log.info("Deleting {}", this.inputFile);
+    if (!this.inputFile.delete()) {
+      log.warn("Could not delete {}", this.inputFile);
+    }
+  }
+
+  public boolean exists() {
+    return this.inputFile.exists();
   }
 }

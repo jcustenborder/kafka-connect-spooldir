@@ -65,7 +65,7 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
         timestamp = date.getTime();
         break;
       case FILE_TIME:
-        timestamp = this.inputFileModifiedTime;
+        timestamp = this.inputFile.lastModified();
         break;
       case PROCESS_TIME:
         timestamp = null;
