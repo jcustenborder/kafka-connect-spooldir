@@ -61,10 +61,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
 
     return result;
   }
-
-
-
-
+  
   protected boolean createDirectory(File directory) {
     if (directory.exists()) {
       return true;

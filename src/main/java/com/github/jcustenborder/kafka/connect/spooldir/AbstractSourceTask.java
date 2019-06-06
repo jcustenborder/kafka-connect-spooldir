@@ -112,7 +112,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
     checkDirectory(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.config.inputPath);
     checkDirectory(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.config.errorPath);
 
-    if (AbstractSourceConnectorConfig.CleanupPolicy.MOVE == this.config.cleanupPolicy) {
+    if (AbstractSourceConnectorConfig.CleanupPolicy.MOVE == this.config.cleanupPolicy ||
+        AbstractSourceConnectorConfig.CleanupPolicy.MOVEBYDATE == this.config.cleanupPolicy) {
       checkDirectory(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.config.finishedPath);
     }
 

@@ -119,7 +119,7 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     this.inputPath = ConfigUtils.getAbsoluteFile(this, INPUT_PATH_CONFIG);
     this.cleanupPolicy = ConfigUtils.getEnum(CleanupPolicy.class, this, CLEANUP_POLICY_CONF);
 
-    if (CleanupPolicy.MOVE == this.cleanupPolicy) {
+    if (CleanupPolicy.MOVE == this.cleanupPolicy || CleanupPolicy.MOVEBYDATE == this.cleanupPolicy) {
       this.finishedPath = ConfigUtils.getAbsoluteFile(this, FINISHED_PATH_CONFIG);
     } else {
       this.finishedPath = null;
