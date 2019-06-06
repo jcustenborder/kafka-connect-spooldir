@@ -55,24 +55,11 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
   }
 
   protected void addRecord(List<SourceRecord> records, SchemaAndValue key, SchemaAndValue value) {
-
-    if (this.config.hasKeyMetadataField && !SchemaAndValue.NULL.equals(key)) {
-      final Struct keyStruct = (Struct) key.value();
-      keyStruct.put(this.config.keyMetadataField, this.metadata);
-    }
-
-    final Struct valueStruct;
-    if (this.config.hasvalueMetadataField && !SchemaAndValue.NULL.equals(value)) {
-      valueStruct = (Struct) value.value();
-      valueStruct.put(this.config.valueMetadataField, this.metadata);
-    } else {
-      valueStruct = null;
-    }
-
-    Long timestamp;
+    final Long timestamp;
 
     switch (this.config.timestampMode) {
       case FIELD:
+        Struct valueStruct = (Struct) value.value();
         log.trace("addRecord() - Reading date from timestamp field '{}'", this.config.timestampField);
         final java.util.Date date = (java.util.Date) valueStruct.get(this.config.timestampField);
         timestamp = date.getTime();
@@ -88,8 +75,6 @@ public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorCon
             String.format("Unsupported timestamp mode. %s", this.config.timestampMode)
         );
     }
-
-    //TODO: Comeback and add timestamp support.
 
     SourceRecord sourceRecord = record(
         key,

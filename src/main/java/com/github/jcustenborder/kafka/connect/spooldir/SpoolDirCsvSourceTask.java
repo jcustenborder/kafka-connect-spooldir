@@ -40,8 +40,6 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
   private ICSVParser csvParser;
   private CSVReader csvReader;
   private InputStreamReader streamReader;
-  private Map<String, String> fileMetadata;
-
 
   @Override
   protected SpoolDirCsvSourceConnectorConfig config(Map<String, ?> settings) {
@@ -49,7 +47,7 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
   }
 
   @Override
-  protected void configure(InputStream inputStream, Map<String, String> metadata, final Long lastOffset) throws IOException {
+  protected void configure(InputStream inputStream, final Long lastOffset) throws IOException {
     log.trace("configure() - creating csvParser");
     this.csvParser = this.config.createCSVParserBuilder();
     this.streamReader = new InputStreamReader(inputStream, this.config.charset);
@@ -81,7 +79,6 @@ public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceC
     }
 
     this.fieldNames = fieldNames;
-    this.fileMetadata = metadata;
   }
 
   @Override

@@ -21,6 +21,8 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.errors.ConnectException;
+import org.apache.kafka.connect.header.ConnectHeaders;
+import org.apache.kafka.connect.header.Headers;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -101,7 +104,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   protected abstract CONF config(Map<String, ?> settings);
 
-  protected abstract void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException;
+  protected abstract void configure(InputStream inputStream, Long lastOffset) throws IOException;
 
   protected abstract List<SourceRecord> process() throws IOException;
 
@@ -174,6 +177,13 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   AbstractCleanUpPolicy cleanUpPolicy;
 
+  static final String HEADER_PATH = "file.path";
+  static final String HEADER_NAME = "file.name";
+  static final String HEADER_LAST_MODIFIED = "file.last.modified";
+  static final String HEADER_LENGTH = "file.length";
+
+  Headers headers;
+
   public List<SourceRecord> read() {
     try {
       if (!hasRecords) {
@@ -198,6 +208,13 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         this.inputFile = nextFile;
         this.inputFileModifiedTime = this.inputFile.inputFile.lastModified();
 
+        ConnectHeaders headers = new ConnectHeaders();
+        headers.addString(HEADER_NAME, this.inputFile.inputFile.getName());
+        headers.addString(HEADER_PATH, this.inputFile.inputFile.getPath());
+        headers.addLong(HEADER_LENGTH, this.inputFile.inputFile.length());
+        headers.addTimestamp(HEADER_LAST_MODIFIED, new Date(this.inputFileModifiedTime));
+        this.headers = headers;
+
         try {
           this.inputFile.openStream();
           this.sourcePartition = ImmutableMap.of(
@@ -214,8 +231,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
           this.cleanUpPolicy = AbstractCleanUpPolicy.create(this.config, this.inputFile);
           this.recordCount = 0;
-          log.trace("read() - calling configure()");
-          configure(this.inputFile.inputStream, this.metadata, lastOffset);
+          log.trace("read() - calling configure(lastOffset={})", lastOffset);
+          configure(this.inputFile.inputStream, lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }
@@ -252,10 +269,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       SchemaAndValue key,
       SchemaAndValue value,
       Long timestamp) {
-    Map<String, ?> sourceOffset = ImmutableMap.of(
-        "offset",
-        recordOffset()
-    );
+    Map<String, ?> sourceOffset = offset();
 
     return new SourceRecord(
         this.sourcePartition,
@@ -266,7 +280,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         null != key ? key.value() : null,
         value.schema(),
         value.value(),
-        timestamp
+        timestamp,
+        headers
     );
   }
 

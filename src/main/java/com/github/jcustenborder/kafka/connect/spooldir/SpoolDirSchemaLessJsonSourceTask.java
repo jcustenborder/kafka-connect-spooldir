@@ -45,7 +45,7 @@ public class SpoolDirSchemaLessJsonSourceTask extends AbstractSourceTask<SpoolDi
   long recordOffset;
 
   @Override
-  protected void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException {
+  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
     if (null != this.parser) {
       this.parser.close();
     }

@@ -73,8 +73,6 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
 
   public final Schema keySchema;
   public final Schema valueSchema;
-  public final Field keyMetadataField;
-  public final Field valueMetadataField;
   public final SimpleDateFormat[] parserTimestampDateFormats;
   public final TimeZone parserTimestampTimezone;
 
@@ -84,8 +82,6 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
   public final boolean schemaGenerationEnabled;
   public final String schemaGenerationKeyName;
   public final String schemaGenerationValueName;
-  public boolean hasKeyMetadataField;
-  public boolean hasvalueMetadataField;
 
   public SpoolDirSourceConnectorConfig(final boolean isTask, ConfigDef configDef, Map<String, ?> settings) {
     super(configDef, settings);
@@ -140,22 +136,6 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
       );
     }
 
-    if (null != this.keySchema) {
-      this.keyMetadataField = findMetadataField(this.keySchema);
-      this.hasKeyMetadataField = null != this.keyMetadataField;
-    } else {
-      this.keyMetadataField = null;
-      this.hasKeyMetadataField = false;
-    }
-
-    if (null != this.valueSchema) {
-      this.valueMetadataField = findMetadataField(this.valueSchema);
-      this.hasvalueMetadataField = null != this.valueMetadataField;
-    } else {
-      this.valueMetadataField = null;
-      this.hasvalueMetadataField = false;
-    }
-
     if (TimestampMode.FIELD == this.timestampMode) {
       this.timestampField = this.getString(TIMESTAMP_FIELD_CONF);
 
@@ -204,19 +184,6 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
           String.format("'%s' must be set to a valid schema.", VALUE_SCHEMA_CONF)
       );
     }
-  }
-
-  private static final Field findMetadataField(Schema schema) {
-    Field result = null;
-    for (Field field : schema.fields()) {
-      if (METADATA_SCHEMA_NAME.equals(field.schema().name()) &&
-          Schema.Type.MAP == field.schema().type() &&
-          Schema.Type.STRING == field.schema().valueSchema().type()) {
-        result = field;
-        break;
-      }
-    }
-    return result;
   }
 
   public static ConfigDef config() {
