@@ -51,7 +51,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String CLEANUP_POLICY_DOC = "Determines how the connector should cleanup the " +
       "files that have been successfully processed. NONE leaves the files in place which could " +
       "cause them to be reprocessed if the connector is restarted. DELETE removes the file from the " +
-      "filesystem. MOVE will move the file to a finished directory.";
+      "filesystem. MOVE will move the file to a finished directory. MOVEBYDATE will move the file to " +
+      "a finished directory with subdirectories by date";
   public static final String GROUP_FILESYSTEM = "File System";
   public static final String GROUP_GENERAL = "General";
   //DirectoryMonitorConfig
@@ -282,7 +283,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public enum CleanupPolicy {
     NONE,
     DELETE,
-    MOVE
+    MOVE,
+    MOVEBYDATE
   }
 
   public enum FileAttribute {
