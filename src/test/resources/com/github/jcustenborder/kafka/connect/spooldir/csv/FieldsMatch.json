@@ -309,14 +309,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 2
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -325,7 +332,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -568,14 +575,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 3
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -584,7 +598,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -825,14 +839,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -841,7 +862,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -1084,14 +1105,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1100,7 +1128,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -1342,14 +1370,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 6
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1358,7 +1393,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -1600,14 +1635,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 7
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1616,7 +1658,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -1859,14 +1901,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 8
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1875,7 +1924,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -2117,14 +2166,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 9
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2133,7 +2189,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -2375,14 +2431,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 10
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2391,7 +2454,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -2634,14 +2697,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 11
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2650,7 +2720,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -2893,14 +2963,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 12
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2909,7 +2986,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -3152,14 +3229,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 13
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -3168,7 +3252,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -3410,14 +3494,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 14
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -3426,7 +3517,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -3669,14 +3760,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 15
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -3685,7 +3783,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -3928,14 +4026,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 16
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -3944,7 +4049,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -4186,14 +4291,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 17
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4202,7 +4314,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -4444,14 +4556,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 18
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4460,7 +4579,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -4702,14 +4821,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 19
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4718,7 +4844,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -4960,14 +5086,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 20
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4976,7 +5109,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   }, {
     "sourcePartition" : {
@@ -5219,14 +5352,21 @@
         "type" : "STRING",
         "isOptional" : false
       },
-      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559833071368-0/input/FieldsMatch.csv"
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925244697-0/input/FieldsMatch.csv"
     }, {
       "name" : "file.length",
       "schema" : {
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 1969
+      "storage" : 1968
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 21
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -5235,7 +5375,7 @@
         "version" : 1,
         "isOptional" : false
       },
-      "storage" : 1559833071000
+      "storage" : 1559925244000
     } ]
   } ]
 }
