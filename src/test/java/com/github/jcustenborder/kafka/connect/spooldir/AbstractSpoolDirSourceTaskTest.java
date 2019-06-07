@@ -167,12 +167,8 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     assertNull(records, "records should be null after first poll.");
     assertFalse(inputFile.exists(), String.format("inputFile %s should not exist.", inputFile));
     assertFalse(processingFile.exists(), String.format("processingFile %s should not exist.", processingFile));
-
-    assertNull(records, "records should be null after first poll.");
-
     final File finishedFile = new File(this.finishedPath, inputFileName);
     assertTrue(finishedFile.exists(), String.format("finishedFile %s should exist.", finishedFile));
-
   }
 
   protected List<TestCase> loadTestCases(String packageName) throws IOException {
