@@ -24,7 +24,10 @@ import org.apache.kafka.connect.header.Headers;
 
 import java.util.Date;
 
-public class Metadata {
+/**
+ * Class is used to write metadata for the InputFile.
+ */
+class Metadata {
   public static final String METADATA_SCHEMA_NAME = "com.github.jcustenborder.kafka.connect.spooldir.Metadata";
   static final String HEADER_PATH = "file.path";
   static final String HEADER_NAME = "file.name";
@@ -51,7 +54,7 @@ public class Metadata {
    * Method is used to copy metadata from the file to the headers of the file.
    *
    * @param file
-   * @return
+   * @return Returns a Headers object populated with the metadata from the file.
    */
   public static Headers headers(InputFile file) {
     ConnectHeaders headers = new ConnectHeaders();
@@ -65,8 +68,8 @@ public class Metadata {
   /**
    * Method is used to copy the metadata from the headers to a struct.
    *
-   * @param headers
-   * @return
+   * @param headers Headers object to copy the headers from.
+   * @return Struct containing the metadata from the file processed.
    */
   public static Struct struct(Headers headers) {
     Struct result = new Struct(METADATA_SCHEMA);
