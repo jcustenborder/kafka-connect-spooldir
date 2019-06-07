@@ -259,7 +259,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         value.schema(),
         value.value(),
         timestamp,
-        Metadata.headers(this.inputFile)
+        Metadata.headers(this.inputFile, recordOffset())
     );
   }
 

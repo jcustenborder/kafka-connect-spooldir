@@ -33,10 +33,13 @@ class Metadata {
   static final String HEADER_NAME = "file.name";
   static final String HEADER_LAST_MODIFIED = "file.last.modified";
   static final String HEADER_LENGTH = "file.length";
+  static final String HEADER_OFFSET = "file.offset";
+
   static final String FIELD_PATH = "path";
   static final String FIELD_NAME = "name";
   static final String FIELD_LAST_MODIFIED = "last_modified";
   static final String FIELD_LENGTH = "length";
+  static final String FIELD_OFFSET = "offset";
   static final Schema METADATA_SCHEMA;
 
   static {
@@ -47,6 +50,7 @@ class Metadata {
         .field(FIELD_PATH, SchemaBuilder.string().doc("Absolute path of the file.").build())
         .field(FIELD_LAST_MODIFIED, Timestamp.builder().doc("Absolute path of the file.").build())
         .field(FIELD_LENGTH, SchemaBuilder.int64().doc("Length of the file.").build())
+        .field(FIELD_OFFSET, SchemaBuilder.int64().doc("Position of the record in the file.").build())
         .build();
   }
 
@@ -56,11 +60,12 @@ class Metadata {
    * @param file
    * @return Returns a Headers object populated with the metadata from the file.
    */
-  public static Headers headers(InputFile file) {
+  public static Headers headers(InputFile file, long offset) {
     ConnectHeaders headers = new ConnectHeaders();
     headers.addString(HEADER_NAME, file.getName());
     headers.addString(HEADER_PATH, file.getPath());
     headers.addLong(HEADER_LENGTH, file.length());
+    headers.addLong(HEADER_OFFSET, offset);
     headers.addTimestamp(HEADER_LAST_MODIFIED, new Date(file.lastModified()));
     return headers;
   }
@@ -77,6 +82,7 @@ class Metadata {
     result.put(FIELD_PATH, headers.lastWithName(HEADER_PATH));
     result.put(FIELD_LAST_MODIFIED, headers.lastWithName(HEADER_LAST_MODIFIED));
     result.put(FIELD_LENGTH, headers.lastWithName(HEADER_LENGTH));
+    result.put(HEADER_OFFSET, headers.lastWithName(HEADER_OFFSET));
     return result;
   }
 }
