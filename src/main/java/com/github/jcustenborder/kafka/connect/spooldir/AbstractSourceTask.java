@@ -112,7 +112,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
     checkDirectory(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.config.inputPath);
     checkDirectory(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.config.errorPath);
 
-    if (AbstractSourceConnectorConfig.CleanupPolicy.MOVE == this.config.cleanupPolicy) {
+    if(this.config.finishedPathRequired()) {
       checkDirectory(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.config.finishedPath);
     }
 
@@ -210,7 +210,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
           this.cleanUpPolicy = AbstractCleanUpPolicy.create(this.config, this.inputFile);
           this.recordCount = 0;
           log.trace("read() - calling configure(lastOffset={})", lastOffset);
-          configure(this.inputFile.inputStream, lastOffset);
+          configure(this.inputFile.inputStream(), lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }

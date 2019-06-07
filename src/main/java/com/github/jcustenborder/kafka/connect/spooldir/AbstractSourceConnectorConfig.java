@@ -114,12 +114,29 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public final int taskCount;
   public final TaskPartitioner taskPartitioner;
 
+
+  public final boolean finishedPathRequired() {
+    boolean result;
+
+    switch (this.cleanupPolicy) {
+      case MOVE:
+      case MOVEBYDATE:
+        result = true;
+        break;
+      default:
+        result = false;
+    }
+
+    return result;
+  }
+
+
   public AbstractSourceConnectorConfig(ConfigDef definition, Map<?, ?> originals) {
     super(definition, originals);
     this.inputPath = ConfigUtils.getAbsoluteFile(this, INPUT_PATH_CONFIG);
     this.cleanupPolicy = ConfigUtils.getEnum(CleanupPolicy.class, this, CLEANUP_POLICY_CONF);
 
-    if (CleanupPolicy.MOVE == this.cleanupPolicy) {
+    if (finishedPathRequired()) {
       this.finishedPath = ConfigUtils.getAbsoluteFile(this, FINISHED_PATH_CONFIG);
     } else {
       this.finishedPath = null;
