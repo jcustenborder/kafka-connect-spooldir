@@ -42,7 +42,7 @@ import java.util.TimeZone;
 
 
 @SuppressWarnings("WeakerAccess")
-public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnectorConfig {
+public abstract class AbstractSpoolDirSourceConnectorConfig extends AbstractSourceConnectorConfig {
   public static final String TIMESTAMP_FIELD_CONF = "timestamp.field";
   public static final String KEY_SCHEMA_CONF = "key.schema";
   public static final String VALUE_SCHEMA_CONF = "value.schema";
@@ -69,7 +69,7 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
   static final String SCHEMA_GENERATION_ENABLED_DOC = "Flag to determine if schemas should be dynamically generated. If set " +
       " to true, `" + KEY_SCHEMA_CONF + "` and `" + VALUE_SCHEMA_CONF + "` can be omitted, but `" + SCHEMA_GENERATION_KEY_NAME_CONF + "` " +
       "and `" + SCHEMA_GENERATION_VALUE_NAME_CONF + "` must be set.";
-  private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceConnectorConfig.class);
+  private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceConnectorConfig.class);
 
   public final Schema keySchema;
   public final Schema valueSchema;
@@ -83,8 +83,10 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
   public final String schemaGenerationKeyName;
   public final String schemaGenerationValueName;
 
-  public SpoolDirSourceConnectorConfig(final boolean isTask, ConfigDef configDef, Map<String, ?> settings) {
-    super(configDef, settings);
+
+  public AbstractSpoolDirSourceConnectorConfig(final boolean isTask, boolean bufferedInputStream, ConfigDef configDef, Map<String, ?> settings) {
+    super(configDef, settings, bufferedInputStream);
+
 
     this.keyFields = this.getList(SCHEMA_GENERATION_KEY_FIELDS_CONF);
     this.schemaGenerationEnabled = this.getBoolean(SCHEMA_GENERATION_ENABLED_CONF);
@@ -186,7 +188,7 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
     }
   }
 
-  public static ConfigDef config() {
+  protected static ConfigDef config(boolean bufferedInputStream) {
 
     ConfigDef.Recommender schemaRecommender = new ConfigDef.Recommender() {
       @Override
@@ -219,7 +221,7 @@ public abstract class SpoolDirSourceConnectorConfig extends AbstractSourceConnec
     };
 
 
-    return AbstractSourceConnectorConfig.config()
+    return AbstractSourceConnectorConfig.config(bufferedInputStream)
         .define(
             ConfigKeyBuilder.of(KEY_SCHEMA_CONF, Type.STRING)
                 .documentation(KEY_SCHEMA_DOC)

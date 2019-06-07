@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourceConnectorConfig> {
+public class SpoolDirJsonSourceTask extends AbstractSpoolDirSourceTask<SpoolDirJsonSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirJsonSourceTask.class);
   JsonFactory jsonFactory;
   JsonParser jsonParser;

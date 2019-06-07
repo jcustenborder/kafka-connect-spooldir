@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SpoolDirCsvSourceTask extends SpoolDirSourceTask<SpoolDirCsvSourceConnectorConfig> {
+public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCsvSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirCsvSourceTask.class);
   String[] fieldNames;
   private ICSVParser csvParser;

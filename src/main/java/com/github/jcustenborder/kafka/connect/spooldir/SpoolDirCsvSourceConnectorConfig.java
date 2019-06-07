@@ -34,7 +34,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
+class SpoolDirCsvSourceConnectorConfig extends AbstractSpoolDirSourceConnectorConfig {
 
   //CSVRecordProcessorConfig
   public static final String CSV_SKIP_LINES_CONF = "csv.skip.lines";
@@ -122,7 +122,7 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   public final boolean useRFC4180Parser;
 
   public SpoolDirCsvSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
-    super(isTask, conf(), settings);
+    super(isTask, true, config(), settings);
     this.skipLines = this.getInt(SpoolDirCsvSourceConnectorConfig.CSV_SKIP_LINES_CONF);
     this.separatorChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_SEPARATOR_CHAR_CONF);
     this.quoteChar = this.getChar(SpoolDirCsvSourceConnectorConfig.CSV_QUOTE_CHAR_CONF);
@@ -142,9 +142,9 @@ class SpoolDirCsvSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     this.useRFC4180Parser = this.getBoolean(CSV_USE_RFC_4180_PARSER_CONF);
   }
 
-  static final ConfigDef conf() {
+  static ConfigDef config() {
 
-    return SpoolDirSourceConnectorConfig.config()
+    return AbstractSpoolDirSourceConnectorConfig.config(true)
         .define(
             ConfigKeyBuilder.of(CSV_SKIP_LINES_CONF, ConfigDef.Type.INT)
                 .defaultValue(CSV_SKIP_LINES_DEFAULT)

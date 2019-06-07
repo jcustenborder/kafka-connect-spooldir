@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-public class SpoolDirJsonSourceTaskTest extends SpoolDirSourceTaskTest<SpoolDirJsonSourceTask> {
+public class SpoolDirJsonSourceTaskTest extends AbstractSpoolDirSourceTaskTest<SpoolDirJsonSourceTask> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirJsonSourceTaskTest.class);
 
   @Override

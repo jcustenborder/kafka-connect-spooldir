@@ -69,7 +69,7 @@ public class InputFileDequeue extends ForwardingDeque<InputFile> {
         .filter(this.processingFileExists)
         .filter(this.fileMinimumAge)
         .sorted(this.fileComparator)
-        .map(f -> new InputFile(f, processingFile(this.config.processingFileExtension, f)))
+        .map(f -> new InputFile(f, processingFile(this.config.processingFileExtension, f), this.config.fileBufferSizeBytes))
         .collect(Collectors.toCollection(ArrayDeque::new));
     return this.files;
   }

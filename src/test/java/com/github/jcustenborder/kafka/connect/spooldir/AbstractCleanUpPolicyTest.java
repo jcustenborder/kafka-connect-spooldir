@@ -29,7 +29,7 @@ public abstract class AbstractCleanUpPolicyTest<T extends AbstractCleanUpPolicy>
     this.finishedPath = Files.createTempDir();
     File inputFile = File.createTempFile("input", "file");
     File processingFlag = new File(inputFile.getParent(), inputFile.getName() + ".PROCESSING");
-    this.inputFile = new InputFile(inputFile, processingFlag);
+    this.inputFile = new InputFile(inputFile, processingFlag, 0);
     this.cleanupPolicy = create(this.inputFile, this.errorPath, this.finishedPath);
   }
 

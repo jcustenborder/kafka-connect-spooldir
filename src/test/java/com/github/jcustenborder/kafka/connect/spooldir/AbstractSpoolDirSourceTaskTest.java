@@ -48,8 +48,8 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
-  private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTaskTest.class);
+public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTask> {
+  private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceTaskTest.class);
 
   protected File tempDirectory;
   protected File inputPath;
@@ -91,8 +91,8 @@ public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
 
     Map<String, String> settings = this.settings();
     settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
-    settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
-    settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
+    settings.put(AbstractSpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
+    settings.put(AbstractSpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
 
     if (null != testCase.settings && !testCase.settings.isEmpty()) {
       settings.putAll(testCase.settings);

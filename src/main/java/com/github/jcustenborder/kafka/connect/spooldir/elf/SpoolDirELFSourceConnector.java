@@ -15,8 +15,8 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
-import com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator;
-import com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSourceConnector;
+import com.github.jcustenborder.kafka.connect.spooldir.AbstractSchemaGenerator;
+import com.github.jcustenborder.kafka.connect.spooldir.AbstractSpoolDirSourceConnector;
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
 import org.apache.kafka.common.config.ConfigDef;
@@ -27,7 +27,7 @@ import java.util.Map;
 @Title("Extended Log File Format Source Connector")
 @Description("This connector is used to stream `Extended Log File Format <https://www.w3.org/TR/WD-logfile.html>` " +
     "files from a directory while converting the data to a strongly typed schema.")
-public class SpoolDirELFSourceConnector extends SpoolDirSourceConnector<SpoolDirELFSourceConnectorConfig> {
+public class SpoolDirELFSourceConnector extends AbstractSpoolDirSourceConnector<SpoolDirELFSourceConnectorConfig> {
 
   @Override
   protected SpoolDirELFSourceConnectorConfig config(Map<String, String> settings) {
@@ -35,7 +35,7 @@ public class SpoolDirELFSourceConnector extends SpoolDirSourceConnector<SpoolDir
   }
 
   @Override
-  protected SchemaGenerator<SpoolDirELFSourceConnectorConfig> generator(Map<String, String> settings) {
+  protected AbstractSchemaGenerator<SpoolDirELFSourceConnectorConfig> generator(Map<String, String> settings) {
     return null;
   }
 
@@ -46,6 +46,6 @@ public class SpoolDirELFSourceConnector extends SpoolDirSourceConnector<SpoolDir
 
   @Override
   public ConfigDef config() {
-    return SpoolDirELFSourceConnectorConfig.config();
+    return SpoolDirELFSourceConnectorConfig.config(true);
   }
 }

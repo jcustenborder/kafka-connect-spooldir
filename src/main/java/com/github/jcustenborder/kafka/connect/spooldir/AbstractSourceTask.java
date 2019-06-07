@@ -194,7 +194,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         }
         this.inputFile = nextFile;
         try {
-          this.inputFile.openStream();
+          this.inputFile.openStream(this.config.bufferedInputStream);
           this.sourcePartition = ImmutableMap.of(
               "fileName", this.inputFile.getName()
           );

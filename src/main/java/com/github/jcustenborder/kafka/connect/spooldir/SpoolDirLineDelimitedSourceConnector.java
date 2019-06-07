@@ -58,7 +58,7 @@ public class SpoolDirLineDelimitedSourceConnector extends SourceConnector {
 
   @Override
   public ConfigDef config() {
-    return SpoolDirLineDelimitedSourceConnectorConfig.config();
+    return SpoolDirLineDelimitedSourceConnectorConfig.config(true);
   }
 
   @Override

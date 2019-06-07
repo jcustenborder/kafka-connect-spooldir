@@ -15,18 +15,18 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
-import com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSourceConnectorConfig;
+import com.github.jcustenborder.kafka.connect.spooldir.AbstractSpoolDirSourceConnectorConfig;
 import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
-class SpoolDirELFSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
+class SpoolDirELFSourceConnectorConfig extends AbstractSpoolDirSourceConnectorConfig {
 
   public final char separatorChar;
 
   public SpoolDirELFSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
-    super(isTask, config(), settings);
+    super(isTask, true, config(true), settings);
     this.separatorChar = (char) ((int) getInt(SEPARATOR_CHAR_CONF));
   }
 
@@ -43,8 +43,8 @@ class SpoolDirELFSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
     return false;
   }
 
-  public static ConfigDef config() {
-    return SpoolDirSourceConnectorConfig.config()
+  public static ConfigDef config(boolean bufferedInputStream) {
+    return AbstractSpoolDirSourceConnectorConfig.config(bufferedInputStream)
         .define(
             ConfigKeyBuilder.of(SEPARATOR_CHAR_CONF, ConfigDef.Type.INT)
                 .documentation(SEPARATOR_CHAR_DOC)

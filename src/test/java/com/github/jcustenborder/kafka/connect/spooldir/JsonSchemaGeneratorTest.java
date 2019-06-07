@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static com.github.jcustenborder.kafka.connect.utils.AssertSchema.assertSchema;
 
-public class JsonSchemaGeneratorTest extends SchemaGeneratorTest {
+public class JsonSchemaGeneratorTest extends AbstractSchemaGeneratorTest {
 
   @Test
   public void schema() throws IOException {

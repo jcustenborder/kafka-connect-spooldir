@@ -19,9 +19,9 @@ import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
-class SpoolDirJsonSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
+class SpoolDirJsonSourceConnectorConfig extends AbstractSpoolDirSourceConnectorConfig {
   public SpoolDirJsonSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
-    super(isTask, config(), settings);
+    super(isTask, true, config(), settings);
   }
 
   @Override
@@ -30,7 +30,7 @@ class SpoolDirJsonSourceConnectorConfig extends SpoolDirSourceConnectorConfig {
   }
 
   public static ConfigDef config() {
-    return SpoolDirSourceConnectorConfig.config();
+    return AbstractSpoolDirSourceConnectorConfig.config(true);
   }
 
 }

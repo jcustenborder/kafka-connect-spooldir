@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
-import com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSourceTask;
+import com.github.jcustenborder.kafka.connect.spooldir.AbstractSpoolDirSourceTask;
 import com.github.jcustenborder.parsers.elf.ElfParser;
 import com.github.jcustenborder.parsers.elf.ElfParserBuilder;
 import com.github.jcustenborder.parsers.elf.LogEntry;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceConnectorConfig> {
+public class SpoolDirELFSourceTask extends AbstractSpoolDirSourceTask<SpoolDirELFSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirELFSourceTask.class);
   ElfParser parser;
   ElfParserBuilder parserBuilder;

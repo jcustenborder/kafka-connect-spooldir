@@ -27,7 +27,7 @@ import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SpoolDirJsonSourceConnectorTest extends SpoolDirSourceConnectorTest<SpoolDirJsonSourceConnector> {
+public class SpoolDirJsonSourceConnectorTest extends AbstractSpoolDirSourceConnectorTest<SpoolDirJsonSourceConnector> {
   @Override
   protected SpoolDirJsonSourceConnector createConnector() {
     return new SpoolDirJsonSourceConnector();

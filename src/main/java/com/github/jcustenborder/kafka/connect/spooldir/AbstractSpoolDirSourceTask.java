@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public abstract class SpoolDirSourceTask<CONF extends SpoolDirSourceConnectorConfig> extends AbstractSourceTask<CONF> {
-  private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTask.class);
+public abstract class AbstractSpoolDirSourceTask<CONF extends AbstractSpoolDirSourceConnectorConfig> extends AbstractSourceTask<CONF> {
+  private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceTask.class);
   protected Parser parser;
 
   @Override

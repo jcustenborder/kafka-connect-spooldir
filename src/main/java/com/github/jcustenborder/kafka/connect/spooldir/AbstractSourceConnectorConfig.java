@@ -78,7 +78,7 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
       "[ConnectRecord](https://kafka.apache.org/0102/javadoc/org/apache/kafka/connect/connector/ConnectRecord.html#timestamp()). " +
       "If set to `Field` then the timestamp will be read from a field in the value. This field cannot be optional and must be " +
       "a [Timestamp](https://kafka.apache.org/0102/javadoc/org/apache/kafka/connect/data/Schema.html). Specify the field " +
-      " in `" + SpoolDirSourceConnectorConfig.TIMESTAMP_FIELD_CONF + "`. " +
+      " in `" + AbstractSpoolDirSourceConnectorConfig.TIMESTAMP_FIELD_CONF + "`. " +
       "If set to `FILE_TIME` then " +
       "the last modified time of the file will be used. If set to `PROCESS_TIME` the time the record is read will be used.";
   static final String FILE_SORT_ATTRIBUTES_DOC = "The attributes each file will use to determine the sort order. " +
@@ -95,6 +95,10 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String TASK_PARTITIONER_CONF = "task.partitioner";
   static final String TASK_PARTITIONER_DOC = "The task partitioner implementation to use to select " +
       "which files will be processed by the task.";
+
+  public static final String FILE_BUFFER_SIZE_CONF = "file.buffer.size.bytes";
+  static final String FILE_BUFFER_SIZE_DOC = "The size of buffer for the BufferedInputStream that will be used to " +
+      "interact with the file system.";
 
 
   public final File inputPath;
@@ -113,6 +117,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public final int taskIndex;
   public final int taskCount;
   public final TaskPartitioner taskPartitioner;
+  public final boolean bufferedInputStream;
+  public final int fileBufferSizeBytes;
 
 
   public final boolean finishedPathRequired() {
@@ -131,8 +137,9 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   }
 
 
-  public AbstractSourceConnectorConfig(ConfigDef definition, Map<?, ?> originals) {
+  public AbstractSourceConnectorConfig(ConfigDef definition, Map<?, ?> originals, boolean bufferedInputStream) {
     super(definition, originals);
+    this.bufferedInputStream = bufferedInputStream;
     this.inputPath = ConfigUtils.getAbsoluteFile(this, INPUT_PATH_CONFIG);
     this.cleanupPolicy = ConfigUtils.getEnum(CleanupPolicy.class, this, CLEANUP_POLICY_CONF);
 
@@ -157,11 +164,18 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     this.taskIndex = getInt(TASK_INDEX_CONF);
     this.taskCount = getInt(TASK_COUNT_CONF);
     this.taskPartitioner = ConfigUtils.getEnum(TaskPartitioner.class, this, TASK_PARTITIONER_CONF);
+
+    if (bufferedInputStream) {
+      this.fileBufferSizeBytes = getInt(FILE_BUFFER_SIZE_CONF);
+    } else {
+      this.fileBufferSizeBytes = 0;
+    }
   }
 
-  public static ConfigDef config() {
 
-    return new ConfigDef()
+
+  protected static ConfigDef config(boolean bufferedInputStream) {
+    final ConfigDef result = new ConfigDef()
         .define(
             ConfigKeyBuilder.of(TOPIC_CONF, ConfigDef.Type.STRING)
                 .documentation(TOPIC_DOC)
@@ -288,6 +302,20 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
                 .group(GROUP_FILESYSTEM)
                 .build()
         );
+
+    if (bufferedInputStream) {
+      result.define(
+          ConfigKeyBuilder.of(FILE_BUFFER_SIZE_CONF, ConfigDef.Type.INT)
+              .documentation(FILE_BUFFER_SIZE_DOC)
+              .importance(ConfigDef.Importance.LOW)
+              .validator(ConfigDef.Range.atLeast(1))
+              .defaultValue(128 * 1024)
+              .group(GROUP_FILESYSTEM)
+              .build()
+      );
+    }
+
+    return result;
   }
 
   public enum TimestampMode {

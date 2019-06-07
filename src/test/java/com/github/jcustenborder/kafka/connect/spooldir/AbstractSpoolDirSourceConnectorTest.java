@@ -16,18 +16,43 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.google.common.io.Files;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SchemaGeneratorTest {
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+public abstract class AbstractSpoolDirSourceConnectorTest<T extends AbstractSpoolDirSourceConnector> {
+  private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceConnectorTest.class);
+  protected T connector;
   protected Map<String, String> settings;
   File tempRoot;
   File inputPath;
   File finishedPath;
   File errorPath;
+
+  protected abstract T createConnector();
+
+  @BeforeEach
+  public void before() {
+    this.connector = createConnector();
+  }
+
+  @Test
+  public void taskClass() {
+    assertNotNull(this.connector.taskClass());
+  }
 
   @BeforeEach
   public void createTempDir() {
@@ -44,6 +69,27 @@ public class SchemaGeneratorTest {
     this.settings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.getAbsolutePath());
     this.settings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.getAbsolutePath());
     this.settings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "dummy");
+    this.settings.put(AbstractSpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
   }
+
+  @AfterEach
+  public void cleanupTempDir() throws IOException {
+    java.nio.file.Files.walkFileTree(this.tempRoot.toPath(), new SimpleFileVisitor<Path>() {
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        log.trace("cleanupTempDir() - Removing {}", file);
+        java.nio.file.Files.delete(file);
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        log.trace("cleanupTempDir() - Removing {}", file);
+        java.nio.file.Files.delete(file);
+        return FileVisitResult.CONTINUE;
+      }
+    });
+  }
+
 
 }
