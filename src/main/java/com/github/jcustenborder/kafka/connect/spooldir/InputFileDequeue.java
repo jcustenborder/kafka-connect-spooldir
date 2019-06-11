@@ -57,7 +57,7 @@ public class InputFileDequeue extends ForwardingDeque<InputFile> {
       return files;
     }
 
-    log.info("Searching for file(s) in {}", this.config.inputPath);
+    log.trace("delegate() - Searching for file(s) in {}", this.config.inputPath);
     File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
     if (null == input || input.length == 0) {
       log.info("No files matching {} were found in {}", AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
