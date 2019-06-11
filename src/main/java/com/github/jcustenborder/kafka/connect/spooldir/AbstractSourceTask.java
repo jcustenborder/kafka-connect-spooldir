@@ -162,12 +162,48 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
     return results;
   }
 
+  //
+
+  /**
+   * Calculates the byte count in a human readable form. Special thanks to
+   * https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+   *
+   * @param bytes
+   * @param si
+   * @return
+   */
+  public static String humanReadableByteCount(long bytes, boolean si) {
+    final int unit = si ? 1000 : 1024;
+    if (bytes < unit) return bytes + " B";
+    int exp = (int) (Math.log(bytes) / Math.log(unit));
+    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+  }
+
   private void recordProcessingTime() {
-    log.info(
-        "Finished processing {} record(s) in {} second(s).",
-        this.recordCount,
-        processingTime.elapsed(TimeUnit.SECONDS)
-    );
+    final long secondsElapsed = processingTime.elapsed(TimeUnit.SECONDS);
+    final long bytesPerSecond;
+
+    if (0L == secondsElapsed || 0L == this.inputFile.length()) {
+      bytesPerSecond = 0L;
+    } else {
+      bytesPerSecond = this.inputFile.length() / secondsElapsed;
+    }
+
+    if (bytesPerSecond > 0) {
+      log.info(
+          "Finished processing {} record(s) in {} second(s). Processing speed {} per second.",
+          this.recordCount,
+          secondsElapsed,
+          humanReadableByteCount(bytesPerSecond, false)
+      );
+    } else {
+      log.info(
+          "Finished processing {} record(s) in {} second(s).",
+          this.recordCount,
+          secondsElapsed
+      );
+    }
   }
 
   AbstractCleanUpPolicy cleanUpPolicy;
