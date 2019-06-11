@@ -193,7 +193,7 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
             ConfigKeyBuilder.of(EMPTY_POLL_WAIT_MS_CONF, ConfigDef.Type.LONG)
                 .documentation(EMPTY_POLL_WAIT_MS_DOC)
                 .importance(ConfigDef.Importance.LOW)
-                .defaultValue(250L)
+                .defaultValue(500L)
                 .validator(ConfigDef.Range.between(1L, Long.MAX_VALUE))
                 .group(GROUP_GENERAL)
                 .build()
