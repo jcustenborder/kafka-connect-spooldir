@@ -27,7 +27,7 @@
         <version>2.1.1-cp1</version>
     </parent>
     <artifactId>kafka-connect-spooldir</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>kafka-connect-spooldir</name>
     <description>A Kafka Connect connector reading delimited files from the file system.
     </description>
@@ -62,11 +62,6 @@
     </issueManagement>
     <dependencies>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
             <groupId>net.sourceforge.argparse4j</groupId>
             <artifactId>argparse4j</artifactId>
             <version>0.7.0</version>
@@ -78,12 +73,6 @@
             <version>4.5</version>
         </dependency>
         <dependency>
-            <groupId>io.confluent</groupId>
-            <artifactId>kafka-connect-avro-converter</artifactId>
-            <version>5.2.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.18</version>
@@ -91,7 +80,7 @@
         <dependency>
             <groupId>com.github.jcustenborder.parsers</groupId>
             <artifactId>extended-log-format</artifactId>
-            <version>[0.0.2.13, 0.0.2.1000)</version>
+            <version>[0.0.1.2, 0.0.1.1000)</version>
         </dependency>
     </dependencies>
     <build>
@@ -107,10 +96,8 @@
                             <goal>kafka-connect</goal>
                         </goals>
                         <configuration>
-                            <confluentControlCenterIntegration>true
-                            </confluentControlCenterIntegration>
-                            <documentationUrl>
-                                https://docs.confluent.io/current/connect/kafka-connect-spooldir/
+                            <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
+                            <documentationUrl>https://docs.confluent.io/current/connect/kafka-connect-spooldir/
                             </documentationUrl>
                             <componentTypes>
                                 <componentType>source</componentType>
@@ -123,19 +110,9 @@
                             </tags>
                             <title>Kafka Connect Spooldir</title>
                             <supportProviderName>Confluent, Inc.</supportProviderName>
-                            <supportUrl>
-                                https://docs.confluent.io/current/connect/kafka-connect-spooldir/
-                            </supportUrl>
-                            <supportSummary><![CDATA[Confluent is introducing this preview connector to
-                                        gain early feedback from developers. It should only be used for
-                                        evaluation and non-production testing purposes or to provide
-                                        feedback to Confluent and is subject to the
-                                        <a href="https://www.confluent.io/confluent-software-evaluation-license/">Confluent Software Evaluation License.</a>
-                                        Confluent will provide support for this connector for evaluation and non-production testing purposes.
-                                         Comments, questions and suggestions related to preview features
-                                        are encouraged. Confluent customers may submit questions and suggestions, and file support tickets via the
-                                        <a href="https://support.confluent.io/">Confluent Support Portal.</a>]]>
-                            </supportSummary>
+                            <supportUrl>https://docs.confluent.io/current/connect/kafka-connect-spooldir/</supportUrl>
+                            <supportSummary><![CDATA[This connector is <a href="https://www.confluent.io/subscription/">supported by Confluent</a> as part of a
+                              <a href="https://www.confluent.io/product/confluent-platform/">Confluent Platform</a> subscription.]]></supportSummary>
                         </configuration>
                     </execution>
                 </executions>
