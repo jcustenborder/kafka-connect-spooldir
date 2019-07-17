@@ -24,6 +24,8 @@ import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.source.SourceConnector;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,8 +51,17 @@ public class SpoolDirSchemaLessJsonSourceConnector extends SourceConnector {
   }
 
   @Override
-  public List<Map<String, String>> taskConfigs(int i) {
-    return TaskConfigs.single(this.settings);
+  public List<Map<String, String>> taskConfigs(int taskCount) {
+    List<Map<String, String>> result = new ArrayList<>();
+
+    for (int i = 0; i < taskCount; i++) {
+      Map<String, String> taskConfig = new LinkedHashMap<>(this.settings);
+      taskConfig.put(AbstractSourceConnectorConfig.TASK_INDEX_CONF, Integer.toString(i));
+      taskConfig.put(AbstractSourceConnectorConfig.TASK_COUNT_CONF, Integer.toString(taskCount));
+      result.add(taskConfig);
+    }
+
+    return result;
   }
 
   @Override
