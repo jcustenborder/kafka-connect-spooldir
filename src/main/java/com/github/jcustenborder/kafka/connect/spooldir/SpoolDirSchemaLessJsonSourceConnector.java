@@ -18,7 +18,6 @@ package com.github.jcustenborder.kafka.connect.spooldir;
 import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationImportant;
-import com.github.jcustenborder.kafka.connect.utils.config.TaskConfigs;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
