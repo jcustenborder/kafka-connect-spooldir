@@ -99,7 +99,17 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String FILE_BUFFER_SIZE_CONF = "file.buffer.size.bytes";
   static final String FILE_BUFFER_SIZE_DOC = "The size of buffer for the BufferedInputStream that will be used to " +
       "interact with the file system.";
-
+  static final String METADATA_LOCATION_CONF = "metadata.location";
+  static final String METADATA_LOCATION_DOC = "Location that metadata about the input file will be stored. " +
+      "`FIELD` - Metadata about the file will be stored in a field in the value of the record. `HEADERS` " +
+      "- Metadata about the input file will be stored as headers on the record. `NONE` - no metadata " +
+      "about the input file will be stored.";
+  static final String METADATA_FIELD_CONF = "metadata.field";
+  static final String METADATA_FIELD_DOC = "Location that metadata about the input file will be stored. " +
+      "`FIELD` - Metadata about the file will be stored in a field in the value of the record. `HEADERS` " +
+      "- Metadata about the input file will be stored as headers on the record. `NONE` - no metadata " +
+      "about the input file will be stored.";
+  public static final String GROUP_METADATA = "Metadata";
 
   public final File inputPath;
   public final File finishedPath;
@@ -119,7 +129,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public final TaskPartitioner taskPartitioner;
   public final boolean bufferedInputStream;
   public final int fileBufferSizeBytes;
-
+  public final MetadataLocation metadataLocation;
+  public final String metadataField;
 
   public final boolean finishedPathRequired() {
     boolean result;
@@ -170,8 +181,9 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     } else {
       this.fileBufferSizeBytes = 0;
     }
+    this.metadataLocation = ConfigUtils.getEnum(MetadataLocation.class, this, METADATA_LOCATION_CONF);
+    this.metadataField = this.getString(METADATA_FIELD_CONF);
   }
-
 
 
   protected static ConfigDef config(boolean bufferedInputStream) {
@@ -300,6 +312,23 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
                 .validator(Validators.validEnum(TaskPartitioner.class))
                 .defaultValue(TaskPartitioner.ByName.toString())
                 .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(METADATA_LOCATION_CONF, ConfigDef.Type.STRING)
+                .documentation(METADATA_LOCATION_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .group(GROUP_METADATA)
+                .recommender(Recommenders.enumValues(MetadataLocation.class))
+                .validator(Validators.validEnum(MetadataLocation.class))
+                .defaultValue(MetadataLocation.HEADERS.toString())
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(METADATA_FIELD_CONF, ConfigDef.Type.STRING)
+                .documentation(METADATA_FIELD_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .group(GROUP_METADATA)
+                .recommender(Recommenders.visibleIf(METADATA_LOCATION_CONF, MetadataLocation.FIELD.toString()))
+                .defaultValue("metadata")
                 .build()
         );
 

@@ -69,6 +69,7 @@ public abstract class AbstractSpoolDirSourceConnectorConfig extends AbstractSour
   static final String SCHEMA_GENERATION_ENABLED_DOC = "Flag to determine if schemas should be dynamically generated. If set " +
       " to true, `" + KEY_SCHEMA_CONF + "` and `" + VALUE_SCHEMA_CONF + "` can be omitted, but `" + SCHEMA_GENERATION_KEY_NAME_CONF + "` " +
       "and `" + SCHEMA_GENERATION_VALUE_NAME_CONF + "` must be set.";
+
   private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceConnectorConfig.class);
 
   public final Schema keySchema;

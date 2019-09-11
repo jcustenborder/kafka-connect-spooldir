@@ -285,18 +285,39 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       Long timestamp) {
     Map<String, ?> sourceOffset = offset();
 
-    return new SourceRecord(
-        this.sourcePartition,
-        sourceOffset,
-        this.config.topic,
-        null,
-        null != key ? key.schema() : null,
-        null != key ? key.value() : null,
-        value.schema(),
-        value.value(),
-        timestamp,
-        Metadata.headers(this.inputFile, recordOffset())
-    );
+    SourceRecord result;
+
+    switch (this.config.metadataLocation) {
+      case HEADERS:
+        result = new SourceRecord(
+            this.sourcePartition,
+            sourceOffset,
+            this.config.topic,
+            null,
+            null != key ? key.schema() : null,
+            null != key ? key.value() : null,
+            value.schema(),
+            value.value(),
+            timestamp,
+            this.inputFile.metadata().headers(recordOffset())
+        );
+        break;
+      default:
+        result = new SourceRecord(
+            this.sourcePartition,
+            sourceOffset,
+            this.config.topic,
+            null,
+            null != key ? key.schema() : null,
+            null != key ? key.value() : null,
+            value.schema(),
+            value.value(),
+            timestamp
+        );
+        break;
+    }
+
+    return result;
   }
 
 

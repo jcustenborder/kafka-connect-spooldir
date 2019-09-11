@@ -39,6 +39,7 @@ class InputFile implements Closeable {
   private final long length;
   private final long lastModified;
   private final int bufferSize;
+  private final Metadata metadata;
 
   InputFile(File inputFile, File processingFlag, int bufferSize) {
     this.inputFile = inputFile;
@@ -48,6 +49,7 @@ class InputFile implements Closeable {
     this.lastModified = this.inputFile.lastModified();
     this.length = this.inputFile.length();
     this.processingFlag = processingFlag;
+    this.metadata = new Metadata(inputFile);
   }
 
   static final Map<String, String> SUPPORTED_COMPRESSION_TYPES = ImmutableMap.of(
@@ -57,6 +59,10 @@ class InputFile implements Closeable {
       "lz4", CompressorStreamFactory.LZ4_BLOCK,
       "z", CompressorStreamFactory.Z
   );
+
+  public Metadata metadata() {
+    return this.metadata;
+  }
 
   private InputStream inputStream;
 

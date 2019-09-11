@@ -22,6 +22,7 @@ import org.apache.kafka.connect.data.Timestamp;
 import org.apache.kafka.connect.header.ConnectHeaders;
 import org.apache.kafka.connect.header.Headers;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -42,6 +43,18 @@ class Metadata {
   static final String FIELD_OFFSET = "offset";
   static final Schema METADATA_SCHEMA;
 
+  final String path;
+  final String name;
+  final Date lastModified;
+  final long length;
+
+  public Metadata(File file) {
+    this.path = file.getAbsolutePath();
+    this.name = file.getName();
+    this.lastModified = new Date(file.lastModified());
+    this.length = file.length();
+  }
+
   static {
     METADATA_SCHEMA = SchemaBuilder.struct()
         .name(METADATA_SCHEMA_NAME)
@@ -57,32 +70,31 @@ class Metadata {
   /**
    * Method is used to copy metadata from the file to the headers of the file.
    *
-   * @param file
    * @return Returns a Headers object populated with the metadata from the file.
    */
-  public static Headers headers(InputFile file, long offset) {
+  public Headers headers(long offset) {
     ConnectHeaders headers = new ConnectHeaders();
-    headers.addString(HEADER_NAME, file.getName());
-    headers.addString(HEADER_PATH, file.getPath());
-    headers.addLong(HEADER_LENGTH, file.length());
+    headers.addString(HEADER_NAME, this.name);
+    headers.addString(HEADER_PATH, this.path);
+    headers.addLong(HEADER_LENGTH, this.length);
     headers.addLong(HEADER_OFFSET, offset);
-    headers.addTimestamp(HEADER_LAST_MODIFIED, new Date(file.lastModified()));
+    headers.addTimestamp(HEADER_LAST_MODIFIED, this.lastModified);
     return headers;
   }
 
   /**
    * Method is used to copy the metadata from the headers to a struct.
    *
-   * @param headers Headers object to copy the headers from.
    * @return Struct containing the metadata from the file processed.
    */
-  public static Struct struct(Headers headers) {
+  public Struct struct(long offset) {
+
     Struct result = new Struct(METADATA_SCHEMA);
-    result.put(FIELD_NAME, headers.lastWithName(HEADER_NAME));
-    result.put(FIELD_PATH, headers.lastWithName(HEADER_PATH));
-    result.put(FIELD_LAST_MODIFIED, headers.lastWithName(HEADER_LAST_MODIFIED));
-    result.put(FIELD_LENGTH, headers.lastWithName(HEADER_LENGTH));
-    result.put(HEADER_OFFSET, headers.lastWithName(HEADER_OFFSET));
+    result.put(FIELD_NAME, this.name);
+    result.put(FIELD_PATH, this.path);
+    result.put(FIELD_LAST_MODIFIED, this.lastModified);
+    result.put(FIELD_LENGTH, this.length);
+    result.put(HEADER_OFFSET, offset);
     return result;
   }
 }
