@@ -21,7 +21,6 @@ import com.github.jcustenborder.parsers.elf.ElfParserBuilder;
 import com.github.jcustenborder.parsers.elf.LogEntry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.SchemaAndValue;
-import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
@@ -48,7 +47,7 @@ public class SpoolDirELFSourceTask extends AbstractSpoolDirSourceTask<SpoolDirEL
   @Override
   public void start(Map<String, String> settings) {
     super.start(settings);
-    this.parserBuilder = ElfParserBuilder.of().separator(this.config.separatorChar);
+    this.parserBuilder = ElfParserBuilder.of();
   }
 
 
@@ -87,14 +86,14 @@ public class SpoolDirELFSourceTask extends AbstractSpoolDirSourceTask<SpoolDirEL
     LogEntry entry;
     try {
       while (null != (entry = next()) && records.size() < this.config.batchSize) {
-        Pair<Struct, Struct> converted = conversion.convert(entry);
-        final Struct keyStruct = converted.getKey();
-        final Struct valueStruct = converted.getValue();
+        log.trace("process() - Processing LogEntry: {}", entry);
+        Pair<SchemaAndValue, SchemaAndValue> converted = conversion.convert(entry);
+
 
         addRecord(
             records,
-            new SchemaAndValue(keyStruct.schema(), keyStruct),
-            new SchemaAndValue(valueStruct.schema(), valueStruct)
+            converted.getKey(),
+            converted.getValue()
         );
       }
     } catch (IOException ex) {

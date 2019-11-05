@@ -1,0 +1,1545 @@
+{
+  "settings" : {
+    "schema.generation.enabled" : "true"
+  },
+  "offset" : { },
+  "expected" : [ {
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.elf"
+    },
+    "sourceOffset" : {
+      "offset" : 0
+    },
+    "topic" : "testing",
+    "valueSchema" : {
+      "name" : "com.github.jcustenborder.kafka.connect.spooldir.LogEntry",
+      "type" : "STRUCT",
+      "isOptional" : false,
+      "fieldSchemas" : {
+        "date" : {
+          "name" : "org.apache.kafka.connect.data.Date",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date"
+          },
+          "isOptional" : true
+        },
+        "time" : {
+          "name" : "org.apache.kafka.connect.data.Time",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "time"
+          },
+          "isOptional" : true
+        },
+        "time_taken" : {
+          "type" : "FLOAT64",
+          "parameters" : {
+            "logField" : "time-taken"
+          },
+          "isOptional" : true
+        },
+        "ip1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip1"
+          },
+          "isOptional" : true
+        },
+        "user" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "user"
+          },
+          "isOptional" : true
+        },
+        "gp" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "gp"
+          },
+          "isOptional" : true
+        },
+        "id1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id1"
+          },
+          "isOptional" : true
+        },
+        "res" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "res"
+          },
+          "isOptional" : true
+        },
+        "cat1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat1"
+          },
+          "isOptional" : true
+        },
+        "status" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "status"
+          },
+          "isOptional" : true
+        },
+        "act" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "act"
+          },
+          "isOptional" : true
+        },
+        "method" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "method"
+          },
+          "isOptional" : true
+        },
+        "ct" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ct"
+          },
+          "isOptional" : true
+        },
+        "scheme" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "scheme"
+          },
+          "isOptional" : true
+        },
+        "host" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "host"
+          },
+          "isOptional" : true
+        },
+        "port" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "port"
+          },
+          "isOptional" : true
+        },
+        "ext" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ext"
+          },
+          "isOptional" : true
+        },
+        "ua" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ua"
+          },
+          "isOptional" : true
+        },
+        "ip2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip2"
+          },
+          "isOptional" : true
+        },
+        "bytes1" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes1"
+          },
+          "isOptional" : true
+        },
+        "bytes2" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes2"
+          },
+          "isOptional" : true
+        },
+        "id2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id2"
+          },
+          "isOptional" : true
+        },
+        "err1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err1"
+          },
+          "isOptional" : true
+        },
+        "err2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err2"
+          },
+          "isOptional" : true
+        },
+        "err3" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err3"
+          },
+          "isOptional" : true
+        },
+        "str" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "str"
+          },
+          "isOptional" : true
+        },
+        "cr" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cr"
+          },
+          "isOptional" : true
+        },
+        "cat2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat2"
+          },
+          "isOptional" : true
+        },
+        "datetime" : {
+          "name" : "org.apache.kafka.connect.data.Timestamp",
+          "type" : "INT64",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date,time"
+          },
+          "isOptional" : true
+        }
+      }
+    },
+    "value" : {
+      "schema" : {
+        "name" : "com.github.jcustenborder.kafka.connect.spooldir.LogEntry",
+        "type" : "STRUCT",
+        "isOptional" : false,
+        "fieldSchemas" : {
+          "date" : {
+            "name" : "org.apache.kafka.connect.data.Date",
+            "type" : "INT32",
+            "version" : 1,
+            "parameters" : {
+              "logField" : "date"
+            },
+            "isOptional" : true
+          },
+          "time" : {
+            "name" : "org.apache.kafka.connect.data.Time",
+            "type" : "INT32",
+            "version" : 1,
+            "parameters" : {
+              "logField" : "time"
+            },
+            "isOptional" : true
+          },
+          "time_taken" : {
+            "type" : "FLOAT64",
+            "parameters" : {
+              "logField" : "time-taken"
+            },
+            "isOptional" : true
+          },
+          "ip1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ip1"
+            },
+            "isOptional" : true
+          },
+          "user" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "user"
+            },
+            "isOptional" : true
+          },
+          "gp" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "gp"
+            },
+            "isOptional" : true
+          },
+          "id1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "id1"
+            },
+            "isOptional" : true
+          },
+          "res" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "res"
+            },
+            "isOptional" : true
+          },
+          "cat1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "cat1"
+            },
+            "isOptional" : true
+          },
+          "status" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "status"
+            },
+            "isOptional" : true
+          },
+          "act" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "act"
+            },
+            "isOptional" : true
+          },
+          "method" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "method"
+            },
+            "isOptional" : true
+          },
+          "ct" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ct"
+            },
+            "isOptional" : true
+          },
+          "scheme" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "scheme"
+            },
+            "isOptional" : true
+          },
+          "host" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "host"
+            },
+            "isOptional" : true
+          },
+          "port" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "port"
+            },
+            "isOptional" : true
+          },
+          "ext" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ext"
+            },
+            "isOptional" : true
+          },
+          "ua" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ua"
+            },
+            "isOptional" : true
+          },
+          "ip2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ip2"
+            },
+            "isOptional" : true
+          },
+          "bytes1" : {
+            "type" : "INT64",
+            "parameters" : {
+              "logField" : "bytes1"
+            },
+            "isOptional" : true
+          },
+          "bytes2" : {
+            "type" : "INT64",
+            "parameters" : {
+              "logField" : "bytes2"
+            },
+            "isOptional" : true
+          },
+          "id2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "id2"
+            },
+            "isOptional" : true
+          },
+          "err1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "err1"
+            },
+            "isOptional" : true
+          },
+          "err2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "err2"
+            },
+            "isOptional" : true
+          },
+          "err3" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "err3"
+            },
+            "isOptional" : true
+          },
+          "str" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "str"
+            },
+            "isOptional" : true
+          },
+          "cr" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "cr"
+            },
+            "isOptional" : true
+          },
+          "cat2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "cat2"
+            },
+            "isOptional" : true
+          },
+          "datetime" : {
+            "name" : "org.apache.kafka.connect.data.Timestamp",
+            "type" : "INT64",
+            "version" : 1,
+            "parameters" : {
+              "logField" : "date,time"
+            },
+            "isOptional" : true
+          }
+        }
+      },
+      "fieldValues" : [ {
+        "name" : "date",
+        "schema" : {
+          "name" : "org.apache.kafka.connect.data.Date",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date"
+          },
+          "isOptional" : true
+        },
+        "storage" : 18192
+      }, {
+        "name" : "time",
+        "schema" : {
+          "name" : "org.apache.kafka.connect.data.Time",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "time"
+          },
+          "isOptional" : true
+        },
+        "storage" : 75600000
+      }, {
+        "name" : "time_taken",
+        "schema" : {
+          "type" : "FLOAT64",
+          "parameters" : {
+            "logField" : "time-taken"
+          },
+          "isOptional" : true
+        },
+        "storage" : 1234.0
+      }, {
+        "name" : "ip1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip1"
+          },
+          "isOptional" : true
+        },
+        "storage" : "1.2.3.4"
+      }, {
+        "name" : "user",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "user"
+          },
+          "isOptional" : true
+        },
+        "storage" : "xyz"
+      }, {
+        "name" : "gp",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "gp"
+          },
+          "isOptional" : true
+        },
+        "storage" : "abc"
+      }, {
+        "name" : "id1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id1"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "res",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "res"
+          },
+          "isOptional" : true
+        },
+        "storage" : "OK"
+      }, {
+        "name" : "cat1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat1"
+          },
+          "isOptional" : true
+        },
+        "storage" : "cat"
+      }, {
+        "name" : "status",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "status"
+          },
+          "isOptional" : true
+        },
+        "storage" : "0"
+      }, {
+        "name" : "act",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "act"
+          },
+          "isOptional" : true
+        },
+        "storage" : "zyx"
+      }, {
+        "name" : "method",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "method"
+          },
+          "isOptional" : true
+        },
+        "storage" : "unk"
+      }, {
+        "name" : "ct",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ct"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "scheme",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "scheme"
+          },
+          "isOptional" : true
+        },
+        "storage" : "pro"
+      }, {
+        "name" : "host",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "host"
+          },
+          "isOptional" : true
+        },
+        "storage" : "site"
+      }, {
+        "name" : "port",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "port"
+          },
+          "isOptional" : true
+        },
+        "storage" : "123"
+      }, {
+        "name" : "ext",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ext"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "ua",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ua"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "ip2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip2"
+          },
+          "isOptional" : true
+        },
+        "storage" : "1.2.3.4"
+      }, {
+        "name" : "bytes1",
+        "schema" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes1"
+          },
+          "isOptional" : true
+        },
+        "storage" : 0
+      }, {
+        "name" : "bytes2",
+        "schema" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes2"
+          },
+          "isOptional" : true
+        },
+        "storage" : 0
+      }, {
+        "name" : "id2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id2"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "err1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err1"
+          },
+          "isOptional" : true
+        },
+        "storage" : "none"
+      }, {
+        "name" : "err2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err2"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "err3",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err3"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "str",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "str"
+          },
+          "isOptional" : true
+        },
+        "storage" : "none"
+      }, {
+        "name" : "cr",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cr"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "cat2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat2"
+          },
+          "isOptional" : true
+        },
+        "storage" : "cat"
+      }, {
+        "name" : "datetime",
+        "schema" : {
+          "name" : "org.apache.kafka.connect.data.Timestamp",
+          "type" : "INT64",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date,time"
+          },
+          "isOptional" : true
+        },
+        "storage" : 1571864400000
+      } ]
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "FieldsMatch.elf"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1572979596824-0/input/FieldsMatch.elf"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 683
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 0
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1572979597000
+    } ]
+  }, {
+    "sourcePartition" : {
+      "fileName" : "FieldsMatch.elf"
+    },
+    "sourceOffset" : {
+      "offset" : 1
+    },
+    "topic" : "testing",
+    "valueSchema" : {
+      "name" : "com.github.jcustenborder.kafka.connect.spooldir.LogEntry",
+      "type" : "STRUCT",
+      "isOptional" : false,
+      "fieldSchemas" : {
+        "date" : {
+          "name" : "org.apache.kafka.connect.data.Date",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date"
+          },
+          "isOptional" : true
+        },
+        "time" : {
+          "name" : "org.apache.kafka.connect.data.Time",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "time"
+          },
+          "isOptional" : true
+        },
+        "time_taken" : {
+          "type" : "FLOAT64",
+          "parameters" : {
+            "logField" : "time-taken"
+          },
+          "isOptional" : true
+        },
+        "ip1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip1"
+          },
+          "isOptional" : true
+        },
+        "user" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "user"
+          },
+          "isOptional" : true
+        },
+        "gp" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "gp"
+          },
+          "isOptional" : true
+        },
+        "id1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id1"
+          },
+          "isOptional" : true
+        },
+        "res" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "res"
+          },
+          "isOptional" : true
+        },
+        "cat1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat1"
+          },
+          "isOptional" : true
+        },
+        "status" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "status"
+          },
+          "isOptional" : true
+        },
+        "act" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "act"
+          },
+          "isOptional" : true
+        },
+        "method" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "method"
+          },
+          "isOptional" : true
+        },
+        "ct" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ct"
+          },
+          "isOptional" : true
+        },
+        "scheme" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "scheme"
+          },
+          "isOptional" : true
+        },
+        "host" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "host"
+          },
+          "isOptional" : true
+        },
+        "port" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "port"
+          },
+          "isOptional" : true
+        },
+        "ext" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ext"
+          },
+          "isOptional" : true
+        },
+        "ua" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ua"
+          },
+          "isOptional" : true
+        },
+        "ip2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip2"
+          },
+          "isOptional" : true
+        },
+        "bytes1" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes1"
+          },
+          "isOptional" : true
+        },
+        "bytes2" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes2"
+          },
+          "isOptional" : true
+        },
+        "id2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id2"
+          },
+          "isOptional" : true
+        },
+        "err1" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err1"
+          },
+          "isOptional" : true
+        },
+        "err2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err2"
+          },
+          "isOptional" : true
+        },
+        "err3" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err3"
+          },
+          "isOptional" : true
+        },
+        "str" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "str"
+          },
+          "isOptional" : true
+        },
+        "cr" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cr"
+          },
+          "isOptional" : true
+        },
+        "cat2" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat2"
+          },
+          "isOptional" : true
+        },
+        "datetime" : {
+          "name" : "org.apache.kafka.connect.data.Timestamp",
+          "type" : "INT64",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date,time"
+          },
+          "isOptional" : true
+        }
+      }
+    },
+    "value" : {
+      "schema" : {
+        "name" : "com.github.jcustenborder.kafka.connect.spooldir.LogEntry",
+        "type" : "STRUCT",
+        "isOptional" : false,
+        "fieldSchemas" : {
+          "date" : {
+            "name" : "org.apache.kafka.connect.data.Date",
+            "type" : "INT32",
+            "version" : 1,
+            "parameters" : {
+              "logField" : "date"
+            },
+            "isOptional" : true
+          },
+          "time" : {
+            "name" : "org.apache.kafka.connect.data.Time",
+            "type" : "INT32",
+            "version" : 1,
+            "parameters" : {
+              "logField" : "time"
+            },
+            "isOptional" : true
+          },
+          "time_taken" : {
+            "type" : "FLOAT64",
+            "parameters" : {
+              "logField" : "time-taken"
+            },
+            "isOptional" : true
+          },
+          "ip1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ip1"
+            },
+            "isOptional" : true
+          },
+          "user" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "user"
+            },
+            "isOptional" : true
+          },
+          "gp" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "gp"
+            },
+            "isOptional" : true
+          },
+          "id1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "id1"
+            },
+            "isOptional" : true
+          },
+          "res" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "res"
+            },
+            "isOptional" : true
+          },
+          "cat1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "cat1"
+            },
+            "isOptional" : true
+          },
+          "status" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "status"
+            },
+            "isOptional" : true
+          },
+          "act" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "act"
+            },
+            "isOptional" : true
+          },
+          "method" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "method"
+            },
+            "isOptional" : true
+          },
+          "ct" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ct"
+            },
+            "isOptional" : true
+          },
+          "scheme" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "scheme"
+            },
+            "isOptional" : true
+          },
+          "host" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "host"
+            },
+            "isOptional" : true
+          },
+          "port" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "port"
+            },
+            "isOptional" : true
+          },
+          "ext" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ext"
+            },
+            "isOptional" : true
+          },
+          "ua" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ua"
+            },
+            "isOptional" : true
+          },
+          "ip2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "ip2"
+            },
+            "isOptional" : true
+          },
+          "bytes1" : {
+            "type" : "INT64",
+            "parameters" : {
+              "logField" : "bytes1"
+            },
+            "isOptional" : true
+          },
+          "bytes2" : {
+            "type" : "INT64",
+            "parameters" : {
+              "logField" : "bytes2"
+            },
+            "isOptional" : true
+          },
+          "id2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "id2"
+            },
+            "isOptional" : true
+          },
+          "err1" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "err1"
+            },
+            "isOptional" : true
+          },
+          "err2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "err2"
+            },
+            "isOptional" : true
+          },
+          "err3" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "err3"
+            },
+            "isOptional" : true
+          },
+          "str" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "str"
+            },
+            "isOptional" : true
+          },
+          "cr" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "cr"
+            },
+            "isOptional" : true
+          },
+          "cat2" : {
+            "type" : "STRING",
+            "parameters" : {
+              "logField" : "cat2"
+            },
+            "isOptional" : true
+          },
+          "datetime" : {
+            "name" : "org.apache.kafka.connect.data.Timestamp",
+            "type" : "INT64",
+            "version" : 1,
+            "parameters" : {
+              "logField" : "date,time"
+            },
+            "isOptional" : true
+          }
+        }
+      },
+      "fieldValues" : [ {
+        "name" : "date",
+        "schema" : {
+          "name" : "org.apache.kafka.connect.data.Date",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date"
+          },
+          "isOptional" : true
+        },
+        "storage" : 18192
+      }, {
+        "name" : "time",
+        "schema" : {
+          "name" : "org.apache.kafka.connect.data.Time",
+          "type" : "INT32",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "time"
+          },
+          "isOptional" : true
+        },
+        "storage" : 75600000
+      }, {
+        "name" : "time_taken",
+        "schema" : {
+          "type" : "FLOAT64",
+          "parameters" : {
+            "logField" : "time-taken"
+          },
+          "isOptional" : true
+        },
+        "storage" : 123.0
+      }, {
+        "name" : "ip1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip1"
+          },
+          "isOptional" : true
+        },
+        "storage" : "1.2.3.4"
+      }, {
+        "name" : "user",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "user"
+          },
+          "isOptional" : true
+        },
+        "storage" : "xyz"
+      }, {
+        "name" : "gp",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "gp"
+          },
+          "isOptional" : true
+        },
+        "storage" : "abc"
+      }, {
+        "name" : "id1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id1"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "res",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "res"
+          },
+          "isOptional" : true
+        },
+        "storage" : "OK"
+      }, {
+        "name" : "cat1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat1"
+          },
+          "isOptional" : true
+        },
+        "storage" : "dog"
+      }, {
+        "name" : "status",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "status"
+          },
+          "isOptional" : true
+        },
+        "storage" : "0"
+      }, {
+        "name" : "act",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "act"
+          },
+          "isOptional" : true
+        },
+        "storage" : "zyx"
+      }, {
+        "name" : "method",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "method"
+          },
+          "isOptional" : true
+        },
+        "storage" : "unk"
+      }, {
+        "name" : "ct",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ct"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "scheme",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "scheme"
+          },
+          "isOptional" : true
+        },
+        "storage" : "pro"
+      }, {
+        "name" : "host",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "host"
+          },
+          "isOptional" : true
+        },
+        "storage" : "site"
+      }, {
+        "name" : "port",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "port"
+          },
+          "isOptional" : true
+        },
+        "storage" : "123"
+      }, {
+        "name" : "ext",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ext"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "ua",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ua"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "ip2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "ip2"
+          },
+          "isOptional" : true
+        },
+        "storage" : "1.2.3.4"
+      }, {
+        "name" : "bytes1",
+        "schema" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes1"
+          },
+          "isOptional" : true
+        },
+        "storage" : 0
+      }, {
+        "name" : "bytes2",
+        "schema" : {
+          "type" : "INT64",
+          "parameters" : {
+            "logField" : "bytes2"
+          },
+          "isOptional" : true
+        },
+        "storage" : 0
+      }, {
+        "name" : "id2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "id2"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "err1",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err1"
+          },
+          "isOptional" : true
+        },
+        "storage" : "none"
+      }, {
+        "name" : "err2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err2"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "err3",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "err3"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "str",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "str"
+          },
+          "isOptional" : true
+        },
+        "storage" : "none"
+      }, {
+        "name" : "cr",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cr"
+          },
+          "isOptional" : true
+        }
+      }, {
+        "name" : "cat2",
+        "schema" : {
+          "type" : "STRING",
+          "parameters" : {
+            "logField" : "cat2"
+          },
+          "isOptional" : true
+        },
+        "storage" : "dog"
+      }, {
+        "name" : "datetime",
+        "schema" : {
+          "name" : "org.apache.kafka.connect.data.Timestamp",
+          "type" : "INT64",
+          "version" : 1,
+          "parameters" : {
+            "logField" : "date,time"
+          },
+          "isOptional" : true
+        },
+        "storage" : 1571864400000
+      } ]
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "FieldsMatch.elf"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1572979596824-0/input/FieldsMatch.elf"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 683
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 1
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1572979597000
+    } ]
+  } ]
+}

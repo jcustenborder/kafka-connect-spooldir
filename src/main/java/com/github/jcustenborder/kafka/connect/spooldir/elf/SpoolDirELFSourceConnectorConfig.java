@@ -16,27 +16,18 @@
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
 import com.github.jcustenborder.kafka.connect.spooldir.AbstractSpoolDirSourceConnectorConfig;
-import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
 class SpoolDirELFSourceConnectorConfig extends AbstractSpoolDirSourceConnectorConfig {
 
-  public final char separatorChar;
-
   public SpoolDirELFSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
     super(isTask, true, config(true), settings);
-    this.separatorChar = (char) ((int) getInt(SEPARATOR_CHAR_CONF));
   }
 
   public static final String KEY_FIELDS_CONFIG = "key.fields";
   public static final String KEY_FIELDS_DOC = "key.fields";
-
-  public static final String SEPARATOR_CHAR_CONF = "elf.separator.char";
-  static final String SEPARATOR_CHAR_DISPLAY = "Separator Character";
-  static final String SEPARATOR_CHAR_DOC = "The character that separates each field in the form " +
-      "of an integer. Typically in a CSV this is a TAB(9) or SPACE(32).";
 
   @Override
   public boolean schemasRequired() {
@@ -44,15 +35,7 @@ class SpoolDirELFSourceConnectorConfig extends AbstractSpoolDirSourceConnectorCo
   }
 
   public static ConfigDef config(boolean bufferedInputStream) {
-    return AbstractSpoolDirSourceConnectorConfig.config(bufferedInputStream)
-        .define(
-            ConfigKeyBuilder.of(SEPARATOR_CHAR_CONF, ConfigDef.Type.INT)
-                .documentation(SEPARATOR_CHAR_DOC)
-                .importance(ConfigDef.Importance.HIGH)
-                .defaultValue(9)
-                .displayName(SEPARATOR_CHAR_DISPLAY)
-                .build()
-        );
+    return AbstractSpoolDirSourceConnectorConfig.config(bufferedInputStream);
   }
 
 }

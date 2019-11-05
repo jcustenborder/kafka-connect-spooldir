@@ -20,6 +20,7 @@ import com.github.jcustenborder.parsers.elf.LogEntry;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.Struct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,24 +42,24 @@ public class SchemaConversion {
   }
 
 
-  public Pair<Struct, Struct> convert(LogEntry entry) {
-    final Struct key = null != this.keySchema ? new Struct(this.keySchema) : null;
-    final Struct value = new Struct(this.valueSchema);
-
-    if (null != key) {
-      for (LogFieldConverter converter : this.keyConverters) {
-        converter.convert(entry, key);
+  static SchemaAndValue convert(Schema schema, List<LogFieldConverter> converters, LogEntry entry) {
+    final SchemaAndValue result;
+    if (null == schema) {
+      result = SchemaAndValue.NULL;
+    } else {
+      Struct struct = new Struct(schema);
+      for (LogFieldConverter converter : converters) {
+        converter.convert(entry, struct);
       }
+      struct.validate();
+      result = new SchemaAndValue(schema, struct);
     }
+    return result;
+  }
 
-    for (LogFieldConverter converter : this.valueConverters) {
-      converter.convert(entry, value);
-    }
-
-    if (null != key) {
-      key.validate();
-    }
-    value.validate();
+  public Pair<SchemaAndValue, SchemaAndValue> convert(LogEntry entry) {
+    final SchemaAndValue key = convert(this.keySchema, this.keyConverters, entry);
+    final SchemaAndValue value = convert(this.valueSchema, this.valueConverters, entry);
     return new ImmutablePair<>(key, value);
   }
 }

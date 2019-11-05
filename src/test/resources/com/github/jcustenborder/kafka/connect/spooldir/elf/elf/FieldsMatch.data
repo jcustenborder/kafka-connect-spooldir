@@ -1,0 +1,8 @@
+#Software: xyz 1.2.3.4
+#Version: 1.0
+#Start-Date: 2019-10-23 22:00:00
+#Date: 2019-10-23 22:00:00
+#Fields: date time time-taken ip1 user gp id1 res cat1 status act method ct scheme host port ext ua ip2 bytes1 bytes2 id2 err1 err2 err3 str cr cat2
+#Remark: 1234567890 "xyz" "1.2.3.4" "type"
+2019-10-23    21:00:00    1234    1.2.3.4    xyz    abc    -    OK    "cat"    0    zyx    unk    -    pro    site    123    -    -    1.2.3.4    0    0    -    none    -    -    none    -    "cat"
+2019-10-23    21:00:00    123    1.2.3.4    xyz    abc    -    OK    "dog"    0    zyx    unk    -    pro    site    123    -    -    1.2.3.4    0    0    -    none    -    -    none    -    "dog"
