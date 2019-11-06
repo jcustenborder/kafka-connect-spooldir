@@ -91,7 +91,7 @@
         <dependency>
             <groupId>com.github.jcustenborder.parsers</groupId>
             <artifactId>extended-log-format</artifactId>
-            <version>[0.0.1.2, 0.0.1.1000)</version>
+            <version>[0.0.2.12, 0.0.2.1000)</version>
         </dependency>
     </dependencies>
     <build>
