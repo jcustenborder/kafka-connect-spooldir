@@ -105,10 +105,7 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
       "- Metadata about the input file will be stored as headers on the record. `NONE` - no metadata " +
       "about the input file will be stored.";
   static final String METADATA_FIELD_CONF = "metadata.field";
-  static final String METADATA_FIELD_DOC = "Location that metadata about the input file will be stored. " +
-      "`FIELD` - Metadata about the file will be stored in a field in the value of the record. `HEADERS` " +
-      "- Metadata about the input file will be stored as headers on the record. `NONE` - no metadata " +
-      "about the input file will be stored.";
+  static final String METADATA_FIELD_DOC = "The name of the field in the value where the metadata will be stored.";
   public static final String GROUP_METADATA = "Metadata";
 
   public final File inputPath;
