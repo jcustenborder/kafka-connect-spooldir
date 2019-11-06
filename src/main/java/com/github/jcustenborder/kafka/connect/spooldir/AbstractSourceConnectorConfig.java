@@ -93,8 +93,10 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
       "task on which files to select. The connector will override this setting.";
 
   public static final String TASK_PARTITIONER_CONF = "task.partitioner";
-  static final String TASK_PARTITIONER_DOC = "The task partitioner implementation to use to select " +
-      "which files will be processed by the task.";
+  static final String TASK_PARTITIONER_DOC = "The task partitioner implementation is used when the " +
+      "connector is configured to use more than one task. This is used by each task to identify " +
+      "which files will be processed by that task. This ensures that each file is only assigned to " +
+      "one task.";
 
   public static final String FILE_BUFFER_SIZE_CONF = "file.buffer.size.bytes";
   static final String FILE_BUFFER_SIZE_DOC = "The size of buffer for the BufferedInputStream that will be used to " +
