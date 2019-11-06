@@ -17,8 +17,6 @@ package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
 import com.github.jcustenborder.kafka.connect.spooldir.elf.converters.LogFieldConverter;
 import com.github.jcustenborder.parsers.elf.LogEntry;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.Struct;
@@ -29,15 +27,11 @@ import java.util.List;
 
 public class SchemaConversion {
   private static final Logger log = LoggerFactory.getLogger(SchemaConversion.class);
-  private final Schema keySchema;
   private final Schema valueSchema;
-  private final List<LogFieldConverter> keyConverters;
   private final List<LogFieldConverter> valueConverters;
 
-  SchemaConversion(Schema keySchema, Schema valueSchema, List<LogFieldConverter> keyConverters, List<LogFieldConverter> valueConverters) {
-    this.keySchema = keySchema;
+  SchemaConversion(Schema valueSchema, List<LogFieldConverter> valueConverters) {
     this.valueSchema = valueSchema;
-    this.keyConverters = keyConverters;
     this.valueConverters = valueConverters;
   }
 
@@ -57,9 +51,8 @@ public class SchemaConversion {
     return result;
   }
 
-  public Pair<SchemaAndValue, SchemaAndValue> convert(LogEntry entry) {
-    final SchemaAndValue key = convert(this.keySchema, this.keyConverters, entry);
+  public SchemaAndValue convert(LogEntry entry) {
     final SchemaAndValue value = convert(this.valueSchema, this.valueConverters, entry);
-    return new ImmutablePair<>(key, value);
+    return value;
   }
 }

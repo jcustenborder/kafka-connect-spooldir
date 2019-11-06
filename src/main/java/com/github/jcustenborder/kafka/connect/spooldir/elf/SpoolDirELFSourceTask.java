@@ -15,11 +15,10 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
-import com.github.jcustenborder.kafka.connect.spooldir.AbstractSpoolDirSourceTask;
+import com.github.jcustenborder.kafka.connect.spooldir.AbstractSourceTask;
 import com.github.jcustenborder.parsers.elf.ElfParser;
 import com.github.jcustenborder.parsers.elf.ElfParserBuilder;
 import com.github.jcustenborder.parsers.elf.LogEntry;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SpoolDirELFSourceTask extends AbstractSpoolDirSourceTask<SpoolDirELFSourceConnectorConfig> {
+public class SpoolDirELFSourceTask extends AbstractSourceTask<SpoolDirELFSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirELFSourceTask.class);
   ElfParser parser;
   ElfParserBuilder parserBuilder;
@@ -41,7 +40,7 @@ public class SpoolDirELFSourceTask extends AbstractSpoolDirSourceTask<SpoolDirEL
 
   @Override
   protected SpoolDirELFSourceConnectorConfig config(Map<String, ?> settings) {
-    return new SpoolDirELFSourceConnectorConfig(true, settings);
+    return new SpoolDirELFSourceConnectorConfig(settings);
   }
 
   @Override
@@ -59,7 +58,7 @@ public class SpoolDirELFSourceTask extends AbstractSpoolDirSourceTask<SpoolDirEL
     }
 
     this.parser = this.parserBuilder.build(inputStream);
-    SchemaConversionBuilder builder = new SchemaConversionBuilder(this.parser, this.config);
+    SchemaConversionBuilder builder = new SchemaConversionBuilder(this.parser);
     this.conversion = builder.build();
 
     this.offset = -1;
@@ -81,25 +80,21 @@ public class SpoolDirELFSourceTask extends AbstractSpoolDirSourceTask<SpoolDirEL
 
   @Override
   protected List<SourceRecord> process() {
+    int recordCount = 0;
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
 
     LogEntry entry;
     try {
-      while (null != (entry = next()) && records.size() < this.config.batchSize) {
+      while (null != (entry = next()) && recordCount < this.config.batchSize) {
         log.trace("process() - Processing LogEntry: {}", entry);
-        Pair<SchemaAndValue, SchemaAndValue> converted = conversion.convert(entry);
-
-
-        addRecord(
-            records,
-            converted.getKey(),
-            converted.getValue()
-        );
+        SchemaAndValue value = conversion.convert(entry);
+        SourceRecord record = record(SchemaAndValue.NULL, value, null);
+        records.add(record);
+        recordCount++;
       }
     } catch (IOException ex) {
       throw new ConnectException(ex);
     }
-
     return records;
   }
 

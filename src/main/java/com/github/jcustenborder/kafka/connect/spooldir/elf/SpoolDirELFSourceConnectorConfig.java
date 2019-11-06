@@ -15,27 +15,18 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
-import com.github.jcustenborder.kafka.connect.spooldir.AbstractSpoolDirSourceConnectorConfig;
+import com.github.jcustenborder.kafka.connect.spooldir.AbstractSourceConnectorConfig;
 import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
-class SpoolDirELFSourceConnectorConfig extends AbstractSpoolDirSourceConnectorConfig {
+class SpoolDirELFSourceConnectorConfig extends AbstractSourceConnectorConfig {
 
-  public SpoolDirELFSourceConnectorConfig(final boolean isTask, Map<String, ?> settings) {
-    super(isTask, true, config(true), settings);
-  }
-
-  public static final String KEY_FIELDS_CONFIG = "key.fields";
-  public static final String KEY_FIELDS_DOC = "key.fields";
-
-  @Override
-  public boolean schemasRequired() {
-    return false;
+  public SpoolDirELFSourceConnectorConfig(Map<String, ?> settings) {
+    super(config(true), settings, true);
   }
 
   public static ConfigDef config(boolean bufferedInputStream) {
-    return AbstractSpoolDirSourceConnectorConfig.config(bufferedInputStream);
+    return AbstractSourceConnectorConfig.config(bufferedInputStream);
   }
-
 }

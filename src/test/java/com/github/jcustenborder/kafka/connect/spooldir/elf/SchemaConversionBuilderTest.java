@@ -86,7 +86,7 @@ public class SchemaConversionBuilderTest {
     );
     when(parser.fieldTypes()).thenReturn(fieldTypes);
 
-    SchemaConversionBuilder schemaGenerator = new SchemaConversionBuilder(parser, null);
+    SchemaConversionBuilder schemaGenerator = new SchemaConversionBuilder(parser);
     SchemaConversion conversion = schemaGenerator.build();
     assertNotNull(conversion, "conversion should not be null.");
 
@@ -94,10 +94,11 @@ public class SchemaConversionBuilderTest {
     when(entry.fieldTypes()).thenReturn(fieldTypes);
     when(entry.fieldData()).thenReturn(fieldData);
 
-    Pair<SchemaAndValue, SchemaAndValue> actual = conversion.convert(entry);
+    SchemaAndValue actual = conversion.convert(entry);
     assertNotNull(actual, "actual should not be null");
 //    assertNotNull(actual.getKey(), "actual.getKey() should not be null");
-    assertNotNull(actual.getValue(), "actual.getValue() should not be null");
+    assertNotNull(actual.schema(), "actual.getValue() should not be null");
+    assertNotNull(actual.value(), "actual.getValue() should not be null");
 
 //    actual.getValue()..validate();
 

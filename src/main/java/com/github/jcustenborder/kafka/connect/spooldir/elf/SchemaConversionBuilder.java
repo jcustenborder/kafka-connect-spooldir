@@ -33,11 +33,9 @@ import java.util.Map;
 public class SchemaConversionBuilder {
   private static final Logger log = LoggerFactory.getLogger(SchemaConversionBuilder.class);
   final ElfParser parser;
-  final SpoolDirELFSourceConnectorConfig config;
 
-  public SchemaConversionBuilder(ElfParser parser, SpoolDirELFSourceConnectorConfig config) {
+  public SchemaConversionBuilder(ElfParser parser) {
     this.parser = parser;
-    this.config = config;
   }
 
   static String normalizeFieldName(String fieldName) {
@@ -86,6 +84,6 @@ public class SchemaConversionBuilder {
 
     final Schema valueSchema = valueBuilder.build();
 
-    return new SchemaConversion(null, valueSchema, null, valueConverters);
+    return new SchemaConversion(valueSchema, valueConverters);
   }
 }
