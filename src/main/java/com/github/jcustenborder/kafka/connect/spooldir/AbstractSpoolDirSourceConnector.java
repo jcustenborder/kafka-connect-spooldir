@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,14 +38,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnectorConfig> extends SourceConnector {
-  private static Logger log = LoggerFactory.getLogger(SpoolDirSourceConnector.class);
+public abstract class AbstractSpoolDirSourceConnector<CONF extends AbstractSpoolDirSourceConnectorConfig> extends SourceConnector {
+  private static Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceConnector.class);
   protected Map<String, String> settings;
   private CONF config;
 
   protected abstract CONF config(Map<String, String> settings);
 
-  protected abstract SchemaGenerator<CONF> generator(Map<String, String> settings);
+  protected abstract AbstractSchemaGenerator<CONF> generator(Map<String, String> settings);
 
   @Override
   public String version() {
@@ -58,7 +59,7 @@ public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnect
 
     if (this.config.schemasRequired() && (null == this.config.valueSchema || null == this.config.keySchema)) {
       log.info("Key or Value schema was not defined. Running schema generator.");
-      SchemaGenerator<CONF> generator = generator(settings);
+      AbstractSchemaGenerator<CONF> generator = generator(settings);
 
       try {
         List<File> inputFiles = Arrays.stream(this.config.inputPath.listFiles(this.config.inputFilenameFilter))
@@ -109,11 +110,11 @@ public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnect
         }
 
         final String keySchema = ObjectMapperFactory.INSTANCE.writeValueAsString(schemaPair.getKey());
-        log.info("Setting {} to {}", SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchema);
+        log.info("Setting {} to {}", AbstractSpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchema);
         final String valueSchema = ObjectMapperFactory.INSTANCE.writeValueAsString(schemaPair.getValue());
-        log.info("Setting {} to {}", SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchema);
-        settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchema);
-        settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchema);
+        log.info("Setting {} to {}", AbstractSpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchema);
+        settings.put(AbstractSpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchema);
+        settings.put(AbstractSpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchema);
       } catch (IOException e) {
         throw new ConnectException("Exception thrown while generating schema", e);
       }
@@ -124,8 +125,17 @@ public abstract class SpoolDirSourceConnector<CONF extends SpoolDirSourceConnect
   }
 
   @Override
-  public List<Map<String, String>> taskConfigs(int i) {
-    return Arrays.asList(this.settings);
+  public List<Map<String, String>> taskConfigs(int taskCount) {
+    List<Map<String, String>> result = new ArrayList<>();
+
+    for (int i = 0; i < taskCount; i++) {
+      Map<String, String> taskConfig = new LinkedHashMap<>(this.settings);
+      taskConfig.put(AbstractSourceConnectorConfig.TASK_INDEX_CONF, Integer.toString(i));
+      taskConfig.put(AbstractSourceConnectorConfig.TASK_COUNT_CONF, Integer.toString(taskCount));
+      result.add(taskConfig);
+    }
+
+    return result;
   }
 
   @Override

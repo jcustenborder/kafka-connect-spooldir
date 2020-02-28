@@ -42,7 +42,7 @@ public class SpoolDirLineDelimitedSourceTask extends AbstractSourceTask<SpoolDir
 
 
   @Override
-  protected void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException {
+  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
     if (null != this.reader) {
       this.reader.close();
     }

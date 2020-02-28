@@ -15,16 +15,8 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import org.apache.kafka.common.config.ConfigDef;
-
-import java.util.Map;
-
-public class SpoolDirLineDelimitedSourceConnectorConfig extends AbstractSourceConnectorConfig {
-  public SpoolDirLineDelimitedSourceConnectorConfig(Map<?, ?> originals) {
-    super(config(), originals, true);
-  }
-
-  public static ConfigDef config() {
-    return AbstractSourceConnectorConfig.config(true);
-  }
+public enum MetadataLocation {
+  NONE,
+  HEADERS,
+  FIELD
 }

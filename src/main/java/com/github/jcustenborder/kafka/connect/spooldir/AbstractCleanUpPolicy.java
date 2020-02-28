@@ -15,22 +15,23 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 abstract class AbstractCleanUpPolicy implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(AbstractCleanUpPolicy.class);
-  protected final File inputFile;
+  private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+  protected final InputFile inputFile;
   protected final File errorPath;
   protected final File finishedPath;
 
 
-  protected AbstractCleanUpPolicy(File inputFile, File errorPath, File finishedPath) {
+  protected AbstractCleanUpPolicy(InputFile inputFile, File errorPath, File finishedPath) {
     this.inputFile = inputFile;
     this.errorPath = errorPath;
     this.finishedPath = finishedPath;
@@ -41,13 +42,16 @@ abstract class AbstractCleanUpPolicy implements Closeable {
     final AbstractCleanUpPolicy result;
     switch (config.cleanupPolicy) {
       case MOVE:
-        result = new Move(inputFile.inputFile, config.errorPath, config.finishedPath);
+        result = new Move(inputFile, config.errorPath, config.finishedPath);
+        break;
+      case MOVEBYDATE:
+        result = new MoveByDate(inputFile, config.errorPath, config.finishedPath);
         break;
       case DELETE:
-        result = new Delete(inputFile.inputFile, config.errorPath, config.finishedPath);
+        result = new Delete(inputFile, config.errorPath, config.finishedPath);
         break;
       case NONE:
-        result = new None(inputFile.inputFile, config.errorPath, config.finishedPath);
+        result = new None(inputFile, config.errorPath, config.finishedPath);
         break;
       default:
         throw new UnsupportedOperationException(
@@ -58,23 +62,22 @@ abstract class AbstractCleanUpPolicy implements Closeable {
     return result;
   }
 
-  protected void removeFile(File file) {
-    log.info("Removing {}", file);
-    if (!file.delete()) {
-      log.warn("Could not delete {}", file);
-    }
-  }
 
-  protected void moveToDirectory(File outputDirectory) {
-    File outputFile = new File(outputDirectory, this.inputFile.getName());
-    try {
-      if (this.inputFile.exists()) {
-        log.info("Moving {} to {}", this.inputFile, outputFile);
-        Files.move(this.inputFile, outputFile);
-      }
-    } catch (IOException e) {
-      log.error("Exception thrown while trying to move {} to {}", this.inputFile, outputFile, e);
+
+
+  protected boolean createDirectory(File directory) {
+    if (directory.exists()) {
+      return true;
     }
+    if (!directory.mkdir()) {
+      log.error("Cannot make directory - " + directory.getAbsolutePath());
+      return false;
+    }
+    if (!directory.setWritable(true)) {
+      log.error("Cannot make directory writable - " + directory.getAbsolutePath());
+      return false;
+    }
+    return true;
   }
 
   @Override
@@ -91,7 +94,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
         this.inputFile,
         this.errorPath
     );
-    moveToDirectory(this.errorPath);
+    this.inputFile.moveToDirectory(this.errorPath);
   }
 
   /**
@@ -100,29 +103,48 @@ abstract class AbstractCleanUpPolicy implements Closeable {
   public abstract void success() throws IOException;
 
   static class Move extends AbstractCleanUpPolicy {
-    protected Move(File inputFile, File errorPath, File finishedPath) {
+    protected Move(InputFile inputFile, File errorPath, File finishedPath) {
       super(inputFile, errorPath, finishedPath);
     }
 
     @Override
     public void success() throws IOException {
-      moveToDirectory(this.finishedPath);
+      this.inputFile.moveToDirectory(this.finishedPath);
+    }
+  }
+
+  static class MoveByDate extends AbstractCleanUpPolicy {
+    protected MoveByDate(InputFile inputFile, File errorPath, File finishedPath) {
+      super(inputFile, errorPath, finishedPath);
+    }
+
+    @Override
+    public void success() throws IOException {
+      // Setup directory named as the file created date
+      File subDirectory = new File(this.finishedPath, dateFormatter.format(this.inputFile.lastModified()));
+      log.trace("Finished path: {}", subDirectory);
+
+      if (createDirectory(subDirectory)) {
+        this.inputFile.moveToDirectory(subDirectory);
+      } else {
+        this.inputFile.moveToDirectory(this.finishedPath);
+      }
     }
   }
 
   static class Delete extends AbstractCleanUpPolicy {
-    protected Delete(File inputFile, File errorPath, File finishedPath) {
+    protected Delete(InputFile inputFile, File errorPath, File finishedPath) {
       super(inputFile, errorPath, finishedPath);
     }
 
     @Override
     public void success() throws IOException {
-      removeFile(this.inputFile);
+      this.inputFile.delete();
     }
   }
 
   static class None extends AbstractCleanUpPolicy {
-    protected None(File inputFile, File errorPath, File finishedPath) {
+    protected None(InputFile inputFile, File errorPath, File finishedPath) {
       super(inputFile, errorPath, finishedPath);
     }
 

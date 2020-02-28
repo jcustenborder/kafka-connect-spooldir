@@ -294,7 +294,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 0
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -521,7 +559,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 1
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -747,7 +823,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 2
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -974,7 +1088,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 3
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -1201,7 +1353,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -1428,7 +1618,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 5
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -1655,7 +1883,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 6
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -1882,7 +2148,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 7
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -2109,7 +2413,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 8
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -2336,7 +2678,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 9
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -2563,7 +2943,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 10
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -2790,7 +3208,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 11
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -3017,7 +3473,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 12
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -3244,7 +3738,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 13
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -3471,7 +4003,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 14
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -3698,7 +4268,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 15
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -3925,7 +4533,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 16
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -4152,7 +4798,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 17
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -4379,7 +5063,45 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 18
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   }, {
     "sourcePartition" : {
       "fileName" : "SchemaHasMoreFields.json"
@@ -4606,6 +5328,44 @@
           "isOptional" : true
         }
       } ]
-    }
+    },
+    "headers" : [ {
+      "name" : "file.name",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.path",
+      "schema" : {
+        "type" : "STRING",
+        "isOptional" : false
+      },
+      "storage" : "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925242635-0/input/SchemaHasMoreFields.json"
+    }, {
+      "name" : "file.length",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 4480
+    }, {
+      "name" : "file.offset",
+      "schema" : {
+        "type" : "INT64",
+        "isOptional" : false
+      },
+      "storage" : 19
+    }, {
+      "name" : "file.last.modified",
+      "schema" : {
+        "name" : "org.apache.kafka.connect.data.Timestamp",
+        "type" : "INT64",
+        "version" : 1,
+        "isOptional" : false
+      },
+      "storage" : 1559925242000
+    } ]
   } ]
 }

@@ -15,13 +15,11 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
-import com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSourceTask;
+import com.github.jcustenborder.kafka.connect.spooldir.AbstractSourceTask;
 import com.github.jcustenborder.parsers.elf.ElfParser;
 import com.github.jcustenborder.parsers.elf.ElfParserBuilder;
 import com.github.jcustenborder.parsers.elf.LogEntry;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.connect.data.SchemaAndValue;
-import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
@@ -33,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceConnectorConfig> {
+public class SpoolDirELFSourceTask extends AbstractSourceTask<SpoolDirELFSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirELFSourceTask.class);
   ElfParser parser;
   ElfParserBuilder parserBuilder;
@@ -42,25 +40,25 @@ public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceC
 
   @Override
   protected SpoolDirELFSourceConnectorConfig config(Map<String, ?> settings) {
-    return new SpoolDirELFSourceConnectorConfig(true, settings);
+    return new SpoolDirELFSourceConnectorConfig(settings);
   }
 
   @Override
   public void start(Map<String, String> settings) {
     super.start(settings);
-    this.parserBuilder = ElfParserBuilder.of().separator(this.config.separatorChar);
+    this.parserBuilder = ElfParserBuilder.of();
   }
 
 
   @Override
-  protected void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException {
+  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
     if (null != this.parser) {
       log.trace("configure() - Closing existing parser.");
       this.parser.close();
     }
 
     this.parser = this.parserBuilder.build(inputStream);
-    SchemaConversionBuilder builder = new SchemaConversionBuilder(this.parser, this.config);
+    SchemaConversionBuilder builder = new SchemaConversionBuilder(this.parser);
     this.conversion = builder.build();
 
     this.offset = -1;
@@ -82,25 +80,21 @@ public class SpoolDirELFSourceTask extends SpoolDirSourceTask<SpoolDirELFSourceC
 
   @Override
   protected List<SourceRecord> process() {
+    int recordCount = 0;
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
 
     LogEntry entry;
     try {
-      while (null != (entry = next()) && records.size() < this.config.batchSize) {
-        Pair<Struct, Struct> converted = conversion.convert(entry);
-        final Struct keyStruct = converted.getKey();
-        final Struct valueStruct = converted.getValue();
-
-        addRecord(
-            records,
-            new SchemaAndValue(keyStruct.schema(), keyStruct),
-            new SchemaAndValue(valueStruct.schema(), valueStruct)
-        );
+      while (null != (entry = next()) && recordCount < this.config.batchSize) {
+        log.trace("process() - Processing LogEntry: {}", entry);
+        SchemaAndValue value = conversion.convert(entry);
+        SourceRecord record = record(SchemaAndValue.NULL, value, null);
+        records.add(record);
+        recordCount++;
       }
     } catch (IOException ex) {
       throw new ConnectException(ex);
     }
-
     return records;
   }
 

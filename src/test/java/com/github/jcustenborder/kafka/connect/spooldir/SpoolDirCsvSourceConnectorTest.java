@@ -28,7 +28,7 @@ import java.io.OutputStream;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-public class SpoolDirCsvSourceConnectorTest extends SpoolDirSourceConnectorTest<SpoolDirCsvSourceConnector> {
+public class SpoolDirCsvSourceConnectorTest extends AbstractSpoolDirSourceConnectorTest<SpoolDirCsvSourceConnector> {
   @Override
   protected SpoolDirCsvSourceConnector createConnector() {
     return new SpoolDirCsvSourceConnector();

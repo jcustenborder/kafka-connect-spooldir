@@ -1,0 +1,11 @@
+{
+  "name": "Standard",
+  "description": "This example will read Extended Log Format files and write them to Kafka.",
+  "config": {
+    "finished.path": "/tmp",
+    "input.path": "/tmp",
+    "error.path": "/tmp",
+    "input.file.pattern": "^server\\d+\\.log",
+    "topic": "users"
+  }
+}

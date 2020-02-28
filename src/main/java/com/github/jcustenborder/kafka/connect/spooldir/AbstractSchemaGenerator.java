@@ -40,10 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConfig> {
+public abstract class AbstractSchemaGenerator<CONFIG extends AbstractSpoolDirSourceConnectorConfig> {
   static final String DUMMY_SCHEMA;
   static final Map<String, Object> DEFAULTS;
-  private static final Logger log = LoggerFactory.getLogger(SchemaGenerator.class);
+  private static final Logger log = LoggerFactory.getLogger(AbstractSchemaGenerator.class);
 
   static {
     String dummySchema;
@@ -62,17 +62,17 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
     defaultSettings.put(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, "/tmp/input");
     defaultSettings.put(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, "/tmp/finish");
     defaultSettings.put(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, "/tmp/error");
-    defaultSettings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, DUMMY_SCHEMA);
-    defaultSettings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, DUMMY_SCHEMA);
+    defaultSettings.put(AbstractSpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, DUMMY_SCHEMA);
+    defaultSettings.put(AbstractSpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, DUMMY_SCHEMA);
     defaultSettings.put(AbstractSourceConnectorConfig.TOPIC_CONF, "dummy");
-    defaultSettings.put(SpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
+    defaultSettings.put(AbstractSpoolDirSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF, "true");
 
     DEFAULTS = ImmutableMap.copyOf(defaultSettings);
   }
 
   protected CONFIG config;
 
-  public SchemaGenerator(Map<String, ?> settings) {
+  public AbstractSchemaGenerator(Map<String, ?> settings) {
     Map<String, Object> copySettings = new LinkedHashMap<>(settings);
 
     for (Map.Entry<String, Object> kvp : DEFAULTS.entrySet()) {
@@ -135,7 +135,7 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
       }
     }
 
-    final SchemaGenerator generator;
+    final AbstractSchemaGenerator generator;
     final String type = ns.getString("type");
 
     if ("csv".equalsIgnoreCase(type)) {
@@ -152,8 +152,8 @@ public abstract class SchemaGenerator<CONFIG extends SpoolDirSourceConnectorConf
 
     Properties properties = new Properties();
     properties.putAll(settings);
-    properties.setProperty(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, ObjectMapperFactory.INSTANCE.writeValueAsString(kvp.getKey()));
-    properties.setProperty(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, ObjectMapperFactory.INSTANCE.writeValueAsString(kvp.getValue()));
+    properties.setProperty(AbstractSpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, ObjectMapperFactory.INSTANCE.writeValueAsString(kvp.getKey()));
+    properties.setProperty(AbstractSpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, ObjectMapperFactory.INSTANCE.writeValueAsString(kvp.getValue()));
 
     String output = ns.getString("output");
     final String comment = "Configuration was dynamically generated. Please verify before submitting.";

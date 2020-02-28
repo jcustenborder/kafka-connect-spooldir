@@ -48,7 +48,7 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SpoolDirCsvSourceTaskTest extends SpoolDirSourceTaskTest<SpoolDirCsvSourceTask> {
+public class SpoolDirCsvSourceTaskTest extends AbstractSpoolDirSourceTaskTest<SpoolDirCsvSourceTask> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirCsvSourceTaskTest.class);
 
   @Override

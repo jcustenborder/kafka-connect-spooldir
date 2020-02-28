@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static com.github.jcustenborder.kafka.connect.utils.AssertSchema.assertSchema;
 
-public class CsvSchemaGeneratorTest extends SchemaGeneratorTest {
+public class CsvSchemaGeneratorTest extends AbstractSchemaGeneratorTest {
 
   @Test
   public void foo() throws IOException {

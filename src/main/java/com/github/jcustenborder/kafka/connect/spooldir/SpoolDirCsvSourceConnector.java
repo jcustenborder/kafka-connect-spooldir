@@ -31,16 +31,16 @@ import java.util.Map;
     ".. code-block:: bash\n\n" +
     "   mvn clean package\n" +
     "   export CLASSPATH=\"$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\\n' ':')\"\n" +
-    "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id\n" +
+    "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.AbstractSchemaGenerator -t csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id\n" +
     "")
-public class SpoolDirCsvSourceConnector extends SpoolDirSourceConnector<SpoolDirCsvSourceConnectorConfig> {
+public class SpoolDirCsvSourceConnector extends AbstractSpoolDirSourceConnector<SpoolDirCsvSourceConnectorConfig> {
   @Override
   protected SpoolDirCsvSourceConnectorConfig config(Map<String, String> settings) {
     return new SpoolDirCsvSourceConnectorConfig(false, settings);
   }
 
   @Override
-  protected SchemaGenerator<SpoolDirCsvSourceConnectorConfig> generator(Map<String, String> settings) {
+  protected AbstractSchemaGenerator<SpoolDirCsvSourceConnectorConfig> generator(Map<String, String> settings) {
     return new CsvSchemaGenerator(settings);
   }
 
@@ -51,6 +51,6 @@ public class SpoolDirCsvSourceConnector extends SpoolDirSourceConnector<SpoolDir
 
   @Override
   public ConfigDef config() {
-    return SpoolDirCsvSourceConnectorConfig.conf();
+    return SpoolDirCsvSourceConnectorConfig.config();
   }
 }

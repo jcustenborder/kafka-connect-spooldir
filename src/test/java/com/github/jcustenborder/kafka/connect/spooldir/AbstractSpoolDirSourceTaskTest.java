@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +48,8 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
-  private static final Logger log = LoggerFactory.getLogger(SpoolDirSourceTaskTest.class);
+public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTask> {
+  private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceTaskTest.class);
 
   protected File tempDirectory;
   protected File inputPath;
@@ -90,8 +91,8 @@ public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
 
     Map<String, String> settings = this.settings();
     settings.put(AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, String.format("^.*\\.%s", packageName));
-    settings.put(SpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
-    settings.put(SpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
+    settings.put(AbstractSpoolDirSourceConnectorConfig.KEY_SCHEMA_CONF, keySchemaConfig);
+    settings.put(AbstractSpoolDirSourceConnectorConfig.VALUE_SCHEMA_CONF, valueSchemaConfig);
 
     if (null != testCase.settings && !testCase.settings.isEmpty()) {
       settings.putAll(testCase.settings);
@@ -135,9 +136,28 @@ public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
     assertFalse(records.isEmpty(), "records should not be empty");
     assertEquals(testCase.expected.size(), records.size(), "records.size() does not match.");
 
+    /*
+    The following headers will change. Lets ensure they are there but we don't care about their
+    values since they are driven by things that will change such as lastModified dates and paths.
+     */
+    List<String> headersToRemove = Arrays.asList(
+        Metadata.HEADER_LAST_MODIFIED,
+        Metadata.HEADER_PATH,
+        Metadata.HEADER_LENGTH
+    );
+
     for (int i = 0; i < testCase.expected.size(); i++) {
       SourceRecord expectedRecord = testCase.expected.get(i);
       SourceRecord actualRecord = records.get(i);
+
+      for (String headerToRemove : headersToRemove) {
+        assertNotNull(
+            actualRecord.headers().lastWithName(headerToRemove),
+            String.format("index:%s should have the header '%s'", i, headerToRemove)
+        );
+        actualRecord.headers().remove(headerToRemove);
+        expectedRecord.headers().remove(headerToRemove);
+      }
       assertSourceRecord(expectedRecord, actualRecord, String.format("index:%s", i));
     }
 
@@ -147,12 +167,8 @@ public abstract class SpoolDirSourceTaskTest<T extends AbstractSourceTask> {
     assertNull(records, "records should be null after first poll.");
     assertFalse(inputFile.exists(), String.format("inputFile %s should not exist.", inputFile));
     assertFalse(processingFile.exists(), String.format("processingFile %s should not exist.", processingFile));
-
-    assertNull(records, "records should be null after first poll.");
-
     final File finishedFile = new File(this.finishedPath, inputFileName);
     assertTrue(finishedFile.exists(), String.format("finishedFile %s should exist.", finishedFile));
-
   }
 
   protected List<TestCase> loadTestCases(String packageName) throws IOException {

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MoveCleanupPolicyTest extends AbstractCleanUpPolicyTest<AbstractCleanUpPolicy.Move> {
   @Override
-  protected AbstractCleanUpPolicy.Move create(File inputFile, File errorPath, File finishedPath) {
+  protected AbstractCleanUpPolicy.Move create(InputFile inputFile, File errorPath, File finishedPath) {
     return new AbstractCleanUpPolicy.Move(inputFile, errorPath, finishedPath);
   }
 

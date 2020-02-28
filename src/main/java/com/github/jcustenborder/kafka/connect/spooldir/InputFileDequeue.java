@@ -16,23 +16,32 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.google.common.collect.ForwardingDeque;
+import org.apache.kafka.common.utils.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Deque;
-import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class InputFileDequeue extends ForwardingDeque<InputFile> {
   private static final Logger log = LoggerFactory.getLogger(InputFileDequeue.class);
   private final AbstractSourceConnectorConfig config;
+  private final FileComparator fileComparator;
+  private final Predicate<File> processingFileExists;
+  private final Predicate<File> fileMinimumAge;
+  private final Predicate<File> filePartitionSelector;
+
 
   public InputFileDequeue(AbstractSourceConnectorConfig config) {
     this.config = config;
+    this.fileComparator = new FileComparator(config.fileSortAttributes);
+    this.processingFileExists = new ProcessingFileExistsPredicate(config.processingFileExtension);
+    this.fileMinimumAge = new MinimumFileAgePredicate(config.minimumFileAgeMS);
+    this.filePartitionSelector = AbstractTaskPartitionerPredicate.create(config);
   }
 
   Deque<InputFile> files;
@@ -48,42 +57,76 @@ public class InputFileDequeue extends ForwardingDeque<InputFile> {
       return files;
     }
 
-    log.info("Searching for file(s) in {}", this.config.inputPath);
+    log.trace("delegate() - Searching for file(s) in {}", this.config.inputPath);
     File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
     if (null == input || input.length == 0) {
       log.info("No files matching {} were found in {}", AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
       return new ArrayDeque<>();
     }
-    Arrays.sort(input, Comparator.comparing(File::getName));
-    List<File> files = new ArrayList<>(input.length);
-    files.addAll(Arrays.asList(input));
+    log.trace("delegate() - Found {} potential file(s).", input.length);
+    this.files = Arrays.stream(input)
+        .filter(this.filePartitionSelector)
+        .filter(this.processingFileExists)
+        .filter(this.fileMinimumAge)
+        .sorted(this.fileComparator)
+        .map(f -> new InputFile(f, processingFile(this.config.processingFileExtension, f), this.config.fileBufferSizeBytes))
+        .collect(Collectors.toCollection(ArrayDeque::new));
+    return this.files;
+  }
 
-    Deque<InputFile> result = new ArrayDeque<>(files.size());
 
-    for (File file : files) {
-      File processingFile = processingFile(this.config.processingFileExtension, file);
+  static class ProcessingFileExistsPredicate implements Predicate<File> {
+    final String processingFileExtension;
+
+    ProcessingFileExistsPredicate(String processingFileExtension) {
+      this.processingFileExtension = processingFileExtension;
+    }
+
+    @Override
+    public boolean test(File file) {
+      File processingFile = processingFile(this.processingFileExtension, file);
       log.trace("Checking for processing file: {}", processingFile);
+      return !processingFile.exists();
+    }
+  }
 
-      if (processingFile.exists()) {
-        log.debug("Skipping {} because processing file exists.", file);
-        continue;
-      }
+  static class MinimumFileAgePredicate implements Predicate<File> {
+    final long minimumFileAgeMS;
+    final Time time;
 
-      long fileAgeMS = System.currentTimeMillis() - file.lastModified();
+    /**
+     * @param minimumFileAgeMS Minimum time since last write in milliseconds.
+     */
+    MinimumFileAgePredicate(long minimumFileAgeMS) {
+      this(minimumFileAgeMS, Time.SYSTEM);
+    }
+
+    /**
+     * Constructor is only used for testing.
+     *
+     * @param minimumFileAgeMS
+     * @param time
+     */
+    MinimumFileAgePredicate(long minimumFileAgeMS, Time time) {
+      this.minimumFileAgeMS = minimumFileAgeMS;
+      this.time = time;
+    }
+
+
+    @Override
+    public boolean test(File file) {
+      long fileAgeMS = this.time.milliseconds() - file.lastModified();
 
       if (fileAgeMS < 0L) {
         log.warn("File {} has a date in the future.", file);
       }
-
-      if (this.config.minimumFileAgeMS > 0L && fileAgeMS < this.config.minimumFileAgeMS) {
+      if (fileAgeMS >= this.minimumFileAgeMS) {
+        return true;
+      } else {
         log.debug("Skipping {} because it does not meet the minimum age.", file);
-        continue;
+        return false;
       }
-
-      result.add(new InputFile(file, processingFile));
     }
-
-    log.info("Found {} file(s) to process", result.size());
-    return (this.files = result);
   }
+
 }

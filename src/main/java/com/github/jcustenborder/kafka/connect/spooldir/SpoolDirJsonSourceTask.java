@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourceConnectorConfig> {
+public class SpoolDirJsonSourceTask extends AbstractSpoolDirSourceTask<SpoolDirJsonSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(SpoolDirJsonSourceTask.class);
   JsonFactory jsonFactory;
   JsonParser jsonParser;
@@ -53,7 +53,7 @@ public class SpoolDirJsonSourceTask extends SpoolDirSourceTask<SpoolDirJsonSourc
   }
 
   @Override
-  protected void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException {
+  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
     if (null != jsonParser) {
       log.trace("configure() - Closing existing json parser.");
       jsonParser.close();

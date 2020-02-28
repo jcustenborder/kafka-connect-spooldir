@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CsvSchemaGenerator extends SchemaGenerator<SpoolDirCsvSourceConnectorConfig> {
+public class CsvSchemaGenerator extends AbstractSchemaGenerator<SpoolDirCsvSourceConnectorConfig> {
   private static final Logger log = LoggerFactory.getLogger(CsvSchemaGenerator.class);
 
   public CsvSchemaGenerator(Map<String, ?> settings) {

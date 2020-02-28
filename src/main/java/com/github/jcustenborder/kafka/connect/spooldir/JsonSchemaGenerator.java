@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class JsonSchemaGenerator extends SchemaGenerator<SpoolDirJsonSourceConnectorConfig> {
+public class JsonSchemaGenerator extends AbstractSchemaGenerator<SpoolDirJsonSourceConnectorConfig> {
   public JsonSchemaGenerator(Map<String, ?> settings) {
     super(settings);
   }

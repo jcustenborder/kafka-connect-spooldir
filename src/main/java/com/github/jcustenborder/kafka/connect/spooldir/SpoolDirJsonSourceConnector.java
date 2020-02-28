@@ -31,9 +31,9 @@ import java.util.Map;
     ".. code-block:: bash\n\n" +
     "   mvn clean package\n" +
     "   export CLASSPATH=\"$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\\n' ':')\"\n" +
-    "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.SchemaGenerator -t json -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data -c config/JsonExample.properties -i id\n" +
+    "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.AbstractSchemaGenerator -t json -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data -c config/JsonExample.properties -i id\n" +
     "")
-public class SpoolDirJsonSourceConnector extends SpoolDirSourceConnector<SpoolDirJsonSourceConnectorConfig> {
+public class SpoolDirJsonSourceConnector extends AbstractSpoolDirSourceConnector<SpoolDirJsonSourceConnectorConfig> {
 
   @Override
   protected SpoolDirJsonSourceConnectorConfig config(Map<String, String> settings) {
@@ -41,7 +41,7 @@ public class SpoolDirJsonSourceConnector extends SpoolDirSourceConnector<SpoolDi
   }
 
   @Override
-  protected SchemaGenerator<SpoolDirJsonSourceConnectorConfig> generator(Map<String, String> settings) {
+  protected AbstractSchemaGenerator<SpoolDirJsonSourceConnectorConfig> generator(Map<String, String> settings) {
     return new JsonSchemaGenerator(settings);
   }
 

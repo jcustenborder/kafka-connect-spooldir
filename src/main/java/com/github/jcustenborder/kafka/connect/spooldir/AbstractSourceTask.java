@@ -41,10 +41,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
   protected CONF config;
   private final Stopwatch processingTime = Stopwatch.createUnstarted();
   protected InputFile inputFile;
-  protected long inputFileModifiedTime;
 
   private boolean hasRecords = false;
-  protected Map<String, String> metadata;
 
   private static void checkDirectory(String key, File directoryPath) {
     if (log.isInfoEnabled()) {
@@ -101,7 +99,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   protected abstract CONF config(Map<String, ?> settings);
 
-  protected abstract void configure(InputStream inputStream, Map<String, String> metadata, Long lastOffset) throws IOException;
+  protected abstract void configure(InputStream inputStream, Long lastOffset) throws IOException;
 
   protected abstract List<SourceRecord> process() throws IOException;
 
@@ -114,7 +112,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
     checkDirectory(AbstractSourceConnectorConfig.INPUT_PATH_CONFIG, this.config.inputPath);
     checkDirectory(AbstractSourceConnectorConfig.ERROR_PATH_CONFIG, this.config.errorPath);
 
-    if (AbstractSourceConnectorConfig.CleanupPolicy.MOVE == this.config.cleanupPolicy) {
+    if (this.config.finishedPathRequired()) {
       checkDirectory(AbstractSourceConnectorConfig.FINISHED_PATH_CONFIG, this.config.finishedPath);
     }
 
@@ -164,15 +162,52 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
     return results;
   }
 
+  //
+
+  /**
+   * Calculates the byte count in a human readable form. Special thanks to
+   * https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+   *
+   * @param bytes
+   * @param si
+   * @return
+   */
+  public static String humanReadableByteCount(long bytes, boolean si) {
+    final int unit = si ? 1000 : 1024;
+    if (bytes < unit) return bytes + " B";
+    int exp = (int) (Math.log(bytes) / Math.log(unit));
+    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+  }
+
   private void recordProcessingTime() {
-    log.info(
-        "Finished processing {} record(s) in {} second(s).",
-        this.recordCount,
-        processingTime.elapsed(TimeUnit.SECONDS)
-    );
+    final long secondsElapsed = processingTime.elapsed(TimeUnit.SECONDS);
+    final long bytesPerSecond;
+
+    if (0L == secondsElapsed || 0L == this.inputFile.length()) {
+      bytesPerSecond = 0L;
+    } else {
+      bytesPerSecond = this.inputFile.length() / secondsElapsed;
+    }
+
+    if (bytesPerSecond > 0) {
+      log.info(
+          "Finished processing {} record(s) in {} second(s). Processing speed {} per second.",
+          this.recordCount,
+          secondsElapsed,
+          humanReadableByteCount(bytesPerSecond, false)
+      );
+    } else {
+      log.info(
+          "Finished processing {} record(s) in {} second(s).",
+          this.recordCount,
+          secondsElapsed
+      );
+    }
   }
 
   AbstractCleanUpPolicy cleanUpPolicy;
+
 
   public List<SourceRecord> read() {
     try {
@@ -193,15 +228,11 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
           log.trace("read() - No next file found.");
           return new ArrayList<>();
         }
-
-        this.metadata = ImmutableMap.of();
         this.inputFile = nextFile;
-        this.inputFileModifiedTime = this.inputFile.inputFile.lastModified();
-
         try {
-          this.inputFile.openStream();
+          this.inputFile.openStream(this.config.bufferedInputStream);
           this.sourcePartition = ImmutableMap.of(
-              "fileName", this.inputFile.inputFile.getName()
+              "fileName", this.inputFile.getName()
           );
           log.info("Opening {}", this.inputFile);
           Long lastOffset = null;
@@ -214,8 +245,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
           this.cleanUpPolicy = AbstractCleanUpPolicy.create(this.config, this.inputFile);
           this.recordCount = 0;
-          log.trace("read() - calling configure()");
-          configure(this.inputFile.inputStream, this.metadata, lastOffset);
+          log.trace("read() - calling configure(lastOffset={})", lastOffset);
+          configure(this.inputFile.inputStream(), lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }
@@ -252,22 +283,41 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       SchemaAndValue key,
       SchemaAndValue value,
       Long timestamp) {
-    Map<String, ?> sourceOffset = ImmutableMap.of(
-        "offset",
-        recordOffset()
-    );
+    Map<String, ?> sourceOffset = offset();
 
-    return new SourceRecord(
-        this.sourcePartition,
-        sourceOffset,
-        this.config.topic,
-        null,
-        null != key ? key.schema() : null,
-        null != key ? key.value() : null,
-        value.schema(),
-        value.value(),
-        timestamp
-    );
+    SourceRecord result;
+
+    switch (this.config.metadataLocation) {
+      case HEADERS:
+        result = new SourceRecord(
+            this.sourcePartition,
+            sourceOffset,
+            this.config.topic,
+            null,
+            null != key ? key.schema() : null,
+            null != key ? key.value() : null,
+            value.schema(),
+            value.value(),
+            timestamp,
+            this.inputFile.metadata().headers(recordOffset())
+        );
+        break;
+      default:
+        result = new SourceRecord(
+            this.sourcePartition,
+            sourceOffset,
+            this.config.topic,
+            null,
+            null != key ? key.schema() : null,
+            null != key ? key.value() : null,
+            value.schema(),
+            value.value(),
+            timestamp
+        );
+        break;
+    }
+
+    return result;
   }
 
 
