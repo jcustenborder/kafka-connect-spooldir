@@ -15,30 +15,22 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationImportant;
-import com.github.jcustenborder.kafka.connect.utils.config.TaskConfigs;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
-import org.apache.kafka.connect.source.SourceConnector;
 
-import java.util.List;
 import java.util.Map;
 
 @Title("Line Delimited Source Connector")
 @Description("This connector is used to read a file line by line and write the data to Kafka.")
 @DocumentationImportant("The recommended converter to use is the StringConverter. " +
     "Example: `value.converter=org.apache.kafka.connect.storage.StringConverter`")
-public class SpoolDirLineDelimitedSourceConnector extends SourceConnector {
-
-  Map<String, String> settings;
-
+public class SpoolDirLineDelimitedSourceConnector extends AbstractSourceConnector<SpoolDirLineDelimitedSourceConnectorConfig> {
   @Override
-  public void start(Map<String, String> settings) {
-    SpoolDirSchemaLessJsonSourceConnectorConfig config = new SpoolDirSchemaLessJsonSourceConnectorConfig(settings);
-    this.settings = settings;
+  protected SpoolDirLineDelimitedSourceConnectorConfig config(Map<String, ?> settings) {
+    return new SpoolDirLineDelimitedSourceConnectorConfig(settings);
   }
 
   @Override
@@ -47,22 +39,7 @@ public class SpoolDirLineDelimitedSourceConnector extends SourceConnector {
   }
 
   @Override
-  public List<Map<String, String>> taskConfigs(int i) {
-    return TaskConfigs.single(this.settings);
-  }
-
-  @Override
-  public void stop() {
-
-  }
-
-  @Override
   public ConfigDef config() {
     return SpoolDirLineDelimitedSourceConnectorConfig.config();
-  }
-
-  @Override
-  public String version() {
-    return VersionUtil.version(this.getClass());
   }
 }
