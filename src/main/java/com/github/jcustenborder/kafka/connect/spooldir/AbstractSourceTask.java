@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorConfig> extends SourceTask {
+public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorConfig> extends SourceTask { // TODO [mpb] we rollin "TRACE" on this mofo
   private static final Logger log = LoggerFactory.getLogger(AbstractSourceTask.class);
   protected Map<String, ?> sourcePartition;
   protected CONF config;
@@ -230,14 +230,14 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         }
         this.inputFile = nextFile;
         try {
-          this.inputFile.openStream(this.config.bufferedInputStream);
+          this.inputFile.openStream(this.config.bufferedInputStream); // TODO [mpb] this is invoked and the results logged...
           this.sourcePartition = ImmutableMap.of(
               "fileName", this.inputFile.getName()
           );
-          log.info("Opening {}", this.inputFile);
+          log.info("Opening {}", this.inputFile); // TODO [mpb] this is logged...
           Long lastOffset = null;
           log.trace("looking up offset for {}", this.sourcePartition);
-          Map<String, Object> offset = this.context.offsetStorageReader().offset(this.sourcePartition);
+          Map<String, Object> offset = this.context.offsetStorageReader().offset(this.sourcePartition); // TODO [mpb] collects a 'null' lastOffset (see notes on invocations below)
           if (null != offset && !offset.isEmpty()) {
             Number number = (Number) offset.get("offset");
             lastOffset = number.longValue();
@@ -245,10 +245,10 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
           this.cleanUpPolicy = AbstractCleanUpPolicy.create(this.config, this.inputFile);
           this.recordCount = 0;
-          log.trace("read() - calling configure(lastOffset={})", lastOffset);
-          configure(this.inputFile.inputStream(), lastOffset);
+          log.trace("read() - calling configure(lastOffset={})", lastOffset); // TODO [mpb] this is logged... not very usefully, but with lastOffset->null
+          configure(this.inputFile.inputStream(), lastOffset); // TODO [mpb] this is executed, and often throws NPEs
         } catch (Exception ex) {
-          throw new ConnectException(ex);
+          throw new ConnectException(ex); // TODO [mpb] thrown after the NPE is caught
         }
         processingTime.reset();
         processingTime.start();
@@ -256,13 +256,13 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       List<SourceRecord> records = process();
       this.hasRecords = !records.isEmpty();
       return records;
-    } catch (Exception ex) {
-      log.error("Exception encountered processing line {} of {}.", recordOffset(), this.inputFile, ex);
+    } catch (Exception ex) { // TODO [mpb] arrived at with a ConnectionException thrown from the caught-and-thrown NPE from a few lines above
+      log.error("Exception encountered processing line {} of {}.", recordOffset(), this.inputFile, ex); // TODO [mpb] this is logged
       this.cleanUpPolicy.error();
       try {
-        this.cleanUpPolicy.close();
+        this.cleanUpPolicy.close(); // TODO [mpb] we do dive in here to root out the PROCESSING file
       } catch (IOException e) {
-        log.warn("Exception while while closing cleanup policy", ex);
+        log.warn("Exception while while closing cleanup policy", ex); // TODO [mpb] this is never really logged
       }
       if (this.config.haltOnError) {
         throw new ConnectException(ex);

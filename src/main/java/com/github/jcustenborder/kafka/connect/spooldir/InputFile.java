@@ -78,12 +78,12 @@ class InputFile implements Closeable {
     }
 
     final String extension = Files.getFileExtension(inputFile.getName());
-    log.trace("openStream() - fileName = '{}' extension = '{}'", inputFile, extension);
+    log.trace("openStream() - fileName = '{}' extension = '{}'", inputFile, extension); // TODO [mpb] this is logged...
     this.inputStream = new FileInputStream(this.inputFile);
 
     if (buffered) {
       log.trace(
-          "openStream() - Wrapping '{}' in a BufferedInputStream with bufferSize = {}",
+          "openStream() - Wrapping '{}' in a BufferedInputStream with bufferSize = {}",  // TODO [mpb] this is logged...
           this.inputFile,
           this.bufferSize
       );
@@ -104,7 +104,7 @@ class InputFile implements Closeable {
       }
     }
 
-    log.info("Creating processing flag {}", this.processingFlag);
+    log.info("Creating processing flag {}", this.processingFlag); // TODO [mpb] this is logged...
     Files.touch(this.processingFlag);
 
     return inputStream;

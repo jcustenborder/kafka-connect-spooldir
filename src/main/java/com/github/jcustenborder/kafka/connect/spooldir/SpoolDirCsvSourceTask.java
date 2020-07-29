@@ -47,7 +47,7 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
   }
 
   @Override
-  protected void configure(InputStream inputStream, final Long lastOffset) throws IOException {
+  protected void configure(InputStream inputStream, final Long lastOffset) throws IOException { // TODO [mpb] we go into this
     log.trace("configure() - creating csvParser");
     this.csvParser = this.config.createCSVParserBuilder();
     this.streamReader = new InputStreamReader(inputStream, this.config.charset);
@@ -58,8 +58,8 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
 
     if (this.config.firstRowAsHeader) {
       log.trace("configure() - Reading the header row.");
-      fieldNames = this.csvReader.readNext();
-      log.info("configure() - field names from header row. fields = {}", Joiner.on(", ").join(fieldNames));
+      fieldNames = this.csvReader.readNext(); // TODO [mpb] returns null when the stream was closed
+      log.info("configure() - field names from header row. fields = {}", Joiner.on(", ").join(fieldNames)); // TODO [mpb] NPE
     } else {
       log.trace("configure() - Using fields from schema {}", this.config.valueSchema.name());
       fieldNames = new String[this.config.valueSchema.fields().size()];
