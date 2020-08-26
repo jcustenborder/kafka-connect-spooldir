@@ -69,7 +69,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
       "must match the entire filename. The equivalent of Matcher.matches().";
   static final String HALT_ON_ERROR_DOC = "Should the task halt when it encounters an error or continue to the next file.";
   static final String FILE_MINIMUM_AGE_MS_DOC = "The amount of time in milliseconds after the file was last written to before the file can be processed.";
-  static final String PROCESSING_FILE_EXTENSION_DOC = "Before a file is processed, it is renamed to indicate that it is currently being processed. This setting is appended to the end of the file.";
+  static final String PROCESSING_FILE_EXTENSION_DOC = "Before a file is processed, a flag is created in its directory to indicate the file is being handled. " +
+      "The flag file has the same name as the file, but with this property appended as a suffix.";
   static final String EMPTY_POLL_WAIT_MS_DOC = "The amount of time to wait if a poll returns an empty list of records.";
   static final String TIMESTAMP_FIELD_DOC = "The field in the value schema that will contain the parsed timestamp for the record. " +
       "This field cannot be marked as optional and must be a " +
