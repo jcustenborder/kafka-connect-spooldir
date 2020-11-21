@@ -34,9 +34,8 @@ import java.util.Map;
     "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.AbstractSchemaGenerator -t json -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data -c config/JsonExample.properties -i id\n" +
     "")
 public class SpoolDirJsonSourceConnector extends AbstractSpoolDirSourceConnector<SpoolDirJsonSourceConnectorConfig> {
-
   @Override
-  protected SpoolDirJsonSourceConnectorConfig config(Map<String, String> settings) {
+  protected SpoolDirJsonSourceConnectorConfig config(Map<String, ?> settings) {
     return new SpoolDirJsonSourceConnectorConfig(false, settings);
   }
 

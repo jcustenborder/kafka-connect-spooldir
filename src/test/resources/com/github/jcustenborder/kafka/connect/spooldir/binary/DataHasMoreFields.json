@@ -1,0 +1,64 @@
+{
+  "settings": {},
+  "offset": {},
+  "expected": [
+    {
+      "sourcePartition": {
+        "fileName": "DataHasMoreFields.binary"
+      },
+      "sourceOffset": {
+        "offset": 0
+      },
+      "topic": "testing",
+      "valueSchema": {
+        "type": "BYTES",
+        "isOptional": false
+      },
+      "value": "YXNkaWZvYXNvZGZhc2RmYXJnYXNkZmFzZGZhc2RnZnJhc2RmYXNkZmFzZGZh",
+      "headers": [
+        {
+          "name": "file.name",
+          "schema": {
+            "type": "STRING",
+            "isOptional": false
+          },
+          "storage": "DataHasMoreFields.binary"
+        },
+        {
+          "name": "file.path",
+          "schema": {
+            "type": "STRING",
+            "isOptional": false
+          },
+          "storage": "/var/folders/fc/jqgphp3s5l9087p4v7pdxh040000gn/T/1559925238742-0/input/DataHasMoreFields.binary"
+        },
+        {
+          "name": "file.length",
+          "schema": {
+            "type": "INT64",
+            "isOptional": false
+          },
+          "storage": 5153
+        },
+        {
+          "name": "file.offset",
+          "schema": {
+            "type": "INT64",
+            "isOptional": false
+          },
+          "storage": 0
+        },
+        {
+          "name": "file.last.modified",
+          "schema": {
+            "name": "org.apache.kafka.connect.data.Timestamp",
+            "type": "INT64",
+            "version": 1,
+            "isOptional": false
+          },
+          "storage": 1559925239000
+        }
+      ]
+    }
+  ]
+}

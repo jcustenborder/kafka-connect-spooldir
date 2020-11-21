@@ -17,31 +17,33 @@ package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationImportant;
+import com.github.jcustenborder.kafka.connect.utils.config.DocumentationWarning;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 
 import java.util.Map;
 
-@Title("Schema Less Json Source Connector")
-@Description("This connector is used to `stream <https://en.wikipedia.org/wiki/JSON_Streaming>_` JSON files from a directory " +
-    "while converting the data based on the schema supplied in the configuration.")
-@DocumentationImportant("This connector does not try to convert the json records to a schema. " +
-    "The recommended converter to use is the StringConverter. " +
-    "Example: `value.converter=org.apache.kafka.connect.storage.StringConverter`")
-public class SpoolDirSchemaLessJsonSourceConnector extends AbstractSourceConnector<SpoolDirSchemaLessJsonSourceConnectorConfig> {
+@Title("Binary File Source Connector")
+@Description("This connector is used to read an entire file as a byte array write the data to Kafka.")
+@DocumentationImportant("The recommended converter to use is the ByteArrayConverter. " +
+    "Example: `value.converter=org.apache.kafka.connect.storage.ByteArrayConverter`")
+@DocumentationWarning("Large files will be read as a single byte array. This means that the process could " +
+    "run out of memory or try to send a message to Kafka that is greater than the max message size. If this happens " +
+    "an exception will be thrown.")
+public class SpoolDirBinaryFileSourceConnector extends AbstractSourceConnector<SpoolDirBinaryFileSourceConnectorConfig> {
   @Override
-  protected SpoolDirSchemaLessJsonSourceConnectorConfig config(Map<String, ?> settings) {
-    return new SpoolDirSchemaLessJsonSourceConnectorConfig(settings);
+  protected SpoolDirBinaryFileSourceConnectorConfig config(Map<String, ?> settings) {
+    return new SpoolDirBinaryFileSourceConnectorConfig(settings);
   }
 
   @Override
   public Class<? extends Task> taskClass() {
-    return SpoolDirSchemaLessJsonSourceTask.class;
+    return SpoolDirLineDelimitedSourceTask.class;
   }
 
   @Override
   public ConfigDef config() {
-    return SpoolDirSchemaLessJsonSourceConnectorConfig.config();
+    return SpoolDirBinaryFileSourceConnectorConfig.config();
   }
 }

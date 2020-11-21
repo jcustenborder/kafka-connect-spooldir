@@ -23,13 +23,11 @@ import com.google.common.collect.Multimap;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.DataException;
-import org.apache.kafka.connect.source.SourceConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,12 +36,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class AbstractSpoolDirSourceConnector<CONF extends AbstractSpoolDirSourceConnectorConfig> extends SourceConnector {
-  private static Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceConnector.class);
+public abstract class AbstractSpoolDirSourceConnector<CONF extends AbstractSpoolDirSourceConnectorConfig> extends AbstractSourceConnector<CONF> {
+  private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceConnector.class);
   protected Map<String, String> settings;
-  private CONF config;
-
-  protected abstract CONF config(Map<String, String> settings);
 
   protected abstract AbstractSchemaGenerator<CONF> generator(Map<String, String> settings);
 
@@ -54,6 +49,7 @@ public abstract class AbstractSpoolDirSourceConnector<CONF extends AbstractSpool
 
   @Override
   public void start(final Map<String, String> input) {
+    super.start(input);
     this.config = config(input);
     final Map<String, String> settings = new LinkedHashMap<>(input);
 
@@ -122,24 +118,5 @@ public abstract class AbstractSpoolDirSourceConnector<CONF extends AbstractSpool
     }
 
     this.settings = settings;
-  }
-
-  @Override
-  public List<Map<String, String>> taskConfigs(int taskCount) {
-    List<Map<String, String>> result = new ArrayList<>();
-
-    for (int i = 0; i < taskCount; i++) {
-      Map<String, String> taskConfig = new LinkedHashMap<>(this.settings);
-      taskConfig.put(AbstractSourceConnectorConfig.TASK_INDEX_CONF, Integer.toString(i));
-      taskConfig.put(AbstractSourceConnectorConfig.TASK_COUNT_CONF, Integer.toString(taskCount));
-      result.add(taskConfig);
-    }
-
-    return result;
-  }
-
-  @Override
-  public void stop() {
-
   }
 }
