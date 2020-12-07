@@ -39,7 +39,7 @@ public class SpoolDirBinaryFileSourceConnector extends AbstractSourceConnector<S
 
   @Override
   public Class<? extends Task> taskClass() {
-    return SpoolDirLineDelimitedSourceTask.class;
+    return SpoolDirBinaryFileSourceTask.class;
   }
 
   @Override
