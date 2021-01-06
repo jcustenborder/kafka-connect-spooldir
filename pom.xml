@@ -108,7 +108,7 @@
                         </goals>
                         <configuration>
                             <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
-                            <documentationUrl>https://docs.confluent.io/current/connect/kafka-connect-spooldir/
+                            <documentationUrl>https://docs.confluent.io/kafka-connect-spooldir/current/index.html
                             </documentationUrl>
                             <componentTypes>
                                 <componentType>source</componentType>
@@ -121,7 +121,7 @@
                             </tags>
                             <title>Kafka Connect Spooldir</title>
                             <supportProviderName>Confluent, Inc.</supportProviderName>
-                            <supportUrl>https://docs.confluent.io/current/connect/kafka-connect-spooldir/</supportUrl>
+                            <supportUrl>https://docs.confluent.io/kafka-connect-spooldir/current/index.html</supportUrl>
                             <supportSummary><![CDATA[This connector is <a href="https://www.confluent.io/subscription/">supported by Confluent</a> as part of a
                               <a href="https://www.confluent.io/product/confluent-platform/">Confluent Platform</a> subscription.]]></supportSummary>
                         </configuration>
