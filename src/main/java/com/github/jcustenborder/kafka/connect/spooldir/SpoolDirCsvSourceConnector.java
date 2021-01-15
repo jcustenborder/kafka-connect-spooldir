@@ -16,6 +16,7 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
+import com.github.jcustenborder.kafka.connect.utils.config.DocumentationImportant;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationTip;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
 import org.apache.kafka.common.config.ConfigDef;
@@ -33,6 +34,12 @@ import java.util.Map;
     "   export CLASSPATH=\"$(find target/kafka-connect-target/usr/share/kafka-connect/kafka-connect-spooldir -type f -name '*.jar' | tr '\\n' ':')\"\n" +
     "   kafka-run-class com.github.jcustenborder.kafka.connect.spooldir.AbstractSchemaGenerator -t csv -f src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data -c config/CSVExample.properties -i id\n" +
     "")
+@DocumentationImportant("There are some caveats to running this connector with `" + SpoolDirCsvSourceConnectorConfig.SCHEMA_GENERATION_ENABLED_CONF +
+    " = true`. If schema generation is enabled the connector will start by reading one of the files that match `" + SpoolDirCsvSourceConnectorConfig.INPUT_FILE_PATTERN_CONF +
+    "` in the path specified by `" + SpoolDirCsvSourceConnectorConfig.INPUT_PATH_CONFIG + "`. If there are no files when the connector starts or is restarted " +
+    "the connector will fail to start. If there are different fields in other files they will not be detected. The recommended path is to specify a schema that the " +
+    "files will be parsed with. This will ensure that data written by this connector to Kafka will be consistent across files that have inconsistent columns. For example " +
+    "if some files have an optional column that is not always included, create a schema that includes the column marked as optional.")
 public class SpoolDirCsvSourceConnector extends AbstractSpoolDirSourceConnector<SpoolDirCsvSourceConnectorConfig> {
   @Override
   protected SpoolDirCsvSourceConnectorConfig config(Map<String, ?> settings) {

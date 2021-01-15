@@ -25,7 +25,9 @@ import java.util.Map;
 
 @Title("Schema Less Json Source Connector")
 @Description("This connector is used to `stream <https://en.wikipedia.org/wiki/JSON_Streaming>_` JSON files from a directory " +
-    "while converting the data based on the schema supplied in the configuration.")
+    "while converting the data based on the schema supplied in the configuration. This connector will read each file node by node " +
+    "writing the result to Kafka. For example if your data file contains several json objects the connector will read from { to } " +
+    "for each object and write each object to Kafka.")
 @DocumentationImportant("This connector does not try to convert the json records to a schema. " +
     "The recommended converter to use is the StringConverter. " +
     "Example: `value.converter=org.apache.kafka.connect.storage.StringConverter`")

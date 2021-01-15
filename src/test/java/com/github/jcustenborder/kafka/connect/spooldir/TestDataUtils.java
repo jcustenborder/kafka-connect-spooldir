@@ -17,6 +17,7 @@ package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
 import com.google.common.base.Preconditions;
+import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.FilterBuilder;
@@ -34,6 +35,12 @@ import java.util.Set;
 
 public class TestDataUtils {
   private static final Logger log = LoggerFactory.getLogger(TestDataUtils.class);
+
+  @Test
+  public void metadata() {
+    log.info(Metadata.HEADER_DOCS);
+  }
+
 
   public static <T extends NamedTest> List<T> loadJsonResourceFiles(String packageName, Class<T> cls) throws IOException {
     Preconditions.checkNotNull(packageName, "packageName cannot be null");

@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 
 abstract class AbstractCleanUpPolicy implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(AbstractCleanUpPolicy.class);
-  private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+  private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
   protected final InputFile inputFile;
   protected final File errorPath;
   protected final File finishedPath;
@@ -123,7 +123,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
     public void success() throws IOException {
       super.success();
       // Setup directory named as the file created date
-      File subDirectory = new File(this.finishedPath, dateFormatter.format(this.inputFile.lastModified()));
+      File subDirectory = new File(this.finishedPath, DATE_FORMATTER.format(this.inputFile.lastModified()));
       log.trace("Finished path: {}", subDirectory);
 
       if (createDirectory(subDirectory)) {

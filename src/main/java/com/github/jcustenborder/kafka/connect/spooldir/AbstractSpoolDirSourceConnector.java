@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractSpoolDirSourceConnector<CONF extends AbstractSpoolDirSourceConnectorConfig> extends AbstractSourceConnector<CONF> {
   private static final Logger log = LoggerFactory.getLogger(AbstractSpoolDirSourceConnector.class);
-  protected Map<String, String> settings;
 
   protected abstract AbstractSchemaGenerator<CONF> generator(Map<String, String> settings);
 
