@@ -19,5 +19,13 @@ public class DeleteCleanupPolicyTest extends AbstractCleanUpPolicyTest<AbstractC
     assertTrue(this.inputFile.exists(), "Input file should exist");
     this.cleanupPolicy.success();
     assertFalse(this.inputFile.exists(), "Input file should not exist");
+
+    if (!(cleanupPolicy instanceof AbstractCleanUpPolicy.Delete)) {
+      File finishedFile = new File(this.finishedPath, this.inputFile.getName());
+      assertTrue(finishedFile.exists(), "finishedPath file should exist.");
+    } else {
+      File finishedFile = new File(this.finishedPath, this.inputFile.getName());
+      assertFalse(finishedFile.exists(), "finishedPath file should exist.");
+    }
   }
 }

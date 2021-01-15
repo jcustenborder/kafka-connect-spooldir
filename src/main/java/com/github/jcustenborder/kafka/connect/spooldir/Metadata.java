@@ -15,10 +15,6 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import org.apache.kafka.connect.data.Schema;
-import org.apache.kafka.connect.data.SchemaBuilder;
-import org.apache.kafka.connect.data.Struct;
-import org.apache.kafka.connect.data.Timestamp;
 import org.apache.kafka.connect.header.ConnectHeaders;
 import org.apache.kafka.connect.header.Headers;
 
@@ -29,19 +25,11 @@ import java.util.Date;
  * Class is used to write metadata for the InputFile.
  */
 class Metadata {
-  public static final String METADATA_SCHEMA_NAME = "com.github.jcustenborder.kafka.connect.spooldir.Metadata";
   static final String HEADER_PATH = "file.path";
   static final String HEADER_NAME = "file.name";
   static final String HEADER_LAST_MODIFIED = "file.last.modified";
   static final String HEADER_LENGTH = "file.length";
   static final String HEADER_OFFSET = "file.offset";
-
-  static final String FIELD_PATH = "path";
-  static final String FIELD_NAME = "name";
-  static final String FIELD_LAST_MODIFIED = "last_modified";
-  static final String FIELD_LENGTH = "length";
-  static final String FIELD_OFFSET = "offset";
-  static final Schema METADATA_SCHEMA;
 
   final String path;
   final String name;
@@ -53,18 +41,6 @@ class Metadata {
     this.name = file.getName();
     this.lastModified = new Date(file.lastModified());
     this.length = file.length();
-  }
-
-  static {
-    METADATA_SCHEMA = SchemaBuilder.struct()
-        .name(METADATA_SCHEMA_NAME)
-        .optional()
-        .field(FIELD_NAME, SchemaBuilder.string().doc("Name of the file.").build())
-        .field(FIELD_PATH, SchemaBuilder.string().doc("Absolute path of the file.").build())
-        .field(FIELD_LAST_MODIFIED, Timestamp.builder().doc("Absolute path of the file.").build())
-        .field(FIELD_LENGTH, SchemaBuilder.int64().doc("Length of the file.").build())
-        .field(FIELD_OFFSET, SchemaBuilder.int64().doc("Position of the record in the file.").build())
-        .build();
   }
 
   /**
@@ -80,21 +56,5 @@ class Metadata {
     headers.addLong(HEADER_OFFSET, offset);
     headers.addTimestamp(HEADER_LAST_MODIFIED, this.lastModified);
     return headers;
-  }
-
-  /**
-   * Method is used to copy the metadata from the headers to a struct.
-   *
-   * @return Struct containing the metadata from the file processed.
-   */
-  public Struct struct(long offset) {
-
-    Struct result = new Struct(METADATA_SCHEMA);
-    result.put(FIELD_NAME, this.name);
-    result.put(FIELD_PATH, this.path);
-    result.put(FIELD_LAST_MODIFIED, this.lastModified);
-    result.put(FIELD_LENGTH, this.length);
-    result.put(HEADER_OFFSET, offset);
-    return result;
   }
 }

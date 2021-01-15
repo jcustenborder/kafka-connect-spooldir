@@ -15,16 +15,37 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.github.jcustenborder.kafka.connect.utils.config.ConfigKeyBuilder;
+import com.github.jcustenborder.kafka.connect.utils.config.ConfigUtils;
 import org.apache.kafka.common.config.ConfigDef;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 public class SpoolDirSchemaLessJsonSourceConnectorConfig extends AbstractSourceConnectorConfig {
+  public static final String CHARSET_CONF = "file.charset";
+  static final String CHARSET_DOC = "Character set to read wth file with.";
+  static final String CHARSET_DEFAULT = Charset.defaultCharset().name();
+  static final String CHARSET_DISPLAY = "File character set.";
+
+  public final Charset charset;
+
   public SpoolDirSchemaLessJsonSourceConnectorConfig(Map<?, ?> originals) {
     super(config(), originals, true);
+    this.charset = ConfigUtils.charset(this, CHARSET_CONF);
   }
 
   public static ConfigDef config() {
-    return AbstractSourceConnectorConfig.config(true);
+    return AbstractSourceConnectorConfig.config(true)
+        .define(
+            ConfigKeyBuilder.of(CHARSET_CONF, ConfigDef.Type.STRING)
+                .defaultValue(CHARSET_DEFAULT)
+                .validator(SpoolDirCsvSourceConnectorConfig.CharsetValidator.of())
+                .importance(ConfigDef.Importance.LOW)
+                .documentation(CHARSET_DOC)
+                .displayName(CHARSET_DISPLAY)
+                .width(ConfigDef.Width.LONG)
+                .build()
+        );
   }
 }

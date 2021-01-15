@@ -1,5 +1,6 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,17 +8,23 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 
 public abstract class AbstractCleanUpPolicyTest<T extends AbstractCleanUpPolicy> {
 
   InputFile inputFile;
+  File inputPath;
   File finishedPath;
   File errorPath;
-  T cleanupPolicy;
+  protected T cleanupPolicy;
 
   protected abstract T create(
       InputFile inputFile, File errorPath, File finishedPath
@@ -27,9 +34,23 @@ public abstract class AbstractCleanUpPolicyTest<T extends AbstractCleanUpPolicy>
   public void before() throws IOException {
     this.errorPath = Files.createTempDir();
     this.finishedPath = Files.createTempDir();
-    File inputFile = File.createTempFile("input", "file");
-    File processingFlag = new File(inputFile.getParent(), inputFile.getName() + ".PROCESSING");
-    this.inputFile = new InputFile(inputFile, processingFlag, 0);
+    this.inputPath = Files.createTempDir();
+
+    File inputFile = File.createTempFile("input", "file", this.inputPath);
+
+    SpoolDirBinaryFileSourceConnectorConfig config = new SpoolDirBinaryFileSourceConnectorConfig(
+        ImmutableMap.of(
+            SpoolDirBinaryFileSourceConnectorConfig.TOPIC_CONF, "foo",
+            SpoolDirBinaryFileSourceConnectorConfig.INPUT_PATH_CONFIG, this.inputPath.toString(),
+            SpoolDirBinaryFileSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, "^.$",
+            SpoolDirBinaryFileSourceConnectorConfig.ERROR_PATH_CONFIG, this.errorPath.toString(),
+            SpoolDirBinaryFileSourceConnectorConfig.FINISHED_PATH_CONFIG, this.finishedPath.toString()
+        )
+    );
+
+    this.inputFile = new InputFile(config, inputFile);
+    this.inputFile.inputStreamReader = mock(InputStreamReader.class);
+    this.inputFile.lineNumberReader = mock(LineNumberReader.class);
     this.cleanupPolicy = create(this.inputFile, this.errorPath, this.finishedPath);
   }
 
@@ -53,10 +74,12 @@ public abstract class AbstractCleanUpPolicyTest<T extends AbstractCleanUpPolicy>
   }
 
   @AfterEach
-  public void after() {
-    this.inputFile.delete();
+  public void after() throws IOException {
     delete(this.finishedPath);
     delete(this.errorPath);
+    delete(this.inputPath);
+    verify(this.inputFile.inputStreamReader, only()).close();
+    verify(this.inputFile.lineNumberReader, only()).close();
   }
 
 }

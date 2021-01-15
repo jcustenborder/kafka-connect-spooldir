@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 
 abstract class AbstractCleanUpPolicy implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(AbstractCleanUpPolicy.class);
-  private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+  private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
   protected final InputFile inputFile;
   protected final File errorPath;
   protected final File finishedPath;
@@ -62,9 +62,6 @@ abstract class AbstractCleanUpPolicy implements Closeable {
     return result;
   }
 
-
-
-
   protected boolean createDirectory(File directory) {
     if (directory.exists()) {
       return true;
@@ -82,13 +79,14 @@ abstract class AbstractCleanUpPolicy implements Closeable {
 
   @Override
   public void close() throws IOException {
-
+    this.inputFile.close();
   }
 
   /**
    * Method is used to handle file cleanup when processing the file has errored.
    */
-  public void error() {
+  public void error() throws IOException {
+    close();
     log.error(
         "Error during processing, moving {} to {}.",
         this.inputFile,
@@ -100,7 +98,9 @@ abstract class AbstractCleanUpPolicy implements Closeable {
   /**
    * Method is used to handle file cleanup when processing the file was successful.
    */
-  public abstract void success() throws IOException;
+  public void success() throws IOException {
+    close();
+  }
 
   static class Move extends AbstractCleanUpPolicy {
     protected Move(InputFile inputFile, File errorPath, File finishedPath) {
@@ -109,6 +109,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
 
     @Override
     public void success() throws IOException {
+      super.success();
       this.inputFile.moveToDirectory(this.finishedPath);
     }
   }
@@ -120,6 +121,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
 
     @Override
     public void success() throws IOException {
+      super.success();
       // Setup directory named as the file created date
       File subDirectory = new File(this.finishedPath, dateFormatter.format(this.inputFile.lastModified()));
       log.trace("Finished path: {}", subDirectory);
@@ -139,6 +141,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
 
     @Override
     public void success() throws IOException {
+      super.success();
       this.inputFile.delete();
     }
   }
@@ -150,6 +153,7 @@ abstract class AbstractCleanUpPolicy implements Closeable {
 
     @Override
     public void success() throws IOException {
+      super.success();
       log.trace("Leaving {}", this.inputFile);
     }
   }

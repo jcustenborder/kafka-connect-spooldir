@@ -16,6 +16,7 @@
 package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
 import com.github.jcustenborder.kafka.connect.spooldir.AbstractSourceTask;
+import com.github.jcustenborder.kafka.connect.spooldir.InputFile;
 import com.github.jcustenborder.parsers.elf.ElfParser;
 import com.github.jcustenborder.parsers.elf.ElfParserBuilder;
 import com.github.jcustenborder.parsers.elf.LogEntry;
@@ -51,12 +52,12 @@ public class SpoolDirELFSourceTask extends AbstractSourceTask<SpoolDirELFSourceC
 
 
   @Override
-  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
+  protected void configure(InputFile inputFile, Long lastOffset) throws IOException {
     if (null != this.parser) {
       log.trace("configure() - Closing existing parser.");
       this.parser.close();
     }
-
+    InputStream inputStream = inputFile.openStream();
     this.parser = this.parserBuilder.build(inputStream);
     SchemaConversionBuilder builder = new SchemaConversionBuilder(this.parser);
     this.conversion = builder.build();
