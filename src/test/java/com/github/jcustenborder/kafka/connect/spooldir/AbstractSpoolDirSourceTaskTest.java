@@ -143,7 +143,8 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     List<String> headersToRemove = Arrays.asList(
         Metadata.HEADER_LAST_MODIFIED,
         Metadata.HEADER_PATH,
-        Metadata.HEADER_LENGTH
+        Metadata.HEADER_LENGTH,
+        Metadata.HEADER_NAME_WITHOUT_EXTENSION
     );
 
     for (int i = 0; i < testCase.expected.size(); i++) {

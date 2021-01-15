@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractSourceConnector<CONF extends AbstractSourceConnectorConfig> extends SourceConnector {
-  Map<String, String> settings;
+  protected Map<String, String> settings;
   protected CONF config;
   protected abstract CONF config(Map<String, ?> settings);
 

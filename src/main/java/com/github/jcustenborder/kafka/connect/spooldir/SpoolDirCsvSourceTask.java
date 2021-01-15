@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
   String[] fieldNames;
   private ICSVParser csvParser;
   private CSVReader csvReader;
-  private InputStreamReader streamReader;
+//  private InputStreamReader streamReader;
 
   @Override
   protected SpoolDirCsvSourceConnectorConfig config(Map<String, ?> settings) {
@@ -47,11 +46,11 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
   }
 
   @Override
-  protected void configure(InputStream inputStream, final Long lastOffset) throws IOException {
+  protected void configure(InputFile inputFile, final Long lastOffset) throws IOException {
     log.trace("configure() - creating csvParser");
     this.csvParser = this.config.createCSVParserBuilder();
-    this.streamReader = new InputStreamReader(inputStream, this.config.charset);
-    CSVReaderBuilder csvReaderBuilder = this.config.createCSVReaderBuilder(this.streamReader, csvParser);
+    InputStreamReader streamReader = inputFile.openInputStreamReader(this.config.charset);
+    CSVReaderBuilder csvReaderBuilder = this.config.createCSVReaderBuilder(streamReader, csvParser);
     this.csvReader = csvReaderBuilder.build();
 
     String[] fieldNames;

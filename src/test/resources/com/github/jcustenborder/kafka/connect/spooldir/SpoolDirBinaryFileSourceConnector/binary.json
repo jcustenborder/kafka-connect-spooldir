@@ -1,0 +1,11 @@
+{
+  "name": "Binary File",
+  "description": "This file will read the entire file and write it to Kafka as a binary file.",
+  "config": {
+    "finished.path": "/tmp",
+    "input.path": "/tmp",
+    "error.path": "/tmp",
+    "input.file.pattern": "^users\\d+\\.bin$",
+    "topic": "users"
+  }
+}

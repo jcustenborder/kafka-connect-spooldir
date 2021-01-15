@@ -15,14 +15,14 @@
  */
 @Introduction(
     "This Kafka Connect connector provides the capability to watch a directory for files and " +
-    "read the data as new files are written to the input directory. Each of the records in the " +
-    "input file will be converted based on the user supplied schema.\n" +
-    "\n" +
-    "The CSVRecordProcessor supports reading CSV or TSV files. It can convert a CSV on the fly " +
-    "to the strongly typed Kafka Connect data types. It currently has support for all of the " +
-    "schema types and logical types that are supported in Kafka Connect. If you couple this " +
-    "with the Avro converter and Schema Registry by Confluent, you will be able to process " +
-    "CSV, Json, or TSV files to strongly typed Avro data in real time.")
+        "read the data as new files are written to the input directory. Each of the records in the " +
+        "input file will be converted based on the user supplied schema.\n" +
+        "\n" +
+        "The CSVRecordProcessor supports reading CSV or TSV files. It can convert a CSV on the fly " +
+        "to the strongly typed Kafka Connect data types. It currently has support for all of the " +
+        "schema types and logical types that are supported in Kafka Connect. If you couple this " +
+        "with the Avro converter and Schema Registry by Confluent, you will be able to process " +
+        "CSV, Json, or TSV files to strongly typed Avro data in real time.")
 @Title("Spool Dir")
 @DocumentationWarning("Running these connectors with multiple tasks requires a shared volume across " +
     "all of the Kafka Connect workers. Kafka Connect does not have a mechanism for synchronization of " +
@@ -32,8 +32,18 @@
     "the order that the data is written to Kafka.")
 @PluginOwner("jcustenborder")
 @PluginName("kafka-connect-spooldir")
+@DocumentationNote("Each of the connectors in this plugin emit the following headers for each record " +
+    "written to kafka. \n\n" +
+    "* `file.path` - The absolute path to the file ingested.\n" +
+    "* `file.name` - The name part of the file ingested.\n" +
+    "* `file.name.without.extension` - The file name without the extension part of the file.\n" +
+    "* `file.last.modified` - The last modified date of the file.\n" +
+    "* `file.length` - The size of the file in bytes.\n" +
+    "* `file.offset` - The offset for this piece of data within the file.\n"
+)
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import com.github.jcustenborder.kafka.connect.utils.config.DocumentationNote;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationWarning;
 import com.github.jcustenborder.kafka.connect.utils.config.Introduction;
 import com.github.jcustenborder.kafka.connect.utils.config.PluginName;

@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +98,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   protected abstract CONF config(Map<String, ?> settings);
 
-  protected abstract void configure(InputStream inputStream, Long lastOffset) throws IOException;
+  protected abstract void configure(InputFile inputFile, Long lastOffset) throws IOException;
 
   protected abstract List<SourceRecord> process() throws IOException;
 
@@ -230,7 +229,6 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         }
         this.inputFile = nextFile;
         try {
-          this.inputFile.openStream(this.config.bufferedInputStream);
           this.sourcePartition = ImmutableMap.of(
               "fileName", this.inputFile.getName()
           );
@@ -246,7 +244,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
           this.cleanUpPolicy = AbstractCleanUpPolicy.create(this.config, this.inputFile);
           this.recordCount = 0;
           log.trace("read() - calling configure(lastOffset={})", lastOffset);
-          configure(this.inputFile.inputStream(), lastOffset);
+          configure(this.inputFile, lastOffset);
         } catch (Exception ex) {
           throw new ConnectException(ex);
         }
@@ -258,9 +256,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       return records;
     } catch (Exception ex) {
       log.error("Exception encountered processing line {} of {}.", recordOffset(), this.inputFile, ex);
-      this.cleanUpPolicy.error();
       try {
-        this.cleanUpPolicy.close();
+        this.cleanUpPolicy.error();
       } catch (IOException e) {
         log.warn("Exception while while closing cleanup policy", ex);
       }
@@ -285,40 +282,19 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       Long timestamp) {
     Map<String, ?> sourceOffset = offset();
 
-    SourceRecord result;
-
-    switch (this.config.metadataLocation) {
-      case HEADERS:
-        result = new SourceRecord(
-            this.sourcePartition,
-            sourceOffset,
-            this.config.topic,
-            null,
-            null != key ? key.schema() : null,
-            null != key ? key.value() : null,
-            value.schema(),
-            value.value(),
-            timestamp,
-            this.inputFile.metadata().headers(recordOffset())
-        );
-        break;
-      default:
-        result = new SourceRecord(
-            this.sourcePartition,
-            sourceOffset,
-            this.config.topic,
-            null,
-            null != key ? key.schema() : null,
-            null != key ? key.value() : null,
-            value.schema(),
-            value.value(),
-            timestamp
-        );
-        break;
-    }
+    SourceRecord result = new SourceRecord(
+        this.sourcePartition,
+        sourceOffset,
+        this.config.topic,
+        null,
+        null != key ? key.schema() : null,
+        null != key ? key.value() : null,
+        value.schema(),
+        value.value(),
+        timestamp,
+        this.inputFile.metadata().headers(recordOffset())
+    );
 
     return result;
   }
-
-
 }

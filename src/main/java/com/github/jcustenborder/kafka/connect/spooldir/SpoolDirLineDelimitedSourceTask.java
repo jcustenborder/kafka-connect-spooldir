@@ -22,10 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,16 +34,9 @@ public class SpoolDirLineDelimitedSourceTask extends AbstractSourceTask<SpoolDir
     return new SpoolDirLineDelimitedSourceConnectorConfig(settings);
   }
 
-  LineNumberReader reader;
-
-
   @Override
-  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
-    if (null != this.reader) {
-      this.reader.close();
-    }
-    Reader streamReader = new InputStreamReader(inputStream);
-    this.reader = new LineNumberReader(streamReader);
+  protected void configure(InputFile inputFile, Long lastOffset) throws IOException {
+    this.inputFile.openLineNumberReader(this.config.charset);
   }
 
   @Override
@@ -55,7 +44,7 @@ public class SpoolDirLineDelimitedSourceTask extends AbstractSourceTask<SpoolDir
     int recordCount = 0;
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
     String line = null;
-    while (recordCount < this.config.batchSize && null != (line = this.reader.readLine())) {
+    while (recordCount < this.config.batchSize && null != (line = this.inputFile.lineNumberReader().readLine())) {
       SourceRecord record = record(
           null,
           new SchemaAndValue(Schema.STRING_SCHEMA, line),
@@ -69,6 +58,6 @@ public class SpoolDirLineDelimitedSourceTask extends AbstractSourceTask<SpoolDir
 
   @Override
   protected long recordOffset() {
-    return this.reader.getLineNumber();
+    return this.inputFile.lineNumberReader().getLineNumber();
   }
 }

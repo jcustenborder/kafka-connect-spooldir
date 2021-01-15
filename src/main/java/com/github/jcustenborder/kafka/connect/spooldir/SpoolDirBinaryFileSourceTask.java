@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,19 +35,17 @@ public class SpoolDirBinaryFileSourceTask extends AbstractSourceTask<SpoolDirBin
     return new SpoolDirBinaryFileSourceConnectorConfig(settings);
   }
 
-  InputStream inputStream;
-
   @Override
-  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
-    this.inputStream = inputStream;
+  protected void configure(InputFile inputFile, Long lastOffset) throws IOException {
+    inputFile.openStream();
   }
 
   @Override
   protected List<SourceRecord> process() throws IOException {
     List<SourceRecord> records = new ArrayList<>(1);
 
-    if (this.inputStream.available() > 0) {
-      byte[] buffer = ByteStreams.toByteArray(inputStream);
+    if (this.inputFile.inputStream().available() > 0) {
+      byte[] buffer = ByteStreams.toByteArray(this.inputFile.inputStream());
       records.add(
           record(
               null,

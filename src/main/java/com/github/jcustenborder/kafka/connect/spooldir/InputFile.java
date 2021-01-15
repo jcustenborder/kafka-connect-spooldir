@@ -28,9 +28,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.nio.charset.Charset;
 import java.util.Map;
 
-class InputFile implements Closeable {
+public class InputFile implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(InputFile.class);
   private final File inputFile;
   private final File processingFlag;
@@ -38,17 +41,20 @@ class InputFile implements Closeable {
   private final String path;
   private final long length;
   private final long lastModified;
-  private final int bufferSize;
   private final Metadata metadata;
+  private final AbstractSourceConnectorConfig config;
+  InputStreamReader inputStreamReader;
+  LineNumberReader lineNumberReader;
 
-  InputFile(File inputFile, File processingFlag, int bufferSize) {
+  InputFile(AbstractSourceConnectorConfig config, File inputFile) {
+    this.config = config;
     this.inputFile = inputFile;
-    this.bufferSize = bufferSize;
     this.name = this.inputFile.getName();
     this.path = this.inputFile.getPath();
     this.lastModified = this.inputFile.lastModified();
     this.length = this.inputFile.length();
-    this.processingFlag = processingFlag;
+    String processingFileName = inputFile.getName() + config.processingFileExtension;
+    this.processingFlag = new File(inputFile.getParentFile(), processingFileName);
     this.metadata = new Metadata(inputFile);
   }
 
@@ -70,7 +76,7 @@ class InputFile implements Closeable {
     return this.inputStream;
   }
 
-  public InputStream openStream(boolean buffered) throws IOException {
+  public InputStream openStream() throws IOException {
     if (null != this.inputStream) {
       throw new IOException(
           String.format("File %s is already open", this.inputFile)
@@ -81,13 +87,13 @@ class InputFile implements Closeable {
     log.trace("openStream() - fileName = '{}' extension = '{}'", inputFile, extension);
     this.inputStream = new FileInputStream(this.inputFile);
 
-    if (buffered) {
+    if (this.config.bufferedInputStream) {
       log.trace(
           "openStream() - Wrapping '{}' in a BufferedInputStream with bufferSize = {}",
           this.inputFile,
-          this.bufferSize
+          this.config.fileBufferSizeBytes
       );
-      this.inputStream = new BufferedInputStream(this.inputStream, this.bufferSize);
+      this.inputStream = new BufferedInputStream(this.inputStream, this.config.fileBufferSizeBytes);
     }
 
     if (SUPPORTED_COMPRESSION_TYPES.containsKey(extension)) {
@@ -110,6 +116,33 @@ class InputFile implements Closeable {
     return inputStream;
   }
 
+  public InputStreamReader openInputStreamReader(Charset charset) throws IOException {
+    if (null == this.inputStreamReader) {
+      InputStream inputStream = null != this.inputStream ? this.inputStream : openStream();
+      this.inputStreamReader = new InputStreamReader(inputStream, charset);
+    }
+
+    return this.inputStreamReader;
+  }
+
+  public InputStreamReader inputStreamReader() {
+    return this.inputStreamReader;
+  }
+
+  public LineNumberReader openLineNumberReader(Charset charset) throws IOException {
+    if (null == this.lineNumberReader) {
+      InputStreamReader inputStreamReader = this.inputStreamReader != null ?
+          this.inputStreamReader : openInputStreamReader(charset);
+      this.lineNumberReader = new LineNumberReader(inputStreamReader);
+    }
+    return this.lineNumberReader;
+  }
+
+  public LineNumberReader lineNumberReader() {
+    return this.lineNumberReader;
+  }
+
+
   @Override
   public String toString() {
     return this.inputFile.toString();
@@ -117,6 +150,12 @@ class InputFile implements Closeable {
 
   @Override
   public void close() throws IOException {
+    if (null != this.lineNumberReader) {
+      this.lineNumberReader.close();
+    }
+    if (null != this.inputStreamReader) {
+      this.inputStreamReader.close();
+    }
     if (null != this.inputStream) {
       log.info("Closing {}", this.inputFile);
       this.inputStream.close();

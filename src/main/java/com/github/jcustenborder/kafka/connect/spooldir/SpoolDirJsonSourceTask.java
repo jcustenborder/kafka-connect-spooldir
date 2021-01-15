@@ -53,12 +53,12 @@ public class SpoolDirJsonSourceTask extends AbstractSpoolDirSourceTask<SpoolDirJ
   }
 
   @Override
-  protected void configure(InputStream inputStream, Long lastOffset) throws IOException {
+  protected void configure(InputFile inputFile, Long lastOffset) throws IOException {
     if (null != jsonParser) {
       log.trace("configure() - Closing existing json parser.");
       jsonParser.close();
     }
-
+    InputStream inputStream = inputFile.openStream();
     this.jsonParser = this.jsonFactory.createParser(inputStream);
     this.iterator = ObjectMapperFactory.INSTANCE.readValues(this.jsonParser, JsonNode.class);
     this.offset = -1;

@@ -75,11 +75,11 @@ class SpoolDirCsvSourceConnectorConfig extends AbstractSpoolDirSourceConnectorCo
       "of an integer. Typically in a CSV this is a ,(44) character. A TSV would use a tab(9) character. " +
       "If `" + CSV_SEPARATOR_CHAR_CONF + "` is defined as a null(0), then the RFC 4180 parser must be " +
       "utilized by default. This is the equivalent of `" + CSV_USE_RFC_4180_PARSER_CONF + " = true`.";
-  static final int CSV_SEPARATOR_CHAR_DEFAULT = (int) CSVParser.DEFAULT_SEPARATOR;
-  static final int CSV_QUOTE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_QUOTE_CHARACTER;
+  static final int CSV_SEPARATOR_CHAR_DEFAULT = CSVParser.DEFAULT_SEPARATOR;
+  static final int CSV_QUOTE_CHAR_DEFAULT = CSVParser.DEFAULT_QUOTE_CHARACTER;
   static final String CSV_ESCAPE_CHAR_DOC = "The character as an integer to use when a special " +
       "character is encountered. The default escape character is typically a \\(92)";
-  static final int CSV_ESCAPE_CHAR_DEFAULT = (int) CSVParser.DEFAULT_ESCAPE_CHARACTER;
+  static final int CSV_ESCAPE_CHAR_DEFAULT = CSVParser.DEFAULT_ESCAPE_CHARACTER;
   static final String CSV_STRICT_QUOTES_DOC = "Sets the strict quotes setting - if true, characters outside the quotes are ignored.";
   static final boolean CSV_STRICT_QUOTES_DEFAULT = CSVParser.DEFAULT_STRICT_QUOTES;
   static final String CSV_IGNORE_LEADING_WHITESPACE_DOC = "Sets the ignore leading whitespace setting - if true, white space in front of a quote in a field is ignored.";
@@ -135,8 +135,7 @@ class SpoolDirCsvSourceConnectorConfig extends AbstractSpoolDirSourceConnectorCo
     this.nullFieldIndicator = ConfigUtils.getEnum(CSVReaderNullFieldIndicator.class, this, SpoolDirCsvSourceConnectorConfig.CSV_NULL_FIELD_INDICATOR_CONF);
     this.firstRowAsHeader = this.getBoolean(SpoolDirCsvSourceConnectorConfig.CSV_FIRST_ROW_AS_HEADER_CONF);
 
-    String charsetName = this.getString(SpoolDirCsvSourceConnectorConfig.CSV_CHARSET_CONF);
-    this.charset = Charset.forName(charsetName);
+    this.charset = ConfigUtils.charset(this, SpoolDirCsvSourceConnectorConfig.CSV_CHARSET_CONF);
 
     this.caseSensitiveFieldNames = this.getBoolean(SpoolDirCsvSourceConnectorConfig.CSV_CASE_SENSITIVE_FIELD_NAMES_CONF);
     this.useRFC4180Parser = this.getBoolean(CSV_USE_RFC_4180_PARSER_CONF);

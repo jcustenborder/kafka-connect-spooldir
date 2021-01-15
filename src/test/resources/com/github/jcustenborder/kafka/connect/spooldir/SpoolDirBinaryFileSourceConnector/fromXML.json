@@ -1,0 +1,14 @@
+{
+  "name": "Transform XML Files",
+  "description": "This example will use the FromXml transformation to read the binary data based on the supplied XSD. This allows files to be converted to strongly typed data based on the XSD. Once Kafka connect has converted the data it can be stored as AVRO, JSON, or whatever converter the user chooses.",
+  "config": {
+    "finished.path": "/tmp",
+    "input.path": "/tmp",
+    "error.path": "/tmp",
+    "input.file.pattern": "^users\\d+\\.bin$",
+    "topic": "users",
+    "transforms": "FromXml",
+    "transforms.FromXml.type":"com.github.jcustenborder.kafka.connect.transform.xml.FromXml$Value",
+    "transforms.FromXml.schema.path": "file:///books.xsd"
+  }
+}
