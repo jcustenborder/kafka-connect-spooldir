@@ -19,23 +19,24 @@
 : ${ERROR_PATH:='/tmp/spooldir/error'}
 : ${FINISHED_PATH:='/tmp/spooldir/finished'}
 : ${DEBUG_SUSPEND_FLAG:='y'}
-export KAFKA_DEBUG='n'
-export KAFKA_OPTS='-agentpath:/Applications/YourKit-Java-Profiler-2017.02.app/Contents/Resources/bin/mac/libyjpagent.jnilib=disablestacktelemetry,exceptions=disable,delay=10000'
+export KAFKA_DEBUG='y'
+export DEBUG_SUSPEND_FLAG='y'
+# export KAFKA_OPTS='-agentpath:/Applications/YourKit-Java-Profiler-2017.02.app/Contents/Resources/bin/mac/libyjpagent.jnilib=disablestacktelemetry,exceptions=disable,delay=10000'
 set -e
 
-mvn clean package
+# mvn clean package
 
-#if [ ! -d "${INPUT_PATH}" ]; then
-#    mkdir -p "${INPUT_PATH}"
-#fi
+if [ ! -d "${INPUT_PATH}" ]; then
+   mkdir -p "${INPUT_PATH}"
+fi
 
-#if [ ! -d "${ERROR_PATH}" ]; then
-#    mkdir -p "${ERROR_PATH}"
-#fi
+if [ ! -d "${ERROR_PATH}" ]; then
+   mkdir -p "${ERROR_PATH}"
+fi
 
-#if [ ! -d "${FINISHED_PATH}" ]; then
-#    mkdir -p "${FINISHED_PATH}"
-#fi
+if [ ! -d "${FINISHED_PATH}" ]; then
+   mkdir -p "${FINISHED_PATH}"
+fi
 
-#cp src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data "${INPUT_PATH}/FieldsMatch.csv
-connect-standalone config/connect-avro-docker.properties config/ELFTesting.properties
+cp src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data "${INPUT_PATH}/FieldsMatch.csv"
+connect-standalone config/connect-avro-docker.properties config/CSVSchemaGenerator.properties

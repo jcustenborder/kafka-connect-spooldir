@@ -104,7 +104,10 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
     while (records.size() < this.config.batchSize) {
       String[] row = this.csvReader.readNext();
 
-      if (row == null) {
+      if (null == row) {
+        break;
+      }
+      if (row.length == 1 && null == row[0]) {
         break;
       }
       log.trace("process() - Row on line {} has {} field(s)", recordOffset(), row.length);
