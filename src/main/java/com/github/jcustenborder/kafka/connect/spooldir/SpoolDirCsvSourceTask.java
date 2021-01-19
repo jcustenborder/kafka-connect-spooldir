@@ -91,7 +91,8 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
     if (null == this.csvReader) {
       result = -1L;
     } else {
-      result = this.csvReader.getLinesRead();
+      result = this.csvReader.getLinesRead() - this.config.skipLines -
+          (this.config.firstRowAsHeader ? 1 : 0);
     }
     return result;
   }
@@ -103,7 +104,10 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
     while (records.size() < this.config.batchSize) {
       String[] row = this.csvReader.readNext();
 
-      if (row == null) {
+      if (null == row) {
+        break;
+      }
+      if (row.length == 1 && null == row[0]) {
         break;
       }
       log.trace("process() - Row on line {} has {} field(s)", recordOffset(), row.length);

@@ -16,6 +16,7 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.ICSVParser;
 import org.apache.kafka.connect.data.Schema;
 import org.slf4j.Logger;
@@ -44,7 +45,8 @@ public class CsvSchemaGenerator extends AbstractSchemaGenerator<SpoolDirCsvSourc
     Map<String, Schema.Type> typeMap = new LinkedHashMap<>();
     ICSVParser parserBuilder = this.config.createCSVParserBuilder();
     try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-      try (CSVReader csvReader = new CSVReader(reader, 0, parserBuilder)) {
+      CSVReaderBuilder readerBuilder = this.config.createCSVReaderBuilder(reader, parserBuilder);
+      try (CSVReader csvReader = readerBuilder.build()) {
         String[] headers = null;
 
         if (this.config.firstRowAsHeader) {
