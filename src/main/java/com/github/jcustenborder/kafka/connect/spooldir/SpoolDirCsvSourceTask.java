@@ -91,7 +91,8 @@ public class SpoolDirCsvSourceTask extends AbstractSpoolDirSourceTask<SpoolDirCs
     if (null == this.csvReader) {
       result = -1L;
     } else {
-      result = this.csvReader.getLinesRead();
+      result = this.csvReader.getLinesRead() - this.config.skipLines -
+          (this.config.firstRowAsHeader ? 1 : 0);
     }
     return result;
   }

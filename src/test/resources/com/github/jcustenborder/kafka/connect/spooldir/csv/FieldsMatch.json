@@ -73,7 +73,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 2
+      "offset" : 1
     },
     "topic" : "testing",
     "keySchema" : {
@@ -323,7 +323,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 2
+      "storage" : 1
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -339,7 +339,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 3
+      "offset" : 2
     },
     "topic" : "testing",
     "keySchema" : {
@@ -589,7 +589,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 3
+      "storage" : 2
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -605,7 +605,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 4
+      "offset" : 3
     },
     "topic" : "testing",
     "keySchema" : {
@@ -853,7 +853,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 4
+      "storage" : 3
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -869,7 +869,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 5
+      "offset" : 4
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1119,7 +1119,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 5
+      "storage" : 4
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1135,7 +1135,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 6
+      "offset" : 5
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1384,7 +1384,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 6
+      "storage" : 5
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1400,7 +1400,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 7
+      "offset" : 6
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1649,7 +1649,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 7
+      "storage" : 6
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1665,7 +1665,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 8
+      "offset" : 7
     },
     "topic" : "testing",
     "keySchema" : {
@@ -1915,7 +1915,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 8
+      "storage" : 7
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -1931,7 +1931,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 9
+      "offset" : 8
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2180,7 +2180,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 9
+      "storage" : 8
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2196,7 +2196,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 10
+      "offset" : 9
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2445,7 +2445,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 10
+      "storage" : 9
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2461,7 +2461,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 11
+      "offset" : 10
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2711,7 +2711,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 11
+      "storage" : 10
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2727,7 +2727,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 12
+      "offset" : 11
     },
     "topic" : "testing",
     "keySchema" : {
@@ -2977,7 +2977,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 12
+      "storage" : 11
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -2993,7 +2993,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 13
+      "offset" : 12
     },
     "topic" : "testing",
     "keySchema" : {
@@ -3243,7 +3243,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 13
+      "storage" : 12
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -3259,7 +3259,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 14
+      "offset" : 13
     },
     "topic" : "testing",
     "keySchema" : {
@@ -3508,7 +3508,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 14
+      "storage" : 13
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -3524,7 +3524,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 15
+      "offset" : 14
     },
     "topic" : "testing",
     "keySchema" : {
@@ -3774,7 +3774,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 15
+      "storage" : 14
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -3790,7 +3790,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 16
+      "offset" : 15
     },
     "topic" : "testing",
     "keySchema" : {
@@ -4040,7 +4040,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 16
+      "storage" : 15
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4056,7 +4056,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 17
+      "offset" : 16
     },
     "topic" : "testing",
     "keySchema" : {
@@ -4305,7 +4305,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 17
+      "storage" : 16
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4321,7 +4321,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 18
+      "offset" : 17
     },
     "topic" : "testing",
     "keySchema" : {
@@ -4570,7 +4570,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 18
+      "storage" : 17
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4586,7 +4586,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 19
+      "offset" : 18
     },
     "topic" : "testing",
     "keySchema" : {
@@ -4835,7 +4835,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 19
+      "storage" : 18
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -4851,7 +4851,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 20
+      "offset" : 19
     },
     "topic" : "testing",
     "keySchema" : {
@@ -5100,7 +5100,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 20
+      "storage" : 19
     }, {
       "name" : "file.last.modified",
       "schema" : {
@@ -5116,7 +5116,7 @@
       "fileName" : "FieldsMatch.csv"
     },
     "sourceOffset" : {
-      "offset" : 21
+      "offset" : 20
     },
     "topic" : "testing",
     "keySchema" : {
@@ -5366,7 +5366,7 @@
         "type" : "INT64",
         "isOptional" : false
       },
-      "storage" : 21
+      "storage" : 20
     }, {
       "name" : "file.last.modified",
       "schema" : {
