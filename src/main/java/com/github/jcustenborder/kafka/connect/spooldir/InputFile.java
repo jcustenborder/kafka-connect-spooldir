@@ -45,6 +45,7 @@ public class InputFile implements Closeable {
   private final AbstractSourceConnectorConfig config;
   InputStreamReader inputStreamReader;
   LineNumberReader lineNumberReader;
+  InputStream inputStream;
 
   InputFile(AbstractSourceConnectorConfig config, File file) {
     this.config = config;
@@ -78,15 +79,11 @@ public class InputFile implements Closeable {
     return this.metadata;
   }
 
-  private InputStream inputStream;
-
 
 
   public InputStream inputStream() {
     return this.inputStream;
   }
-
-
 
   public InputStream openStream() throws IOException {
     if (null != this.inputStream) {
