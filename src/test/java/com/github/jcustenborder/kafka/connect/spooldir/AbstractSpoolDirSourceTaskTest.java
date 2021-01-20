@@ -121,6 +121,10 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
 
     final File p = new File(this.inputPath, inputFileName);
     try (InputStream inputStream = this.getClass().getResourceAsStream(dataFile)) {
+      assertNotNull(
+          inputStream,
+          String.format("Resource stream '%s' was not found", dataFile)
+      );
       try (OutputStream outputStream = new FileOutputStream(p)) {
         ByteStreams.copy(inputStream, outputStream);
       }
