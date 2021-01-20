@@ -66,6 +66,10 @@ public class InputFile implements Closeable {
       "z", CompressorStreamFactory.Z
   );
 
+  public File file() {
+    return this.inputFile;
+  }
+
   public Metadata metadata() {
     return this.metadata;
   }
