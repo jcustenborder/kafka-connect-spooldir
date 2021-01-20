@@ -20,7 +20,6 @@ import org.apache.avro.file.DataFileReader;
 import org.apache.avro.generic.GenericContainer;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.io.DatumReader;
-import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class SpoolDirAvroSourceTask extends AbstractSourceTask<SpoolDirAvroSourc
   AvroData avroData = new AvroData(1024);
   DataFileReader<GenericContainer> dataFileReader;
   DatumReader<GenericContainer> datumReader = new GenericDatumReader<>();
-  Schema connectSchema;
+
 
   @Override
   protected SpoolDirAvroSourceConnectorConfig config(Map<String, ?> settings) {
@@ -49,8 +48,8 @@ public class SpoolDirAvroSourceTask extends AbstractSourceTask<SpoolDirAvroSourc
     if (null != this.dataFileReader) {
       this.dataFileReader.close();
     }
-    this.dataFileReader = new DataFileReader<GenericContainer>(inputFile.file(), datumReader);
-    this.connectSchema = avroData.toConnectSchema(dataFileReader.getSchema());
+    inputFile.startProcessing();
+    this.dataFileReader = new DataFileReader<>(inputFile.file(), datumReader);
     this.recordOffset = 0;
 
     if (null != lastOffset) {
@@ -69,8 +68,8 @@ public class SpoolDirAvroSourceTask extends AbstractSourceTask<SpoolDirAvroSourc
     GenericContainer container = null;
     while (recordCount <= this.config.batchSize && dataFileReader.hasNext()) {
       container = dataFileReader.next(container);
-      Object value = avroData.fromConnectData(this.connectSchema, container);
-      SourceRecord sourceRecord = record(null, new SchemaAndValue(this.connectSchema, value), null);
+      SchemaAndValue value = avroData.toConnectData(this.dataFileReader.getSchema(), container);
+      SourceRecord sourceRecord = record(null, value, null);
       records.add(sourceRecord);
       recordCount++;
       recordOffset++;
