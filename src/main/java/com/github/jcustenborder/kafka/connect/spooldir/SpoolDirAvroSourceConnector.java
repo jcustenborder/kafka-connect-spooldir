@@ -16,6 +16,7 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
+import com.github.jcustenborder.kafka.connect.utils.config.DocumentationImportant;
 import com.github.jcustenborder.kafka.connect.utils.config.Title;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
@@ -24,7 +25,10 @@ import java.util.Map;
 
 @Title("Avro Source Connector")
 @Description("This connector is used to read avro data files from the file system and write their contents " +
-    "to kafka.")
+    "to Kafka. The schema of the file is used to read the data and produce it to Kafka")
+@DocumentationImportant("This connector has a dependency on the Confluent Schema Registry specifically kafka-connect-avro-converter. " +
+    "This dependency is not shipped along with the connector to ensure that there are not potential version mismatch issues. " +
+    "The easiest way to ensure this component is available is to use one of the Confluent packages or containers for deployment.")
 public class SpoolDirAvroSourceConnector extends AbstractSourceConnector<SpoolDirAvroSourceConnectorConfig> {
   @Override
   protected SpoolDirAvroSourceConnectorConfig config(Map<String, ?> settings) {
