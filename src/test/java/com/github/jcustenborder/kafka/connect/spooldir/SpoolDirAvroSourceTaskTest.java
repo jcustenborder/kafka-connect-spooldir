@@ -9,6 +9,7 @@ import org.apache.avro.generic.GenericContainer;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.io.DatumWriter;
 import org.apache.kafka.connect.source.SourceRecord;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -39,7 +40,7 @@ public class SpoolDirAvroSourceTaskTest extends AbstractSpoolDirSourceTaskTest<S
     return settings;
   }
 
-
+  @Disabled
   @Test
   public void foo() throws IOException {
 

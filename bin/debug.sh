@@ -19,8 +19,8 @@
 : ${ERROR_PATH:='/tmp/spooldir/error'}
 : ${FINISHED_PATH:='/tmp/spooldir/finished'}
 : ${DEBUG_SUSPEND_FLAG:='y'}
-export KAFKA_DEBUG='y'
-export DEBUG_SUSPEND_FLAG='y'
+export KAFKA_DEBUG='n'
+export DEBUG_SUSPEND_FLAG='n'
 # export KAFKA_OPTS='-agentpath:/Applications/YourKit-Java-Profiler-2017.02.app/Contents/Resources/bin/mac/libyjpagent.jnilib=disablestacktelemetry,exceptions=disable,delay=10000'
 set -e
 
@@ -40,3 +40,4 @@ fi
 
 cp src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data "${INPUT_PATH}/FieldsMatch.csv"
 connect-standalone config/connect-avro-docker.properties config/CSVSchemaGenerator.properties
+# connect-standalone config/connect-avro-docker.properties config/AvroExample.properties
