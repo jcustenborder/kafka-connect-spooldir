@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class InputFile implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(InputFile.class);
-  private final File inputFile;
+  private final File file;
   private final File processingFlag;
   private final String name;
   private final String path;
@@ -45,17 +45,18 @@ public class InputFile implements Closeable {
   private final AbstractSourceConnectorConfig config;
   InputStreamReader inputStreamReader;
   LineNumberReader lineNumberReader;
+  InputStream inputStream;
 
-  InputFile(AbstractSourceConnectorConfig config, File inputFile) {
+  InputFile(AbstractSourceConnectorConfig config, File file) {
     this.config = config;
-    this.inputFile = inputFile;
-    this.name = this.inputFile.getName();
-    this.path = this.inputFile.getPath();
-    this.lastModified = this.inputFile.lastModified();
-    this.length = this.inputFile.length();
-    String processingFileName = inputFile.getName() + config.processingFileExtension;
-    this.processingFlag = new File(inputFile.getParentFile(), processingFileName);
-    this.metadata = new Metadata(inputFile);
+    this.file = file;
+    this.name = this.file.getName();
+    this.path = this.file.getPath();
+    this.lastModified = this.file.lastModified();
+    this.length = this.file.length();
+    String processingFileName = file.getName() + config.processingFileExtension;
+    this.processingFlag = new File(file.getParentFile(), processingFileName);
+    this.metadata = new Metadata(file);
   }
 
   static final Map<String, String> SUPPORTED_COMPRESSION_TYPES = ImmutableMap.of(
@@ -66,11 +67,19 @@ public class InputFile implements Closeable {
       "z", CompressorStreamFactory.Z
   );
 
+  public File file() {
+    return this.file;
+  }
+
+  public File processingFlag() {
+    return this.processingFlag;
+  }
+
   public Metadata metadata() {
     return this.metadata;
   }
 
-  private InputStream inputStream;
+
 
   public InputStream inputStream() {
     return this.inputStream;
@@ -79,18 +88,18 @@ public class InputFile implements Closeable {
   public InputStream openStream() throws IOException {
     if (null != this.inputStream) {
       throw new IOException(
-          String.format("File %s is already open", this.inputFile)
+          String.format("File %s is already open", this.file)
       );
     }
 
-    final String extension = Files.getFileExtension(inputFile.getName());
-    log.trace("openStream() - fileName = '{}' extension = '{}'", inputFile, extension);
-    this.inputStream = new FileInputStream(this.inputFile);
+    final String extension = Files.getFileExtension(file.getName());
+    log.trace("openStream() - fileName = '{}' extension = '{}'", file, extension);
+    this.inputStream = new FileInputStream(this.file);
 
     if (this.config.bufferedInputStream) {
       log.trace(
           "openStream() - Wrapping '{}' in a BufferedInputStream with bufferSize = {}",
-          this.inputFile,
+          this.file,
           this.config.fileBufferSizeBytes
       );
       this.inputStream = new BufferedInputStream(this.inputStream, this.config.fileBufferSizeBytes);
@@ -98,7 +107,7 @@ public class InputFile implements Closeable {
 
     if (SUPPORTED_COMPRESSION_TYPES.containsKey(extension)) {
       final String compressor = SUPPORTED_COMPRESSION_TYPES.get(extension);
-      log.info("Decompressing {} as {}", inputFile, compressor);
+      log.info("Decompressing {} as {}", file, compressor);
       final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory();
       try {
         this.inputStream = compressorStreamFactory.createCompressorInputStream(
@@ -110,10 +119,14 @@ public class InputFile implements Closeable {
       }
     }
 
-    log.info("Creating processing flag {}", this.processingFlag);
-    Files.touch(this.processingFlag);
+    startProcessing();
 
     return inputStream;
+  }
+
+  public void startProcessing() throws IOException {
+    log.info("Creating processing flag {}", this.processingFlag);
+    Files.touch(this.processingFlag);
   }
 
   public InputStreamReader openInputStreamReader(Charset charset) throws IOException {
@@ -145,7 +158,7 @@ public class InputFile implements Closeable {
 
   @Override
   public String toString() {
-    return this.inputFile.toString();
+    return this.file.toString();
   }
 
   @Override
@@ -157,7 +170,7 @@ public class InputFile implements Closeable {
       this.inputStreamReader.close();
     }
     if (null != this.inputStream) {
-      log.info("Closing {}", this.inputFile);
+      log.info("Closing {}", this.file);
       this.inputStream.close();
     }
     if (this.processingFlag.exists()) {
@@ -185,25 +198,25 @@ public class InputFile implements Closeable {
   }
 
   public void moveToDirectory(File outputDirectory) {
-    File outputFile = new File(outputDirectory, this.inputFile.getName());
+    File outputFile = new File(outputDirectory, this.file.getName());
     try {
-      if (this.inputFile.exists()) {
-        log.info("Moving {} to {}", this.inputFile, outputFile);
-        Files.move(this.inputFile, outputFile);
+      if (this.file.exists()) {
+        log.info("Moving {} to {}", this.file, outputFile);
+        Files.move(this.file, outputFile);
       }
     } catch (IOException e) {
-      log.error("Exception thrown while trying to move {} to {}", this.inputFile, outputFile, e);
+      log.error("Exception thrown while trying to move {} to {}", this.file, outputFile, e);
     }
   }
 
   public void delete() {
-    log.info("Deleting {}", this.inputFile);
-    if (!this.inputFile.delete()) {
-      log.warn("Could not delete {}", this.inputFile);
+    log.info("Deleting {}", this.file);
+    if (!this.file.delete()) {
+      log.warn("Could not delete {}", this.file);
     }
   }
 
   public boolean exists() {
-    return this.inputFile.exists();
+    return this.file.exists();
   }
 }

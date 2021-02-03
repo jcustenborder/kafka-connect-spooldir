@@ -116,21 +116,28 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
         packageName
     );
 
+    //Use this config because it's the simplest.
+    SpoolDirBinaryFileSourceConnectorConfig config = new SpoolDirBinaryFileSourceConnectorConfig(settings);
 
-    final File inputFile = new File(this.inputPath, inputFileName);
-    log.trace("poll(String, TestCase) - inputFile = {}", inputFile);
-    final File processingFile = InputFileDequeue.processingFile(AbstractSourceConnectorConfig.PROCESSING_FILE_EXTENSION_DEFAULT, inputFile);
+    final File p = new File(this.inputPath, inputFileName);
     try (InputStream inputStream = this.getClass().getResourceAsStream(dataFile)) {
-      try (OutputStream outputStream = new FileOutputStream(inputFile)) {
+      assertNotNull(
+          inputStream,
+          String.format("Resource stream '%s' was not found", dataFile)
+      );
+      try (OutputStream outputStream = new FileOutputStream(p)) {
         ByteStreams.copy(inputStream, outputStream);
       }
     }
 
-    assertFalse(processingFile.exists(), String.format("processingFile %s should not exist before first poll().", processingFile));
+    final InputFile inputFile = new InputFile(config, p);
+    log.trace("poll(String, TestCase) - inputFile = {}", inputFile);
+
+    assertFalse(inputFile.processingFlag().exists(), String.format("processingFile %s should not exist before first poll().", inputFile.processingFlag()));
     assertTrue(inputFile.exists(), String.format("inputFile %s should exist.", inputFile));
     List<SourceRecord> records = this.task.poll();
     assertTrue(inputFile.exists(), String.format("inputFile %s should exist after first poll().", inputFile));
-    assertTrue(processingFile.exists(), String.format("processingFile %s should exist after first poll().", processingFile));
+    assertTrue(inputFile.processingFlag().exists(), String.format("processingFile %s should exist after first poll().", inputFile.processingFlag()));
 
     assertNotNull(records, "records should not be null.");
     assertFalse(records.isEmpty(), "records should not be empty");
@@ -167,7 +174,7 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     records = this.task.poll();
     assertNull(records, "records should be null after first poll.");
     assertFalse(inputFile.exists(), String.format("inputFile %s should not exist.", inputFile));
-    assertFalse(processingFile.exists(), String.format("processingFile %s should not exist.", processingFile));
+    assertFalse(inputFile.processingFlag().exists(), String.format("processingFile %s should not exist.", inputFile.processingFlag()));
     final File finishedFile = new File(this.finishedPath, inputFileName);
     assertTrue(finishedFile.exists(), String.format("finishedFile %s should exist.", finishedFile));
   }
