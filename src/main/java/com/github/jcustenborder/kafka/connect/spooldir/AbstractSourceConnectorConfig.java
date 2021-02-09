@@ -22,8 +22,8 @@ import com.github.jcustenborder.kafka.connect.utils.config.ValidPattern;
 import com.github.jcustenborder.kafka.connect.utils.config.recommenders.Recommenders;
 import com.github.jcustenborder.kafka.connect.utils.config.validators.Validators;
 import com.github.jcustenborder.kafka.connect.utils.config.validators.filesystem.ValidDirectoryWritable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.PatternFilenameFilter;
+import shaded.com.google.common.collect.ImmutableList;
+import shaded.com.google.common.io.PatternFilenameFilter;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 

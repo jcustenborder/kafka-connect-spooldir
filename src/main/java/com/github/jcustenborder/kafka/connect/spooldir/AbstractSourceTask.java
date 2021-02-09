@@ -16,9 +16,9 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.ImmutableMap;
+import shaded.com.google.common.base.Preconditions;
+import shaded.com.google.common.base.Stopwatch;
+import shaded.com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;

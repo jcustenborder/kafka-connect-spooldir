@@ -1,7 +1,7 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.Files;
+import shaded.com.google.common.collect.ImmutableList;
+import shaded.com.google.common.io.Files;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

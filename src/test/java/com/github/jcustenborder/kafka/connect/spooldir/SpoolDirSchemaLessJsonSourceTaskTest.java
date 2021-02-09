@@ -1,6 +1,6 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.google.common.io.Files;
+import shaded.com.google.common.io.Files;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.slf4j.Logger;

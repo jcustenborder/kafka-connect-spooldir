@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import shaded.com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.source.SourceRecord;
 

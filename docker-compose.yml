@@ -42,3 +42,14 @@ services:
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
+  connect:
+    image: confluentinc/cp-kafka-connect:5.5.1-1-ubi8
+    depends_on:
+      - kafka
+      - zookeeper
+      - schema-registry
+    ports:
+      - "5005:5005"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka:9092
+      CONNECT_GROUP_ID: spooldir
