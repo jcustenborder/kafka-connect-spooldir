@@ -16,7 +16,7 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
-import com.google.common.io.Files;
+import shaded.com.google.common.io.Files;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
 import org.apache.kafka.connect.data.Field;

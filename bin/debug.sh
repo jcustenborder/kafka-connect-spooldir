@@ -38,6 +38,19 @@ if [ ! -d "${FINISHED_PATH}" ]; then
    mkdir -p "${FINISHED_PATH}"
 fi
 
-cp src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data "${INPUT_PATH}/FieldsMatch.csv"
-connect-standalone config/connect-avro-docker.properties config/CSVSchemaGenerator.properties
+cp /Users/jeremy/Downloads/csv-spooldir-source.csv "${INPUT_PATH}/csv-spooldir-source.csv"
+# cp src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/csv/FieldsMatch.data "${INPUT_PATH}/FieldsMatch.csv"
+# cp src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data "${INPUT_PATH}/FieldsMatch.json"
+# connect-standalone config/connect-avro-docker.properties config/CSVSchemaGenerator.properties
+# connect-standalone config/connect-avro-docker.properties config/JsonExample.properties
 # connect-standalone config/connect-avro-docker.properties config/AvroExample.properties
+
+export DOCKER_IMAGE="confluentinc/cp-kafka-connect:5.5.2-1-ubi8"
+
+docker run --rm --network=kafka-connect-spooldir_default \
+    -p "5005:5005" \
+    -v "/tmp/spooldir:/tmp/spooldir" \
+    -v "$(pwd)/config:/config" \
+    -v "$(pwd)/target/kafka-connect-target/usr/share/kafka-connect:/plugins" \
+    "${DOCKER_IMAGE}" /bin/connect-standalone /config/connect-avro-docker.properties /config/CSVSchemaGenerator.properties
+

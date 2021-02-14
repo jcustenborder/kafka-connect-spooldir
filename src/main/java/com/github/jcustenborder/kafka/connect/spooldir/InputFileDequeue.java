@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.google.common.collect.ForwardingDeque;
+import shaded.com.google.common.collect.ForwardingDeque;
 import org.apache.kafka.common.utils.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

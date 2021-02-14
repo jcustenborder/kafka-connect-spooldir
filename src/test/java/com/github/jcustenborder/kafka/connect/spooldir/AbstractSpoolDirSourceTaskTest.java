@@ -15,11 +15,11 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
+import shaded.com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
-import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
+import shaded.com.google.common.collect.Maps;
+import shaded.com.google.common.io.ByteStreams;
+import shaded.com.google.common.io.Files;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTaskContext;
 import org.apache.kafka.connect.storage.OffsetStorageReader;

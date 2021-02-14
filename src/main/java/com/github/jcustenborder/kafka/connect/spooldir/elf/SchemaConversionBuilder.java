@@ -18,7 +18,7 @@ package com.github.jcustenborder.kafka.connect.spooldir.elf;
 import com.github.jcustenborder.kafka.connect.spooldir.elf.converters.LogFieldConverter;
 import com.github.jcustenborder.kafka.connect.spooldir.elf.converters.LogFieldConverterFactory;
 import com.github.jcustenborder.parsers.elf.ElfParser;
-import com.google.common.base.Preconditions;
+import shaded.com.google.common.base.Preconditions;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.slf4j.Logger;
