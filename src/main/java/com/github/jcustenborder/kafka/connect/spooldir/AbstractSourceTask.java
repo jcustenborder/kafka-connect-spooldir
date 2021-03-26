@@ -16,15 +16,15 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
-import shaded.com.google.common.base.Preconditions;
-import shaded.com.google.common.base.Stopwatch;
-import shaded.com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import shaded.com.google.common.base.Preconditions;
+import shaded.com.google.common.base.Stopwatch;
+import shaded.com.google.common.collect.ImmutableMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -255,7 +255,14 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       this.hasRecords = !records.isEmpty();
       return records;
     } catch (Exception ex) {
-      log.error("Exception encountered processing line {} of {}.", recordOffset(), this.inputFile, ex);
+      long recordOffset;
+      try {
+        recordOffset = recordOffset();
+      } catch (Exception e) {
+        log.error("Exception thrown while calling recordOffset()", e);
+        recordOffset = -1;
+      }
+      log.error("Exception encountered processing line {} of {}.", recordOffset, this.inputFile, ex);
       try {
         this.cleanUpPolicy.error();
       } catch (IOException e) {
