@@ -199,6 +199,12 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     assertNotNull(this.task.version(), "version should not be null.");
   }
 
+  @Test
+  public void recordOffsetNPE() {
+    this.task = createTask();
+    long actual = this.task.recordOffset();
+  }
+
   @AfterEach
   public void after() {
     if (null != this.task) {

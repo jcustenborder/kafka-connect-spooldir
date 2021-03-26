@@ -58,6 +58,12 @@ public class SpoolDirLineDelimitedSourceTask extends AbstractSourceTask<SpoolDir
 
   @Override
   protected long recordOffset() {
-    return this.inputFile.lineNumberReader().getLineNumber();
+    long result = -1L;
+
+    if (null != this.inputFile && null != this.inputFile.lineNumberReader()) {
+      result = this.inputFile.lineNumberReader().getLineNumber();
+    }
+
+    return result;
   }
 }
