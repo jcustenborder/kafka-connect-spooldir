@@ -30,7 +30,7 @@ import java.util.Map;
  */
 class Metadata {
   static final String HEADER_PATH = "file.path";
-  static final String HEADER_PARENT_DIR_NAME= "file.parent.dir.name";
+  static final String HEADER_PARENT_DIR_NAME = "file.parent.dir.name";
   static final String HEADER_NAME = "file.name";
   static final String HEADER_NAME_WITHOUT_EXTENSION = "file.name.without.extension";
   static final String HEADER_LAST_MODIFIED = "file.last.modified";
