@@ -151,7 +151,8 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
         Metadata.HEADER_LAST_MODIFIED,
         Metadata.HEADER_PATH,
         Metadata.HEADER_LENGTH,
-        Metadata.HEADER_NAME_WITHOUT_EXTENSION
+        Metadata.HEADER_NAME_WITHOUT_EXTENSION,
+        Metadata.HEADER_PARENT_DIR_NAME
     );
 
     for (int i = 0; i < testCase.expected.size(); i++) {
