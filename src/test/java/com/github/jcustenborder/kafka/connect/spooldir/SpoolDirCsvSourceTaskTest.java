@@ -112,8 +112,8 @@ public class SpoolDirCsvSourceTaskTest extends AbstractSpoolDirSourceTaskTest<Sp
               .put("id", i)
       );
     }
-
-    File inputFile = new File(this.inputPath, "input.csv");
+  
+    File inputFile = this.getTargetFilePath(this.inputPath,  "input.csv");
     writeCSV(inputFile, schema, values);
     Map<String, String> settings = settings();
     settings.put(SpoolDirCsvSourceConnectorConfig.KEY_SCHEMA_CONF, ObjectMapperFactory.INSTANCE.writeValueAsString(schema));
