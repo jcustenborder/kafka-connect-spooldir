@@ -31,6 +31,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class InputFile implements Closeable {
@@ -43,11 +46,12 @@ public class InputFile implements Closeable {
   private final long lastModified;
   private final Metadata metadata;
   private final AbstractSourceConnectorConfig config;
+  private final String inputPathSubDir;
   InputStreamReader inputStreamReader;
   LineNumberReader lineNumberReader;
   InputStream inputStream;
 
-  InputFile(AbstractSourceConnectorConfig config, File file) {
+  InputFile(AbstractSourceConnectorConfig config, File file, String inputPathSubDir) {
     this.config = config;
     this.file = file;
     this.name = this.file.getName();
@@ -56,7 +60,12 @@ public class InputFile implements Closeable {
     this.length = this.file.length();
     String processingFileName = file.getName() + config.processingFileExtension;
     this.processingFlag = new File(file.getParentFile(), processingFileName);
-    this.metadata = new Metadata(file);
+    this.metadata = new Metadata(file, inputPathSubDir);
+    this.inputPathSubDir = inputPathSubDir;
+  }
+
+  InputFile(AbstractSourceConnectorConfig config, File file) {
+    this(config, file, null);
   }
 
   static final Map<String, String> SUPPORTED_COMPRESSION_TYPES = ImmutableMap.of(
@@ -66,6 +75,10 @@ public class InputFile implements Closeable {
       "lz4", CompressorStreamFactory.LZ4_BLOCK,
       "z", CompressorStreamFactory.Z
   );
+
+  public String inputPathSubDir() {
+    return this.inputPathSubDir;
+  }
 
   public File file() {
     return this.file;
@@ -197,7 +210,50 @@ public class InputFile implements Closeable {
     return this.lastModified;
   }
 
+  private List<File> getInputPathSubDirsToCleanup() {
+    List<File> inputPathSubDirsToCleanup = null;
+    if (this.inputPathSubDir != null && !config.inputPathWalkRecursivelyRetainSubDirs) {
+      inputPathSubDirsToCleanup = new ArrayList<File>();
+      File lastSubDir = this.config.inputPath;
+      for (String subDirName : this.inputPathSubDir.split(File.separator)) {
+        lastSubDir = new File(lastSubDir, subDirName);
+        inputPathSubDirsToCleanup.add(lastSubDir);
+      }
+      Collections.reverse(inputPathSubDirsToCleanup);
+    }
+    return inputPathSubDirsToCleanup;
+  }
+
+  private void cleanupInputDirSubDirs() {
+    List<File> inputPathSubDirsToCleanup = this.getInputPathSubDirsToCleanup();
+    if (inputPathSubDirsToCleanup != null) {
+      for (File subDir : inputPathSubDirsToCleanup) {
+        try {
+          if (subDir.listFiles() == null || subDir.listFiles().length == 0) {
+            if (!subDir.delete()) {
+              log.error("Failed to delete input.path sub-directory: {}", subDir);
+            } else {
+              log.info("Cleaned up input.path sub-directory: {}", subDir);
+            }
+          } else {
+            log.info("Cannot clean up input.path sub-directory as it is not empty: {}", subDir);
+          }
+        } catch (SecurityException e) {
+          log.error("SecurityException thrown while trying to delete input.path sub-directory: {}", subDir, e);
+        }
+      }
+    }
+  }
+
+
+
   public void moveToDirectory(File outputDirectory) {
+
+    if (this.inputPathSubDir != null) {
+      outputDirectory = new File(outputDirectory, this.inputPathSubDir);
+      outputDirectory.mkdirs();
+    }
+
     File outputFile = new File(outputDirectory, this.file.getName());
     try {
       if (this.file.exists()) {
@@ -207,6 +263,9 @@ public class InputFile implements Closeable {
     } catch (IOException e) {
       log.error("Exception thrown while trying to move {} to {}", this.file, outputFile, e);
     }
+
+    this.cleanupInputDirSubDirs();
+
   }
 
   public void delete() {
@@ -214,6 +273,8 @@ public class InputFile implements Closeable {
     if (!this.file.delete()) {
       log.warn("Could not delete {}", this.file);
     }
+
+    this.cleanupInputDirSubDirs();
   }
 
   public boolean exists() {

@@ -16,7 +16,7 @@ public class MoveCleanupPolicyTest extends AbstractCleanUpPolicyTest<AbstractCle
 
   @Test
   public void success() throws IOException {
-    File finishedFile = new File(this.finishedPath, this.inputFile.getName());
+    File finishedFile = this.getTargetFilePath(this.finishedPath, this.inputFile);
     assertTrue(this.inputFile.exists(), "Input file should exist");
     assertFalse(finishedFile.exists(), "Finished file should not exist");
     this.cleanupPolicy.success();

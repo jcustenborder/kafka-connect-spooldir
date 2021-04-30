@@ -180,6 +180,26 @@ Before a file is processed, a flag is created in its directory to indicate the f
 
 *Validator:* Matches regex( ^.*\..+$ )
 
+##### `input.path.walk.recursively`
+
+If enabled, any sub-directories dropped under `input.path` will be recursively walked looking for files matching the configured `input.file.pattern`. After processing is complete the discovered sub directory structure (as well as files within them) will handled according to the configured `cleanup.policy` (i.e. moved or deleted etc). For each discovered file, the walked sub-directory path will be set as a header named `file.input.path.sub.dir.path`
+
+*Importance:* LOW
+
+*Type:* BOOLEAN
+
+*Default Value:* false
+
+##### `input.path.walk.recursively.retain.sub.dirs`
+
+If `input.path.walk.recursively` is enabled in combination with this flag being `true`, the walked sub-directories which contained files will be retained as-is under the `input.path`. The actual files within the sub-directories will moved (with a copy of the sub-dir structure) or deleted as per the `cleanup.policy` defined, but the parent sub-directory structure will remain.
+
+*Importance:* LOW
+
+*Type:* BOOLEAN
+
+*Default Value:* false
+
 
 #### General
 

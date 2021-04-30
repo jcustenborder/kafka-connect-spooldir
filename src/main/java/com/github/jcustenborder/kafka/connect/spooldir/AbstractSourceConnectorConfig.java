@@ -39,8 +39,13 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String HALT_ON_ERROR_CONF = "halt.on.error";
   public static final String FILE_MINIMUM_AGE_MS_CONF = "file.minimum.age.ms";
   public static final String FILE_SORT_ATTRIBUTES_CONF = "files.sort.attributes";
-  public static final String FILE_WALK_RECURSIVELY = "files.walk.recursively";
 
+  public static final String INPUT_PATH_WALK_RECURSIVELY = "input.path.walk.recursively";
+  static final String INPUT_PATH_WALK_RECURSIVELY_DOC = "If enabled, activates a recursive walk of sub-directories under input.path searching for files matching input.file.pattern";
+  
+  public static final String INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS = "input.path.walk.recursively.retain.sub.dirs";
+  static final String INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS_DOC = "When input.path.walk.recursively is enabled, if discovered sub dirs under input.path will be retained regardless of success/failure of file processing";
+  
   public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
   //RecordProcessorConfig
   public static final String BATCH_SIZE_CONF = "batch.size";
@@ -104,8 +109,6 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   static final String FILE_BUFFER_SIZE_DOC = "The size of buffer for the BufferedInputStream that will be used to " +
       "interact with the file system.";
 
-  static final String FILE_WALK_RECURSIVELY_DOC = "If enabled, activates a recursive walk of sub-directories under input.path searching for files matching input.file.pattern";
-  
 
   public final File inputPath;
   public final File finishedPath;
@@ -125,7 +128,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public final TaskPartitioner taskPartitioner;
   public final boolean bufferedInputStream;
   public final int fileBufferSizeBytes;
-  public final boolean filesWalkRecursively;
+  public final boolean inputPathWalkRecursively;
+  public final boolean inputPathWalkRecursivelyRetainSubDirs;
 
   public final boolean finishedPathRequired() {
     boolean result;
@@ -170,7 +174,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     this.taskIndex = getInt(TASK_INDEX_CONF);
     this.taskCount = getInt(TASK_COUNT_CONF);
     this.taskPartitioner = ConfigUtils.getEnum(TaskPartitioner.class, this, TASK_PARTITIONER_CONF);
-    this.filesWalkRecursively = this.getBoolean(FILE_WALK_RECURSIVELY);
+    this.inputPathWalkRecursively = this.getBoolean(INPUT_PATH_WALK_RECURSIVELY);
+    this.inputPathWalkRecursivelyRetainSubDirs = this.getBoolean(INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS);
 
     if (bufferedInputStream) {
       this.fileBufferSizeBytes = getInt(FILE_BUFFER_SIZE_CONF);
@@ -308,12 +313,19 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
                 .group(GROUP_FILESYSTEM)
                 .build()
         ).define(
-          ConfigKeyBuilder.of(FILE_WALK_RECURSIVELY, ConfigDef.Type.BOOLEAN)
-          .documentation(FILE_WALK_RECURSIVELY_DOC)
-          .importance(ConfigDef.Importance.LOW)
-          .defaultValue(false)
-          .group(GROUP_FILESYSTEM)
-          .build()
+            ConfigKeyBuilder.of(INPUT_PATH_WALK_RECURSIVELY, ConfigDef.Type.BOOLEAN)
+                .documentation(INPUT_PATH_WALK_RECURSIVELY_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(false)
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS, ConfigDef.Type.BOOLEAN)
+                .documentation(INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(false)
+                .group(GROUP_FILESYSTEM)
+                .build()
         );
 
     if (bufferedInputStream) {
