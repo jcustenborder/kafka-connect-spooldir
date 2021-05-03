@@ -167,7 +167,7 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     headersToRemove.add(Metadata.HEADER_PARENT_DIR_NAME);
     
     if (this.defineInputPathSubDir() != null) {
-      headersToRemove.add(Metadata.HEADER_INPUT_PATH_SUB_DIR_PATH);
+      headersToRemove.add(Metadata.HEADER_FILE_RELATIVE_PATH);
     }
 
     for (int i = 0; i < testCase.expected.size(); i++) {

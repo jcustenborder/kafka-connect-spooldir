@@ -36,7 +36,7 @@ class Metadata {
   static final String HEADER_LAST_MODIFIED = "file.last.modified";
   static final String HEADER_LENGTH = "file.length";
   static final String HEADER_OFFSET = "file.offset";
-  static final String HEADER_INPUT_PATH_SUB_DIR_PATH = "file.input.path.sub.dir.path";
+  static final String HEADER_FILE_RELATIVE_PATH = "file.relative.path";
 
   final String path;
   final String name;
@@ -58,7 +58,7 @@ class Metadata {
     result.put(HEADER_LAST_MODIFIED, "The last modified date of the file.");
     result.put(HEADER_LENGTH, "The size of the file in bytes.");
     result.put(HEADER_OFFSET, "The offset for this piece of data within the file.");
-    result.put(HEADER_INPUT_PATH_SUB_DIR_PATH, "The file's parent sub-directory relative from the input.path.");
+    result.put(HEADER_FILE_RELATIVE_PATH, "The file's parent sub-directory relative from the input.path.");
     HEADER_DESCRIPTIONS = ImmutableMap.copyOf(result);
   }
 
@@ -109,7 +109,7 @@ class Metadata {
     headers.addTimestamp(HEADER_LAST_MODIFIED, this.lastModified);
 
     if (this.inputPathSubDirPath != null) {
-      headers.addString(HEADER_INPUT_PATH_SUB_DIR_PATH, this.inputPathSubDirPath);
+      headers.addString(HEADER_FILE_RELATIVE_PATH, this.inputPathSubDirPath);
     }
 
     return headers;

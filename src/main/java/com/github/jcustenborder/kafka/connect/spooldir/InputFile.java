@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +76,16 @@ public class InputFile implements Closeable {
       "lz4", CompressorStreamFactory.LZ4_BLOCK,
       "z", CompressorStreamFactory.Z
   );
+
+
+  static String determineInputPathSubDir(File inputPath, File inputFile) {
+    Path relative = inputPath.toPath().relativize(inputFile.getParentFile().toPath());
+    String subDir = relative.toString();
+    if ("".equals(subDir)) {
+      return null;
+    } 
+    return subDir;
+  }
 
   public String inputPathSubDir() {
     return this.inputPathSubDir;
@@ -251,7 +262,9 @@ public class InputFile implements Closeable {
 
     if (this.inputPathSubDir != null) {
       outputDirectory = new File(outputDirectory, this.inputPathSubDir);
-      outputDirectory.mkdirs();
+      if (!outputDirectory.isDirectory()) {
+        outputDirectory.mkdirs();
+      }
     }
 
     File outputFile = new File(outputDirectory, this.file.getName());

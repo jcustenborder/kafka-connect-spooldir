@@ -19,7 +19,7 @@ public class MoveCleanupPolicySubDirsNoRetainTest extends MoveCleanupPolicyTest 
   protected ImmutableMap.Builder<String,String> getConnectorConfigMap() {
     return super.getConnectorConfigMap()
       .put(SpoolDirBinaryFileSourceConnectorConfig.INPUT_PATH_WALK_RECURSIVELY, "true")
-      .put(SpoolDirBinaryFileSourceConnectorConfig.INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS, "false");
+      .put(SpoolDirBinaryFileSourceConnectorConfig.CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH, "false");
   }
 
   @Test

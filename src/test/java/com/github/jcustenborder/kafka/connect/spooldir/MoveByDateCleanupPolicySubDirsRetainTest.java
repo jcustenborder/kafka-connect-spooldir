@@ -17,7 +17,7 @@ public class MoveByDateCleanupPolicySubDirsRetainTest extends MoveByDateCleanupP
   protected ImmutableMap.Builder<String,String> getConnectorConfigMap() {
     return super.getConnectorConfigMap()
       .put(SpoolDirBinaryFileSourceConnectorConfig.INPUT_PATH_WALK_RECURSIVELY, "true")
-      .put(SpoolDirBinaryFileSourceConnectorConfig.INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS, "true");
+      .put(SpoolDirBinaryFileSourceConnectorConfig.CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH, "true");
   }
 
   @Test

@@ -59,15 +59,6 @@ public class InputFileDequeue extends ForwardingDeque<InputFile> {
     return new File(input.getParentFile(), fileName);
   }
 
-  static String determineInputPathSubDir(File inputPath, File inputFile) {
-    String subDir = inputFile.getParentFile().getAbsolutePath().replaceAll(inputPath.getAbsolutePath(), "");
-    if ("".equals(subDir)) {
-      return null;
-    } else {
-      return subDir.substring(1, subDir.length());
-    }
-  }
-
   @Override
   protected Deque<InputFile> delegate() {
     if (null != files && !files.isEmpty()) {
@@ -119,7 +110,7 @@ public class InputFileDequeue extends ForwardingDeque<InputFile> {
         .filter(this.processingFileExists)
         .filter(this.fileMinimumAge)
         .sorted(this.fileComparator)
-        .map(f -> new InputFile(this.config, f, determineInputPathSubDir(this.config.inputPath, f)))
+        .map(f -> new InputFile(this.config, f, InputFile.determineInputPathSubDir(this.config.inputPath, f)))
         .collect(Collectors.toCollection(ArrayDeque::new));
     return this.files;
   }

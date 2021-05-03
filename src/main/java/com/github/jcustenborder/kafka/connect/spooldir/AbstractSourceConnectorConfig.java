@@ -41,11 +41,13 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String FILE_SORT_ATTRIBUTES_CONF = "files.sort.attributes";
 
   public static final String INPUT_PATH_WALK_RECURSIVELY = "input.path.walk.recursively";
-  static final String INPUT_PATH_WALK_RECURSIVELY_DOC = "If enabled, activates a recursive walk of sub-directories under input.path searching for files matching input.file.pattern";
-  
-  public static final String INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS = "input.path.walk.recursively.retain.sub.dirs";
-  static final String INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS_DOC = "When input.path.walk.recursively is enabled, if discovered sub dirs under input.path will be retained regardless of success/failure of file processing";
-  
+  public static final boolean INPUT_PATH_WALK_RECURSIVELY_DEFAULT = false;
+  static final String INPUT_PATH_WALK_RECURSIVELY_DOC = "If enabled, any sub-directories dropped under `input.path` will be recursively walked looking for files matching the configured `input.file.pattern`. After processing is complete the discovered sub directory structure (as well as files within them) will handled according to the configured `cleanup.policy` (i.e. moved or deleted etc). For each discovered file, the walked sub-directory path will be set as a header named `file.relative.path`";
+
+  public static final String CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH = "cleanup.policy.maintain.relative.path";
+  static final boolean CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DEFAULT = false;
+  static final String CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DOC = "If `input.path.walk.recursively` is enabled in combination with this flag being `true`, the walked sub-directories which contained files will be retained as-is under the `input.path`. The actual files within the sub-directories will moved (with a copy of the sub-dir structure) or deleted as per the `cleanup.policy` defined, but the parent sub-directory structure will remain.";
+
   public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
   //RecordProcessorConfig
   public static final String BATCH_SIZE_CONF = "batch.size";
@@ -175,7 +177,7 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     this.taskCount = getInt(TASK_COUNT_CONF);
     this.taskPartitioner = ConfigUtils.getEnum(TaskPartitioner.class, this, TASK_PARTITIONER_CONF);
     this.inputPathWalkRecursively = this.getBoolean(INPUT_PATH_WALK_RECURSIVELY);
-    this.inputPathWalkRecursivelyRetainSubDirs = this.getBoolean(INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS);
+    this.inputPathWalkRecursivelyRetainSubDirs = this.getBoolean(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH);
 
     if (bufferedInputStream) {
       this.fileBufferSizeBytes = getInt(FILE_BUFFER_SIZE_CONF);
@@ -316,14 +318,14 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
             ConfigKeyBuilder.of(INPUT_PATH_WALK_RECURSIVELY, ConfigDef.Type.BOOLEAN)
                 .documentation(INPUT_PATH_WALK_RECURSIVELY_DOC)
                 .importance(ConfigDef.Importance.LOW)
-                .defaultValue(false)
+                .defaultValue(INPUT_PATH_WALK_RECURSIVELY_DEFAULT)
                 .group(GROUP_FILESYSTEM)
                 .build()
         ).define(
-            ConfigKeyBuilder.of(INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS, ConfigDef.Type.BOOLEAN)
-                .documentation(INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS_DOC)
+            ConfigKeyBuilder.of(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH, ConfigDef.Type.BOOLEAN)
+                .documentation(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DOC)
                 .importance(ConfigDef.Importance.LOW)
-                .defaultValue(false)
+                .defaultValue(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DEFAULT)
                 .group(GROUP_FILESYSTEM)
                 .build()
         );

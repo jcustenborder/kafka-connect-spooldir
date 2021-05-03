@@ -27,7 +27,7 @@ public class SpoolDirCsvSourceTaskSubDirsRetainTest extends SpoolDirCsvSourceTas
     Map<String, String> settings = super.settings();
 
     settings.put(AbstractSourceConnectorConfig.INPUT_PATH_WALK_RECURSIVELY,"true");
-    settings.put(AbstractSourceConnectorConfig.INPUT_PATH_WALK_RECURSIVELY_RETAIN_SUB_DIRS,"true");
+    settings.put(AbstractSourceConnectorConfig.CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH,"true");
 
     return settings;
   }
