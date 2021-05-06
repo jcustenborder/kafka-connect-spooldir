@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +86,17 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     return settings;
   }
 
+  protected String defineInputPathSubDir() {
+    return null;
+  }
+
+  protected File getTargetFilePath(File containerPath, String inputFileName) {
+    String subDir = (this.defineInputPathSubDir() != null ? this.defineInputPathSubDir() : "");
+    File targetDir = new File(containerPath,subDir);
+    targetDir.mkdirs();
+    return new File(targetDir, inputFileName);
+  }
+
   protected void poll(final String packageName, TestCase testCase) throws InterruptedException, IOException {
     String keySchemaConfig = ObjectMapperFactory.INSTANCE.writeValueAsString(testCase.keySchema);
     String valueSchemaConfig = ObjectMapperFactory.INSTANCE.writeValueAsString(testCase.valueSchema);
@@ -118,8 +130,8 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
 
     //Use this config because it's the simplest.
     SpoolDirBinaryFileSourceConnectorConfig config = new SpoolDirBinaryFileSourceConnectorConfig(settings);
-
-    final File p = new File(this.inputPath, inputFileName);
+    
+    final File p = this.getTargetFilePath(this.inputPath, inputFileName);
     try (InputStream inputStream = this.getClass().getResourceAsStream(dataFile)) {
       assertNotNull(
           inputStream,
@@ -130,7 +142,7 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
       }
     }
 
-    final InputFile inputFile = new InputFile(config, p);
+    final InputFile inputFile = new InputFile(config, p, this.defineInputPathSubDir());
     log.trace("poll(String, TestCase) - inputFile = {}", inputFile);
 
     assertFalse(inputFile.processingFlag().exists(), String.format("processingFile %s should not exist before first poll().", inputFile.processingFlag()));
@@ -147,13 +159,16 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     The following headers will change. Lets ensure they are there but we don't care about their
     values since they are driven by things that will change such as lastModified dates and paths.
      */
-    List<String> headersToRemove = Arrays.asList(
-        Metadata.HEADER_LAST_MODIFIED,
-        Metadata.HEADER_PATH,
-        Metadata.HEADER_LENGTH,
-        Metadata.HEADER_NAME_WITHOUT_EXTENSION,
-        Metadata.HEADER_PARENT_DIR_NAME
-    );
+    List<String> headersToRemove = new ArrayList<String>();
+    headersToRemove.add(Metadata.HEADER_LAST_MODIFIED);
+    headersToRemove.add(Metadata.HEADER_PATH);
+    headersToRemove.add(Metadata.HEADER_LENGTH);
+    headersToRemove.add(Metadata.HEADER_NAME_WITHOUT_EXTENSION);
+    headersToRemove.add(Metadata.HEADER_PARENT_DIR_NAME);
+    
+    if (this.defineInputPathSubDir() != null) {
+      headersToRemove.add(Metadata.HEADER_FILE_RELATIVE_PATH);
+    }
 
     for (int i = 0; i < testCase.expected.size(); i++) {
       SourceRecord expectedRecord = testCase.expected.get(i);
@@ -176,7 +191,7 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     assertNull(records, "records should be null after first poll.");
     assertFalse(inputFile.exists(), String.format("inputFile %s should not exist.", inputFile));
     assertFalse(inputFile.processingFlag().exists(), String.format("processingFile %s should not exist.", inputFile.processingFlag()));
-    final File finishedFile = new File(this.finishedPath, inputFileName);
+    final File finishedFile = this.getTargetFilePath(this.finishedPath, inputFileName);
     assertTrue(finishedFile.exists(), String.format("finishedFile %s should exist.", finishedFile));
   }
 

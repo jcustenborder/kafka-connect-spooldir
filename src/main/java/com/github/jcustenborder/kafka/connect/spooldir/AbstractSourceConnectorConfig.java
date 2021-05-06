@@ -40,6 +40,14 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public static final String FILE_MINIMUM_AGE_MS_CONF = "file.minimum.age.ms";
   public static final String FILE_SORT_ATTRIBUTES_CONF = "files.sort.attributes";
 
+  public static final String INPUT_PATH_WALK_RECURSIVELY = "input.path.walk.recursively";
+  public static final boolean INPUT_PATH_WALK_RECURSIVELY_DEFAULT = false;
+  static final String INPUT_PATH_WALK_RECURSIVELY_DOC = "If enabled, any sub-directories dropped under `input.path` will be recursively walked looking for files matching the configured `input.file.pattern`. After processing is complete the discovered sub directory structure (as well as files within them) will handled according to the configured `cleanup.policy` (i.e. moved or deleted etc). For each discovered file, the walked sub-directory path will be set as a header named `file.relative.path`";
+
+  public static final String CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH = "cleanup.policy.maintain.relative.path";
+  static final boolean CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DEFAULT = false;
+  static final String CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DOC = "If `input.path.walk.recursively` is enabled in combination with this flag being `true`, the walked sub-directories which contained files will be retained as-is under the `input.path`. The actual files within the sub-directories will moved (with a copy of the sub-dir structure) or deleted as per the `cleanup.policy` defined, but the parent sub-directory structure will remain.";
+
   public static final String PROCESSING_FILE_EXTENSION_CONF = "processing.file.extension";
   //RecordProcessorConfig
   public static final String BATCH_SIZE_CONF = "batch.size";
@@ -103,6 +111,7 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   static final String FILE_BUFFER_SIZE_DOC = "The size of buffer for the BufferedInputStream that will be used to " +
       "interact with the file system.";
 
+
   public final File inputPath;
   public final File finishedPath;
   public final File errorPath;
@@ -121,6 +130,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public final TaskPartitioner taskPartitioner;
   public final boolean bufferedInputStream;
   public final int fileBufferSizeBytes;
+  public final boolean inputPathWalkRecursively;
+  public final boolean inputPathWalkRecursivelyRetainSubDirs;
 
   public final boolean finishedPathRequired() {
     boolean result;
@@ -165,6 +176,8 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     this.taskIndex = getInt(TASK_INDEX_CONF);
     this.taskCount = getInt(TASK_COUNT_CONF);
     this.taskPartitioner = ConfigUtils.getEnum(TaskPartitioner.class, this, TASK_PARTITIONER_CONF);
+    this.inputPathWalkRecursively = this.getBoolean(INPUT_PATH_WALK_RECURSIVELY);
+    this.inputPathWalkRecursivelyRetainSubDirs = this.getBoolean(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH);
 
     if (bufferedInputStream) {
       this.fileBufferSizeBytes = getInt(FILE_BUFFER_SIZE_CONF);
@@ -299,6 +312,20 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
                 .importance(ConfigDef.Importance.MEDIUM)
                 .validator(Validators.validEnum(TaskPartitioner.class))
                 .defaultValue(TaskPartitioner.ByName.toString())
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(INPUT_PATH_WALK_RECURSIVELY, ConfigDef.Type.BOOLEAN)
+                .documentation(INPUT_PATH_WALK_RECURSIVELY_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(INPUT_PATH_WALK_RECURSIVELY_DEFAULT)
+                .group(GROUP_FILESYSTEM)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH, ConfigDef.Type.BOOLEAN)
+                .documentation(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH_DEFAULT)
                 .group(GROUP_FILESYSTEM)
                 .build()
         );
