@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.base.Joiner;
+import com.google.common.base.Joiner;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.ICSVParser;

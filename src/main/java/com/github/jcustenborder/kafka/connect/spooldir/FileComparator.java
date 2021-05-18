@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ComparisonChain;
 
 import java.io.File;
 import java.util.Comparator;

@@ -20,7 +20,7 @@ import com.github.jcustenborder.kafka.connect.utils.data.type.DateTypeParser;
 import com.github.jcustenborder.kafka.connect.utils.data.type.TimeTypeParser;
 import com.github.jcustenborder.kafka.connect.utils.data.type.TimestampTypeParser;
 import com.github.jcustenborder.kafka.connect.utils.data.type.TypeParser;
-import shaded.com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;

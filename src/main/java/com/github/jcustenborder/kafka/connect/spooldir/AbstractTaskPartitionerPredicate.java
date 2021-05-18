@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.hash.Hashing;
+import com.google.common.hash.Hashing;
 import org.apache.kafka.common.config.ConfigException;
 
 import java.io.File;
