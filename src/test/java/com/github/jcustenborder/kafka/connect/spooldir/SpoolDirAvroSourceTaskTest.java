@@ -1,6 +1,6 @@
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.io.Files;
+import com.google.common.io.Files;
 import io.confluent.connect.avro.AvroData;
 import org.apache.avro.Schema;
 import org.apache.avro.file.CodecFactory;

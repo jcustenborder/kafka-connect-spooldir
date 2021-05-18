@@ -15,8 +15,8 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.collect.ImmutableMap;
-import shaded.com.google.common.io.Files;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Files;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.slf4j.Logger;

@@ -22,9 +22,9 @@ import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import shaded.com.google.common.base.Preconditions;
-import shaded.com.google.common.base.Stopwatch;
-import shaded.com.google.common.collect.ImmutableMap;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -236,6 +236,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
           Long lastOffset = null;
           log.trace("looking up offset for {}", this.sourcePartition);
           Map<String, Object> offset = this.context.offsetStorageReader().offset(this.sourcePartition);
+          log.trace("offset returned for {} is {}", this.sourcePartition, offset);
           if (null != offset && !offset.isEmpty()) {
             Number number = (Number) offset.get("offset");
             lastOffset = number.longValue();
