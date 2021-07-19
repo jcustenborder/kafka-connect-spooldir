@@ -48,6 +48,7 @@ public class SpoolDirAvroSourceTask extends AbstractSourceTask<SpoolDirAvroSourc
     if (null != this.dataFileReader) {
       this.dataFileReader.close();
     }
+    datumReader = new GenericDatumReader<>();
     inputFile.startProcessing();
     this.dataFileReader = new DataFileReader<>(inputFile.file(), datumReader);
     this.recordOffset = 0;
