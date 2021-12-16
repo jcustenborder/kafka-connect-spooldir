@@ -17,9 +17,9 @@ package com.github.jcustenborder.kafka.connect.spooldir;
 
 import com.github.jcustenborder.kafka.connect.utils.VersionUtil;
 import com.github.jcustenborder.kafka.connect.utils.jackson.ObjectMapperFactory;
-import shaded.com.google.common.base.Preconditions;
-import shaded.com.google.common.collect.HashMultimap;
-import shaded.com.google.common.collect.Multimap;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.DataException;

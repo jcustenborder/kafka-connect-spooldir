@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.io.Files;
+import com.google.common.io.Files;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;

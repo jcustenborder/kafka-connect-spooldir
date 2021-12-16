@@ -15,7 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.io.ByteStreams;
+import com.google.common.io.ByteStreams;
 import org.apache.kafka.connect.errors.DataException;
 import org.junit.jupiter.api.Test;
 

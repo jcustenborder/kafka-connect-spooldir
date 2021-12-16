@@ -17,7 +17,7 @@ package com.github.jcustenborder.kafka.connect.spooldir.elf;
 
 import com.github.jcustenborder.kafka.connect.spooldir.AbstractSpoolDirSourceTaskTest;
 import com.github.jcustenborder.kafka.connect.spooldir.TestCase;
-import shaded.com.google.common.io.Files;
+import com.google.common.io.Files;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.slf4j.Logger;

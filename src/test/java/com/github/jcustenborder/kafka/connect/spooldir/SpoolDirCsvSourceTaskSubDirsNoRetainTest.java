@@ -15,26 +15,26 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.kafka.connect.data.Schema;
-import org.apache.kafka.connect.source.SourceRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-
-public class TestCase implements NamedTest {
-  @JsonIgnore
-  public Path path;
-  public Map<String, String> settings = new LinkedHashMap<>();
-  public Map<String, Object> offset = new LinkedHashMap<>();
-  public Schema keySchema;
-  public Schema valueSchema;
-  public List<SourceRecord> expected;
+public class SpoolDirCsvSourceTaskSubDirsNoRetainTest extends SpoolDirCsvSourceTaskTest {
+  private static final Logger log = LoggerFactory.getLogger(SpoolDirCsvSourceTaskSubDirsNoRetainTest.class);
 
   @Override
-  public void path(Path path) {
-    this.path = path;
+  protected Map<String, String> settings() {
+    Map<String, String> settings = super.settings();
+
+    settings.put(AbstractSourceConnectorConfig.INPUT_PATH_WALK_RECURSIVELY,"true");
+    settings.put(AbstractSourceConnectorConfig.CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH,"false");
+
+    return settings;
   }
+
+  @Override
+  protected String defineInputPathSubDir() {
+    return "test/01/02/03";
+  }
+
 }

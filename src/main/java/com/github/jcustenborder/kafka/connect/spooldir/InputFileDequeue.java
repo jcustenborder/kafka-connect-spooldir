@@ -15,17 +15,22 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
-import shaded.com.google.common.collect.ForwardingDeque;
+import com.google.common.collect.ForwardingDeque;
+import com.google.common.io.PatternFilenameFilter;
 import org.apache.kafka.common.utils.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InputFileDequeue extends ForwardingDeque<InputFile> {
   private static final Logger log = LoggerFactory.getLogger(InputFileDequeue.class);
@@ -58,7 +63,26 @@ public class InputFileDequeue extends ForwardingDeque<InputFile> {
     }
 
     log.trace("delegate() - Searching for file(s) in {}", this.config.inputPath);
-    File[] input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
+
+    final File[] input;
+
+    if (this.config.inputPathWalkRecursively) {
+      final PatternFilenameFilter walkerFilenameFilter = this.config.inputFilenameFilter;
+      Predicate<File> filenameFilterPredicate = file -> walkerFilenameFilter.accept(file.getParentFile(), file.getName());
+
+      try (Stream<Path> filesWalk = Files.walk(this.config.inputPath.toPath())) {
+        input = filesWalk.map(Path::toFile)
+            .filter(File::isFile)
+            .filter(filenameFilterPredicate)
+            .toArray(File[]::new);
+      } catch (IOException e) {
+        log.error("Unexpected eror walking {}: {}", this.config.inputPath.toPath(), e.getMessage(), e);
+        return new ArrayDeque<>();
+      }
+    } else {
+      input = this.config.inputPath.listFiles(this.config.inputFilenameFilter);
+    }
+
     if (null == input || input.length == 0) {
       log.info("No files matching {} were found in {}", AbstractSourceConnectorConfig.INPUT_FILE_PATTERN_CONF, this.config.inputPath);
       return new ArrayDeque<>();

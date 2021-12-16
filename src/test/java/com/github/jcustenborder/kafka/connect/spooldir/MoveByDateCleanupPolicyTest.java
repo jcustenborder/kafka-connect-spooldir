@@ -21,7 +21,7 @@ public class MoveByDateCleanupPolicyTest extends AbstractCleanUpPolicyTest<Abstr
   public void success() throws IOException {
     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     Path subDirectory = Paths.get(this.finishedPath.getAbsolutePath(), dateFormatter.format(this.inputFile.lastModified()));
-    File finishedFile = new File(subDirectory.toFile(), this.inputFile.getName());
+    File finishedFile = this.getTargetFilePath(subDirectory.toFile(), this.inputFile);
 
     assertTrue(this.inputFile.exists(), "Input file should exist");
     assertFalse(finishedFile.exists(), "Finished file should not exist");
