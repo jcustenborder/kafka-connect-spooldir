@@ -5,7 +5,7 @@
     "connector.class": "com.github.jcustenborder.kafka.connect.spooldir.SpoolDirCsvSourceConnector",
     "input.file.pattern": "^.*\\.csv$",
     "halt.on.error": "false",
-    "topic": "testing"
+    "topic": "testing",
     "csv.first.row.as.header": "true",
     "csv.null.field.indicator": "EMPTY_SEPARATORS",
     "input.path": "/tmp/spooldir/input",

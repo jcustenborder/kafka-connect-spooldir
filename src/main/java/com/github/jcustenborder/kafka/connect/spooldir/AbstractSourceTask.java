@@ -207,8 +207,60 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   AbstractCleanUpPolicy cleanUpPolicy;
 
+  static class ReadResult {
+    private final List<SourceRecord> records = new ArrayList<>();
+    private final FileNotifierRecordCreator payloadCreator;
+
+    ReadResult(FileNotifierRecordCreator payloadCreator) {
+      this.payloadCreator = payloadCreator;
+    }
+
+
+    static ReadResult fromConfig(AbstractSourceConnectorConfig config) {
+      FileNotifierRecordCreator payloadCreator =
+              FileNotifierRecordCreator.newInstanceForClassName(config.fileNotifierRecordCreatorClass);
+      payloadCreator.setTopic(config.filesNotificationsTopic);
+      return config.isFilesNotificationsEnabled ? new ReadResult(payloadCreator) : new NoNotifications();
+    }
+
+    private static class NoNotifications extends ReadResult {
+      private NoNotifications() {
+        super(null);
+      }
+
+      @Override
+      void startFile(InputFile file) {
+        return;
+      }
+
+      @Override
+      public void endFile(InputFile file) {
+        return;
+      }
+    }
+
+    void startFile(InputFile file) {
+      records.add(
+          payloadCreator.startFilePayload(file)
+      );
+    }
+
+
+    public void addRecords(List<SourceRecord> newRecords) {
+      records.addAll(newRecords);
+    }
+
+    public void endFile(InputFile file) {
+      records.add(
+          payloadCreator.endFilePayload(file)
+      );
+
+    }
+  }
+
 
   public List<SourceRecord> read() {
+    ReadResult result = ReadResult.fromConfig(this.config);
     try {
       if (!hasRecords) {
 
@@ -216,6 +268,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
           recordProcessingTime();
           this.inputFile.close();
           this.cleanUpPolicy.success();
+          result.endFile(this.inputFile);
           this.inputFile = null;
         }
 
@@ -225,8 +278,9 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
         log.trace("read() - nextFile = '{}'", nextFile);
         if (null == nextFile) {
           log.trace("read() - No next file found.");
-          return new ArrayList<>();
+          return result.records;
         }
+        result.startFile(nextFile);
         this.inputFile = nextFile;
         try {
           this.sourcePartition = ImmutableMap.of(
@@ -253,7 +307,8 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       }
       List<SourceRecord> records = process();
       this.hasRecords = !records.isEmpty();
-      return records;
+      result.addRecords(records);
+      return result.records;
     } catch (Exception ex) {
       long recordOffset;
       try {
@@ -271,7 +326,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       if (this.config.haltOnError) {
         throw new ConnectException(ex);
       } else {
-        return new ArrayList<>();
+        return result.records;
       }
     }
   }

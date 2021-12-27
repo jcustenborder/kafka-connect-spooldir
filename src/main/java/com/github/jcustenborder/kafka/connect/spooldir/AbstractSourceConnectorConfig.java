@@ -94,6 +94,17 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
       "`Name` is name of the file. `Length` is the length of the file preferring larger files first. `LastModified` is " +
       "the LastModified attribute of the file preferring older files first.";
 
+  static final String FILES_NOTIFICATIONS_CONF = "files.notifications.enabled";
+  static final String FILES_NOTIFICATIONS_DOC = "Should the task produce a message to notify when a file is started or finished.";
+  static final boolean FILES_NOTIFICATIONS_DEFAULT = false;
+  static final String FILES_NOTIFICATIONS_TOPIC_CONF = "files.notifications.topic";
+  static final String FILES_NOTIFICATIONS_TOPIC_DOC = "Topic name for files notifications";
+  static final String FILES_NOTIFICATIONS_TOPIC_DEFAULT = "files_notifications";
+  static final String FILES_NOTIFICATIONS_RECORD_CREATOR_CLASS_CONF = "files.notifications.record.creator.class";
+  static final String FILES_NOTIFICATIONS_RECORD_CREATOR_CLASS_DOC = "The implementation to create notification messages";
+  static final String FILES_NOTIFICATIONS_RECORD_CREATOR_CLASS_DEFAULT =
+          FileNotifierRecordCreator.DefaultFileNotifierRecordCreator.class.getTypeName();
+
   public static final String TASK_INDEX_CONF = "task.index";
   static final String TASK_INDEX_DOC = "Internal setting to the connector used to instruct a " +
       "task on which files to select. The connector will override this setting.";
@@ -130,6 +141,9 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
   public final TaskPartitioner taskPartitioner;
   public final boolean bufferedInputStream;
   public final int fileBufferSizeBytes;
+  public final boolean isFilesNotificationsEnabled;
+  public final String filesNotificationsTopic;
+  public final String fileNotifierRecordCreatorClass;
   public final boolean inputPathWalkRecursively;
   public final boolean inputPathWalkRecursivelyRetainSubDirs;
 
@@ -176,6 +190,9 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
     this.taskIndex = getInt(TASK_INDEX_CONF);
     this.taskCount = getInt(TASK_COUNT_CONF);
     this.taskPartitioner = ConfigUtils.getEnum(TaskPartitioner.class, this, TASK_PARTITIONER_CONF);
+    this.isFilesNotificationsEnabled = this.getBoolean(FILES_NOTIFICATIONS_CONF);
+    this.filesNotificationsTopic = this.getString(FILES_NOTIFICATIONS_TOPIC_CONF);
+    this.fileNotifierRecordCreatorClass = this.getString(FILES_NOTIFICATIONS_RECORD_CREATOR_CLASS_CONF);
     this.inputPathWalkRecursively = this.getBoolean(INPUT_PATH_WALK_RECURSIVELY);
     this.inputPathWalkRecursivelyRetainSubDirs = this.getBoolean(CLEANUP_POLICY_MAINTAIN_RELATIVE_PATH);
 
@@ -314,6 +331,27 @@ public abstract class AbstractSourceConnectorConfig extends AbstractConfig {
                 .defaultValue(TaskPartitioner.ByName.toString())
                 .group(GROUP_FILESYSTEM)
                 .build()
+        ).define(
+            ConfigKeyBuilder.of(FILES_NOTIFICATIONS_CONF, ConfigDef.Type.BOOLEAN)
+                .documentation(FILES_NOTIFICATIONS_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(FILES_NOTIFICATIONS_DEFAULT)
+                .group(GROUP_GENERAL)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(FILES_NOTIFICATIONS_TOPIC_CONF, ConfigDef.Type.STRING)
+                    .documentation(FILES_NOTIFICATIONS_TOPIC_DOC)
+                    .importance(ConfigDef.Importance.LOW)
+                    .defaultValue(FILES_NOTIFICATIONS_TOPIC_DEFAULT)
+                    .group(GROUP_GENERAL)
+                    .build()
+        ).define(
+            ConfigKeyBuilder.of(FILES_NOTIFICATIONS_RECORD_CREATOR_CLASS_CONF, ConfigDef.Type.STRING)
+                    .documentation(FILES_NOTIFICATIONS_RECORD_CREATOR_CLASS_DOC)
+                    .importance(ConfigDef.Importance.LOW)
+                    .defaultValue(FILES_NOTIFICATIONS_RECORD_CREATOR_CLASS_DEFAULT)
+                    .group(GROUP_GENERAL)
+                    .build()
         ).define(
             ConfigKeyBuilder.of(INPUT_PATH_WALK_RECURSIVELY, ConfigDef.Type.BOOLEAN)
                 .documentation(INPUT_PATH_WALK_RECURSIVELY_DOC)
