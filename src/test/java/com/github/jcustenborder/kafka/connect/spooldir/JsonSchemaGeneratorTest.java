@@ -15,6 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.spooldir;
 
+import java.util.HashMap;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.junit.jupiter.api.Test;
@@ -56,5 +57,36 @@ public class JsonSchemaGeneratorTest extends AbstractSchemaGeneratorTest {
     assertSchema(expectedValueSchema, kvp.getValue(), "value schema does not match.");
   }
 
+
+  @Test
+  public void schemaWithCustomSchemaName() throws IOException {
+    File inputFile = new File("src/test/resources/com/github/jcustenborder/kafka/connect/spooldir/json/FieldsMatch.data");
+    Map<String, String> configs = new HashMap<>(settings);
+    configs.put(AbstractSpoolDirSourceConnectorConfig.SCHEMA_GENERATION_KEY_NAME_CONF, "com.foo.key");
+    configs.put(AbstractSpoolDirSourceConnectorConfig.SCHEMA_GENERATION_VALUE_NAME_CONF, "com.foo.value");
+    JsonSchemaGenerator schemaGenerator = new JsonSchemaGenerator(configs);
+    Map.Entry<Schema, Schema> kvp = schemaGenerator.generate(inputFile, Arrays.asList("id"));
+    final Schema expectedKeySchema = SchemaBuilder.struct()
+        .name("com.foo.key")
+        .field("id", Schema.OPTIONAL_STRING_SCHEMA)
+        .build();
+
+    final Schema expectedValueSchema = SchemaBuilder.struct()
+        .name("com.foo.value")
+        .field("id", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("first_name", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("last_name", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("email", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("gender", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("ip_address", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("last_login", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("account_balance", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("country", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("favorite_color", Schema.OPTIONAL_STRING_SCHEMA)
+        .build();
+
+    assertSchema(expectedKeySchema, kvp.getKey(), "key schema does not match.");
+    assertSchema(expectedValueSchema, kvp.getValue(), "value schema does not match.");
+  }
 
 }
