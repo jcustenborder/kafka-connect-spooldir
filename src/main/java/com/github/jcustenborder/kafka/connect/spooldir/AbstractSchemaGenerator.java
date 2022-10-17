@@ -191,7 +191,7 @@ public abstract class AbstractSchemaGenerator<CONFIG extends AbstractSpoolDirSou
 
     log.trace("generate() - Building key schema.");
     SchemaBuilder keySchemaBuilder = SchemaBuilder.struct()
-        .name("com.github.jcustenborder.kafka.connect.model.Key");
+        .name(this.config.schemaGenerationKeyName);
 
     for (String keyFieldName : keyFields) {
       log.trace("generate() - Adding keyFieldName field '{}'", keyFieldName);
@@ -205,7 +205,7 @@ public abstract class AbstractSchemaGenerator<CONFIG extends AbstractSpoolDirSou
 
     log.trace("generate() - Building value schema.");
     SchemaBuilder valueSchemaBuilder = SchemaBuilder.struct()
-        .name("com.github.jcustenborder.kafka.connect.model.Value");
+        .name(this.config.schemaGenerationValueName);
 
     for (Map.Entry<String, Schema.Type> kvp : fieldTypes.entrySet()) {
       addField(valueSchemaBuilder, kvp.getKey(), kvp.getValue());
