@@ -43,15 +43,24 @@ public class SpoolDirLineDelimitedSourceTask extends AbstractSourceTask<SpoolDir
   protected List<SourceRecord> process() throws IOException {
     int recordCount = 0;
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
-    String line = null;
-    while (recordCount < this.config.batchSize && null != (line = this.inputFile.lineNumberReader().readLine())) {
-      SourceRecord record = record(
-          null,
-          new SchemaAndValue(Schema.STRING_SCHEMA, line),
-          null
-      );
-      records.add(record);
-      recordCount++;
+    try {
+      String line = null;
+      while (recordCount < this.config.batchSize && null != (line = this.inputFile.lineNumberReader().readLine())) {
+        SourceRecord record = record(
+            null,
+            new SchemaAndValue(Schema.STRING_SCHEMA, line),
+            null
+        );
+        records.add(record);
+        recordCount++;
+        this.recordCount++;
+      }
+    } catch (IOException e) {
+      if (records.isEmpty()) {
+        // If no records where read, throw the exception to trigger error handling
+        // Otherwise, return the records and handle the error in the next iteration.
+        throw e;
+      }
     }
     return records;
   }

@@ -155,6 +155,7 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       }
       return null;
     }
+
     emptyCount = 0;
     log.trace("read() returning {} result(s)", results.size());
 
@@ -271,6 +272,9 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
       if (this.config.haltOnError) {
         throw new ConnectException(ex);
       } else {
+        recordProcessingTime();
+        this.hasRecords = false;
+        this.inputFile = null;
         return new ArrayList<>();
       }
     }
@@ -278,14 +282,14 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
 
   protected Map<String, ?> offset() {
     return ImmutableMap.of(
-        "offset",
-        recordOffset()
+            "offset",
+            recordOffset()
     );
   }
 
   protected SourceRecord record(
-      SchemaAndValue key,
-      SchemaAndValue value,
+          SchemaAndValue key,
+          SchemaAndValue value,
       Long timestamp) {
     Map<String, ?> sourceOffset = offset();
 
