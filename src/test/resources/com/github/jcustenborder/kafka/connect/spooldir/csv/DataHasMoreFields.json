@@ -1,6 +1,7 @@
 {
   "settings" : {
-    "csv.first.row.as.header" : "true"
+    "csv.first.row.as.header" : "true",
+    "files.notifications.enabled": "true"
   },
   "offset" : { },
   "keySchema" : {

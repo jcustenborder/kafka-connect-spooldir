@@ -5,3 +5,4 @@ ELFTesting.properties
 .checkstyle
 .factorypath
 .idea/
+.DS_Store

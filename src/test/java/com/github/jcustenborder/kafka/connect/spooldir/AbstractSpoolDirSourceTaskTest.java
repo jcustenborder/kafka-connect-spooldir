@@ -147,6 +147,18 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     assertFalse(inputFile.processingFlag().exists(), String.format("processingFile %s should not exist before first poll().", inputFile.processingFlag()));
     assertTrue(inputFile.exists(), String.format("inputFile %s should exist.", inputFile));
     List<SourceRecord> records = this.task.poll();
+    if(config.isFilesNotificationsEnabled){
+      SourceRecord startFileEvent = records.remove(0);
+      assertEquals(
+              AbstractSourceConnectorConfig.FILES_NOTIFICATIONS_TOPIC_DEFAULT,
+              startFileEvent.topic()
+      );
+      assertTrue(
+              new String((byte[]) startFileEvent.value()).contains("file_start")
+      );
+    }
+
+
     assertTrue(inputFile.exists(), String.format("inputFile %s should exist after first poll().", inputFile));
     assertTrue(inputFile.processingFlag().exists(), String.format("processingFile %s should exist after first poll().", inputFile.processingFlag()));
 
@@ -183,6 +195,22 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
 
     records = this.task.poll();
     assertNull(records, "records should be null after first poll.");
+    if (config.isFilesNotificationsEnabled) { // the next round that's closing the file
+      records = this.task.poll();
+      assertEquals(
+              1,
+              records.size()
+      );
+      SourceRecord endFileEvent = records.get(0);
+      assertEquals(
+              AbstractSourceConnectorConfig.FILES_NOTIFICATIONS_TOPIC_DEFAULT,
+              endFileEvent.topic()
+      );
+      assertTrue(
+              new String((byte[]) endFileEvent.value()).contains("file_end")
+      );
+    }
+
     records = this.task.poll();
     assertNull(records, "records should be null after first poll.");
     assertFalse(inputFile.exists(), String.format("inputFile %s should not exist.", inputFile));
