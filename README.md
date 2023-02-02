@@ -641,7 +641,7 @@ This connector is used to read an entire file as a byte array write the data to 
 Large files will be read as a single byte array. This means that the process could run out of memory or try to send a message to Kafka that is greater than the max message size. If this happens an exception will be thrown.
 ### Important
 
-The recommended converter to use is the ByteArrayConverter. Example: `value.converter=org.apache.kafka.connect.storage.ByteArrayConverter`
+The recommended converter to use is the ByteArrayConverter. Example: `value.converter=org.apache.kafka.connect.converters.ByteArrayConverter`
 ### Configuration
 
 #### File System
