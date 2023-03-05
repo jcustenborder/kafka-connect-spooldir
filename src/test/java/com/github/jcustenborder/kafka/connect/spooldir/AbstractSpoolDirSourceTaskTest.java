@@ -164,7 +164,6 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
     headersToRemove.add(Metadata.HEADER_LENGTH);
     headersToRemove.add(Metadata.HEADER_NAME_WITHOUT_EXTENSION);
     headersToRemove.add(Metadata.HEADER_PARENT_DIR_NAME);
-    headersToRemove.add(Metadata.HEADER_FILE_RELATIVE_PATH);
 
     for (int i = 0; i < testCase.expected.size(); i++) {
       SourceRecord expectedRecord = testCase.expected.get(i);
@@ -177,6 +176,17 @@ public abstract class AbstractSpoolDirSourceTaskTest<T extends AbstractSourceTas
         );
         actualRecord.headers().remove(headerToRemove);
         expectedRecord.headers().remove(headerToRemove);
+      }
+      /*
+      The file relative path header is created conditionally, so only remove it if expected to exist.
+       */
+      if (expectedRecord.headers().lastWithName(Metadata.HEADER_FILE_RELATIVE_PATH) != null) {
+        assertNotNull(
+          actualRecord.headers().lastWithName(Metadata.HEADER_FILE_RELATIVE_PATH),
+          String.format("index:%s should have the header '%s'", i, Metadata.HEADER_FILE_RELATIVE_PATH)
+        );
+        actualRecord.headers().remove(Metadata.HEADER_FILE_RELATIVE_PATH);
+        expectedRecord.headers().remove(Metadata.HEADER_FILE_RELATIVE_PATH);
       }
       assertSourceRecord(expectedRecord, actualRecord, String.format("index:%s", i));
     }

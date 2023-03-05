@@ -72,6 +72,10 @@ public class SpoolDirCsvSourceTaskTest extends AbstractSpoolDirSourceTaskTest<Sp
 
     return testCases.stream().map(testCase -> {
       String name = Files.getNameWithoutExtension(testCase.path.toString());
+      if (defineInputPathSubDir() != null) {
+        String inputPathSubdir = defineInputPathSubDir();
+        testCase.expected.stream().forEach(record -> record.headers().addString(Metadata.HEADER_FILE_RELATIVE_PATH, inputPathSubdir));
+      }
       return dynamicTest(name, () -> {
         poll(packageName, testCase);
       });
@@ -112,7 +116,7 @@ public class SpoolDirCsvSourceTaskTest extends AbstractSpoolDirSourceTaskTest<Sp
               .put("id", i)
       );
     }
-  
+
     File inputFile = this.getTargetFilePath(this.inputPath,  "input.csv");
     writeCSV(inputFile, schema, values);
     Map<String, String> settings = settings();
