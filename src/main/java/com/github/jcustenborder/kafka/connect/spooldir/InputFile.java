@@ -61,7 +61,7 @@ public class InputFile implements Closeable {
     this.length = this.file.length();
     String processingFileName = file.getName() + config.processingFileExtension;
     this.processingFlag = new File(file.getParentFile(), processingFileName);
-    this.inputPathSubDir = determineRelativePath(file, config.inputPath);
+    this.inputPathSubDir = determineRelativePath(config.inputPath, file);
     this.metadata = new Metadata(file, this.inputPathSubDir);
   }
 
@@ -75,7 +75,7 @@ public class InputFile implements Closeable {
 
 
   private static String determineRelativePath(File inputPath, File inputFile) {
-    Path relative = inputFile.toPath().relativize(inputPath.toPath()); // inputPath.toPath().relativize(inputFile.getParentFile().toPath());
+    Path relative = inputPath.toPath().relativize(inputFile.getParentFile().toPath());
     String subDir = relative.toString();
     if ("".equals(subDir)) {
       return null;
