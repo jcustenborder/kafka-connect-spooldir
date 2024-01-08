@@ -41,7 +41,6 @@ public class SpoolDirLineDelimitedSourceTask extends AbstractSourceTask<SpoolDir
 
   @Override
   protected List<SourceRecord> process() throws IOException {
-    int recordCount = 0;
     List<SourceRecord> records = new ArrayList<>(this.config.batchSize);
     String line = null;
     while (recordCount < this.config.batchSize && null != (line = this.inputFile.lineNumberReader().readLine())) {
