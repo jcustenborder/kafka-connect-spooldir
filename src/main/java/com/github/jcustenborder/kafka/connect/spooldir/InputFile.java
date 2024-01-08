@@ -223,7 +223,9 @@ public class InputFile implements Closeable {
       File lastSubDir = this.config.inputPath;
       for (String subDirName : this.inputPathSubDir.split(File.separator)) {
         lastSubDir = new File(lastSubDir, subDirName);
-        inputPathSubDirsToCleanup.add(lastSubDir);
+        if (lastSubDir.exists()) {
+          inputPathSubDirsToCleanup.add(lastSubDir);
+        }
       }
       Collections.reverse(inputPathSubDirsToCleanup);
     }

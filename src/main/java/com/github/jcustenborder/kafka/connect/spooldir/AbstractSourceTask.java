@@ -180,27 +180,27 @@ public abstract class AbstractSourceTask<CONF extends AbstractSourceConnectorCon
   }
 
   private void recordProcessingTime() {
-    final long secondsElapsed = processingTime.elapsed(TimeUnit.SECONDS);
-    final long bytesPerSecond;
+    final long elapsedMs = processingTime.elapsed(TimeUnit.MILLISECONDS);
+    final long bytesPerMs;
 
-    if (0L == secondsElapsed || 0L == this.inputFile.length()) {
-      bytesPerSecond = 0L;
+    if (0L == elapsedMs || 0L == this.inputFile.length()) {
+      bytesPerMs = 0L;
     } else {
-      bytesPerSecond = this.inputFile.length() / secondsElapsed;
+      bytesPerMs = this.inputFile.length() / elapsedMs;
     }
 
-    if (bytesPerSecond > 0) {
+    if (bytesPerMs > 0) {
       log.info(
-          "Finished processing {} record(s) in {} second(s). Processing speed {} per second.",
+          "Finished processing {} record(s) in {} millisecond(s). Processing speed {} per millisecond.",
           this.recordCount,
-          secondsElapsed,
-          humanReadableByteCount(bytesPerSecond, false)
+          elapsedMs,
+          humanReadableByteCount(bytesPerMs, false)
       );
     } else {
       log.info(
           "Finished processing {} record(s) in {} second(s).",
           this.recordCount,
-          secondsElapsed
+          elapsedMs
       );
     }
   }
